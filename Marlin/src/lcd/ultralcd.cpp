@@ -3804,7 +3804,7 @@ void lcd_quick_feedback(const bool clear_buttons) {
           #endif // HOTENDS > 3
         #endif // HOTENDS > 2
       #else // !PID_PARAMS_PER_HOTEND || HOTENDS == 1
-        //PID_MENU_ITEMS("", 0);
+        PID_MENU_ITEMS("", 0);
       #endif // !PID_PARAMS_PER_HOTEND || HOTENDS == 1
 
     #endif // PIDTEMP
