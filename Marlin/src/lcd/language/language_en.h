@@ -188,7 +188,7 @@
   #define MSG_EDITING_STOPPED                 _UxGT("Mesh Editing Stopped")
 #endif
 #ifndef MSG_USER_MENU
-  #define MSG_USER_MENU                       _UxGT("Custom Commands")
+  #define MSG_USER_MENU                       _UxGT("Custom User Commands")
 #endif
 #ifndef MSG_UBL_DOING_G29
   #define MSG_UBL_DOING_G29                   _UxGT("Doing G29")
@@ -201,6 +201,18 @@
 #endif
 #ifndef MSG_UBL_LEVEL_BED
   #define MSG_UBL_LEVEL_BED                   _UxGT("Unified Bed Leveling")
+#endif
+#ifndef MSG_IDEX_MENU
+  #define MSG_IDEX_MENU                       _UxGT("IDEX Mode")
+#endif
+#ifndef MSG_IDEX_MODE_AUTOPARK
+  #define MSG_IDEX_MODE_AUTOPARK              _UxGT("Auto-Park")
+#endif
+#ifndef MSG_IDEX_MODE_DUPLICATE
+  #define MSG_IDEX_MODE_DUPLICATE             _UxGT("Duplication")
+#endif
+#ifndef MSG_IDEX_MODE_FULL_CTRL
+  #define MSG_IDEX_MODE_FULL_CTRL             _UxGT("Full control")
 #endif
 #ifndef MSG_UBL_MANUAL_MESH
   #define MSG_UBL_MANUAL_MESH                 _UxGT("Manually Build Mesh")
@@ -746,6 +758,44 @@
 #endif
 #ifndef MSG_FILAMENTUNLOAD_ALL
   #define MSG_FILAMENTUNLOAD_ALL              _UxGT("Unload All")
+#endif
+#if ENABLED(BUCKET_FEATURE)
+  #ifndef MSG_BUCKET_FEATURE
+    #define MSG_BUCKET_FEATURE                _UxGT("Purge Bucket")
+  #endif
+  #ifndef MSG_BUCKET_FEATURE
+    #define MSG_BUCKET_TOOL_MIGRATION         _UxGT("Tool Migration")
+  #endif
+  #ifndef MSG_BUCKET_TOOL_MIGRATION_LAST
+    #define MSG_BUCKET_TOOL_MIGRATION_LAST    _UxGT("Final Extruder")
+  #endif
+  #ifndef MSG_BUCKET_TOOL_MIGRATION_SWAP
+    #define MSG_BUCKET_TOOL_MIGRATION_SWAP    _UxGT("Migrate to ")
+  #endif
+  #ifndef MSG_BUCKET_TOOL_MIGRATION_ON
+    #define MSG_BUCKET_TOOL_MIGRATION_ON      _UxGT("Auto ON")
+  #endif
+  #ifndef MSG_BUCKET_TOOL_MIGRATION_OFF 
+    #define MSG_BUCKET_TOOL_MIGRATION_OFF     _UxGT("Auto OFF")
+  #endif
+  #ifndef MSG_BUCKET_TOOL_MIGRATION_OFF 
+    #define MSG_BUCKET_PURGE_LENGTH           _UxGT("Purge")
+  #endif
+  #ifndef MSG_BUCKET_TOOL_MIGRATION_OFF 
+    #define MSG_BUCKET_PURGE_F                _UxGT("Purge V")
+  #endif
+  #ifndef MSG_BUCKET_TOOL_MIGRATION_OFF 
+    #define MSG_BUCKET_RETRACT                _UxGT("Retract")
+  #endif
+  #ifndef MSG_BUCKET_TOOL_MIGRATION_OFF 
+    #define MSG_BUCKET_RETRACT_F              _UxGT("Retract V")
+  #endif
+  #ifndef MSG_BUCKET_TOOL_MIGRATION_OFF 
+    #define MSG_BUCKET_RECOVER_F              _UxGT("UnRet V")
+  #endif
+  #ifndef MSG_BUCKET_TOOL_MIGRATION_OFF 
+    #define MSG_BUCKET_FAN_DWELL              _UxGT("Fan dwell")
+  #endif
 #endif
 #ifndef MSG_INIT_SDCARD
   #define MSG_INIT_SDCARD                     _UxGT("Init. SD card")
