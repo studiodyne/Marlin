@@ -51,11 +51,18 @@
   
   // Extrude function
   void tool_migration_e_move(const float length, const float fr) {
-    set_destination_from_current();
+    // set_destination_from_current();
+    // destination[E_AXIS] += length / planner.e_factor[active_extruder];
+    // planner.buffer_line_kinematic(destination, fr, active_extruder);
+    // planner.synchronize();
+    // set_current_from_destination();
+				set_destination_from_current();
+				const float oldfeedrate_mm_s = feedrate_mm_s;
+				feedrate_mm_s = fr ;
     destination[E_AXIS] += length / planner.e_factor[active_extruder];
-    planner.buffer_line_kinematic(destination, fr, active_extruder);
+    prepare_move_to_destination();
     planner.synchronize();
-    set_current_from_destination();
+				feedrate_mm_s = oldfeedrate_mm_s ;
   }
 #endif
 
