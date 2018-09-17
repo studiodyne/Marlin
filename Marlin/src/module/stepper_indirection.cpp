@@ -69,6 +69,9 @@
   #if AXIS_DRIVER_TYPE(Z2, TMC26X)
     _TMC26X_DEFINE(Z2);
   #endif
+  #if AXIS_DRIVER_TYPE(Z3, TMC26X)
+    _TMC26X_DEFINE(Z3);
+  #endif
   #if AXIS_DRIVER_TYPE(E0, TMC26X)
     _TMC26X_DEFINE(E0);
   #endif
@@ -83,6 +86,9 @@
   #endif
   #if AXIS_DRIVER_TYPE(E4, TMC26X)
     _TMC26X_DEFINE(E4);
+  #endif
+  #if AXIS_DRIVER_TYPE(E5, TMC26X)
+    _TMC26X_DEFINE(E5);
   #endif
 
   #define _TMC26X_INIT(A) do{ \
@@ -109,6 +115,9 @@
     #if AXIS_DRIVER_TYPE(Z2, TMC26X)
       _TMC26X_INIT(Z2);
     #endif
+    #if AXIS_DRIVER_TYPE(Z3, TMC26X)
+      _TMC26X_INIT(Z3);
+    #endif
     #if AXIS_DRIVER_TYPE(E0, TMC26X)
       _TMC26X_INIT(E0);
     #endif
@@ -123,6 +132,9 @@
     #endif
     #if AXIS_DRIVER_TYPE(E4, TMC26X)
       _TMC26X_INIT(E4);
+    #endif
+    #if AXIS_DRIVER_TYPE(E5, TMC26X)
+      _TMC26X_INIT(E5);
     #endif
   }
 #endif // TMC26X
@@ -166,6 +178,9 @@
   #if AXIS_DRIVER_TYPE(Z2, TMC2130)
     _TMC2130_DEFINE(Z2);
   #endif
+  #if AXIS_DRIVER_TYPE(Z3, TMC2130)
+    _TMC2130_DEFINE(Z3);
+  #endif
   #if AXIS_DRIVER_TYPE(E0, TMC2130)
     _TMC2130_DEFINE(E0);
   #endif
@@ -180,6 +195,9 @@
   #endif
   #if AXIS_DRIVER_TYPE(E4, TMC2130)
     _TMC2130_DEFINE(E4);
+  #endif
+  #if AXIS_DRIVER_TYPE(E5, TMC2130)
+    _TMC2130_DEFINE(E5);
   #endif
 
   // Use internal reference voltage for current calculations. This is the default.
@@ -233,6 +251,9 @@
     #if AXIS_DRIVER_TYPE(Z2, TMC2130)
       _TMC2130_INIT(Z2, planner.axis_steps_per_mm[Z_AXIS]);
     #endif
+    #if AXIS_DRIVER_TYPE(Z3, TMC2130)
+      _TMC2130_INIT(Z3, planner.axis_steps_per_mm[Z_AXIS]);
+    #endif
     #if AXIS_DRIVER_TYPE(E0, TMC2130)
       _TMC2130_INIT(E0, planner.axis_steps_per_mm[E_AXIS]);
     #endif
@@ -273,6 +294,9 @@
         #endif
         #if AXIS_DRIVER_TYPE(Z2, TMC2130)
           stepperZ2.sgt(Z_HOMING_SENSITIVITY);
+        #endif
+        #if ENABLED(Z3_IS_TMC2130)
+          stepperZ3.sgt(Z_HOMING_SENSITIVITY);
         #endif
       #endif
     #endif
@@ -337,6 +361,13 @@
       _TMC2208_DEFINE_SOFTWARE(Z2);
     #endif
   #endif
+  #if AXIS_DRIVER_TYPE(Z3, TMC2208)
+    #ifdef Z3_HARDWARE_SERIAL
+      _TMC2208_DEFINE_HARDWARE(Z3);
+    #else
+      _TMC2208_DEFINE_SOFTWARE(Z3);
+    #endif
+  #endif
   #if AXIS_DRIVER_TYPE(E0, TMC2208)
     #ifdef E0_HARDWARE_SERIAL
       _TMC2208_DEFINE_HARDWARE(E0);
@@ -370,6 +401,13 @@
       _TMC2208_DEFINE_HARDWARE(E4);
     #else
       _TMC2208_DEFINE_SOFTWARE(E4);
+    #endif
+  #endif
+  #if AXIS_DRIVER_TYPE(E5, TMC2208)
+    #ifdef E5_HARDWARE_SERIAL
+      _TMC2208_DEFINE_HARDWARE(E5);
+    #else
+      _TMC2208_DEFINE_SOFTWARE(E5);
     #endif
   #endif
 
@@ -416,6 +454,13 @@
         stepperZ2.beginSerial(115200);
       #endif
     #endif
+    #if AXIS_DRIVER_TYPE(Z3, TMC2208)
+      #ifdef Z3_HARDWARE_SERIAL
+        Z3_HARDWARE_SERIAL.begin(115200);
+      #else
+        stepperZ3.beginSerial(115200);
+      #endif
+    #endif
     #if AXIS_DRIVER_TYPE(E0, TMC2208)
       #ifdef E0_HARDWARE_SERIAL
         E0_HARDWARE_SERIAL.begin(115200);
@@ -449,6 +494,13 @@
         E4_HARDWARE_SERIAL.begin(115200);
       #else
         stepperE4.beginSerial(115200);
+      #endif
+    #endif
+    #if AXIS_DRIVER_TYPE(E5, TMC2208)
+      #ifdef E5_HARDWARE_SERIAL
+        E5_HARDWARE_SERIAL.begin(115200);
+      #else
+        stepperE5.beginSerial(115200);
       #endif
     #endif
   }
@@ -510,6 +562,9 @@
     #if AXIS_DRIVER_TYPE(Z2, TMC2208)
       _TMC2208_INIT(Z2, planner.axis_steps_per_mm[Z_AXIS]);
     #endif
+    #if AXIS_DRIVER_TYPE(Z3, TMC2208)
+      _TMC2208_INIT(Z3, planner.axis_steps_per_mm[Z_AXIS]);
+    #endif
     #if AXIS_DRIVER_TYPE(E0, TMC2208)
       _TMC2208_INIT(E0, planner.axis_steps_per_mm[E_AXIS]);
     #endif
@@ -547,6 +602,9 @@ void restore_stepper_drivers() {
   #if AXIS_IS_TMC(Z2)
     stepperZ2.push();
   #endif
+  #if AXIS_IS_TMC(Z3)
+    stepperZ3.push();
+  #endif
   #if AXIS_IS_TMC(E0)
     stepperE0.push();
   #endif
@@ -561,6 +619,9 @@ void restore_stepper_drivers() {
   #endif
   #if AXIS_IS_TMC(E4)
     stepperE4.push();
+  #endif
+  #if AXIS_IS_TMC(E5)
+    stepperE5.push();
   #endif
 }
 
@@ -614,6 +675,9 @@ void reset_stepper_drivers() {
   #if AXIS_DRIVER_TYPE(Z2, L6470)
     _L6470_DEFINE(Z2);
   #endif
+  #if AXIS_DRIVER_TYPE(Z3, L6470)
+    _L6470_DEFINE(Z3);
+  #endif
   #if AXIS_DRIVER_TYPE(E0, L6470)
     _L6470_DEFINE(E0);
   #endif
@@ -628,6 +692,9 @@ void reset_stepper_drivers() {
   #endif
   #if AXIS_DRIVER_TYPE(E4, L6470)
     _L6470_DEFINE(E4);
+  #endif
+  #if AXIS_DRIVER_TYPE(E5, L6470)
+    _L6470_DEFINE(E5);
   #endif
 
   #define _L6470_INIT(A) do{ \
@@ -657,6 +724,9 @@ void reset_stepper_drivers() {
     #if AXIS_DRIVER_TYPE(Z2, L6470)
       _L6470_INIT(Z2);
     #endif
+    #if AXIS_DRIVER_TYPE(Z3, L6470)
+      _L6470_INIT(Z3);
+    #endif
     #if AXIS_DRIVER_TYPE(E0, L6470)
       _L6470_INIT(E0);
     #endif
@@ -671,6 +741,9 @@ void reset_stepper_drivers() {
     #endif
     #if AXIS_DRIVER_TYPE(E4, L6470)
       _L6470_INIT(E4);
+    #endif
+    #if AXIS_DRIVER_TYPE(E5, L6470)
+      _L6470_INIT(E5);
     #endif
   }
 
