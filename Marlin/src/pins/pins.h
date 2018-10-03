@@ -150,6 +150,10 @@
   #include "pins_TRIGORILLA_14.h"     // ATmega2560                                 env:megaatmega2560
 #elif MB(RAMPS_ENDER_4)
   #include "pins_RAMPS_ENDER_4.h"     // ATmega2560                                 env:megaatmega2560
+#elif MB(GT2560_V3)
+  #include "pins_GT2560_V3.h"         // ATmega2560                                 env:megaatmega2560
+#elif MB(FYSETC_F6_13)
+  #include "pins_FYSETC_F6_13.h"      // ATmega2560                                 env:megaatmega2560
 
 //
 // Other ATmega1280, ATmega2560
@@ -400,6 +404,8 @@
 
 #elif MB(THE_BORG)
   #include "pins_THE_BORG.h"          // STM32F7                                    env:STM32F7
+#elif MB(REMRAM_V1)
+  #include "pins_REMRAM_V1.h"         // STM32F7                                    env:STM32F7xx
 
 //
 // Espressif ESP32
