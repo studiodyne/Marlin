@@ -34,6 +34,10 @@
 
 #include "../inc/MarlinConfig.h"
 
+#if ENABLED(EXTENSIBLE_UI)
+  #include "../lcd/extensible_ui/ui_api.h"
+#endif
+
 #define FIL_RUNOUT_THRESHOLD 5
 
 #if ENABLED(BUCKET_FEATURE)
@@ -53,6 +57,10 @@ class FilamentRunoutSensor {
     FORCE_INLINE static void run() {
       if ((IS_SD_PRINTING || print_job_timer.isRunning()) && check() && !filament_ran_out) {
         filament_ran_out = true;
+
+        #if ENABLED(EXTENSIBLE_UI)
+          UI::onFilamentRunout();
+        #endif
         
         #if ENABLED(BUCKET_FEATURE)
           //If last migration tool enabled
