@@ -4476,11 +4476,11 @@ void lcd_quick_feedback(const bool clear_buttons) {
       #endif	
 						STATIC_ITEM(MSG_BUCKET_PURGE_LENGTH, false, false);
       MENU_ITEM_EDIT(float3,MSG_BUCKET_PURGE_LENGTH, &bucket_purge_length, 0, 200);
-      MENU_ITEM_EDIT(float52,MSG_BUCKET_PURGE_F, &bucket_purge_feedrate, 0, planner.max_feedrate_mm_s[E_AXIS]);
+      MENU_ITEM_EDIT(float52,MSG_BUCKET_PURGE_F, &bucket_purge_feedrate, 0, planner.settings.max_feedrate_mm_s[E_AXIS]);
       MENU_ITEM_EDIT(float3,MSG_BUCKET_RETRACT, &bucket_retract, 0, 20);
       #if DISABLED(FWRETRACT)
-        MENU_ITEM_EDIT(float3,MSG_BUCKET_RETRACT_F, &bucket_retract_feedrate, 0, planner.max_feedrate_mm_s[E_AXIS]);
-        MENU_ITEM_EDIT(float3,MSG_BUCKET_RECOVER_F, &bucket_recover_feedrate, 0, planner.max_feedrate_mm_s[E_AXIS]);
+        MENU_ITEM_EDIT(float3,MSG_BUCKET_RETRACT_F, &bucket_retract_feedrate, 0, planner.settings.max_feedrate_mm_s[E_AXIS]);
+        MENU_ITEM_EDIT(float3,MSG_BUCKET_RECOVER_F, &bucket_recover_feedrate, 0, planner.settings.max_feedrate_mm_s[E_AXIS]);
       #endif
       MENU_ITEM_EDIT(int3,MSG_BUCKET_FAN_DWELL, &bucket_fan_dwell, 0, 20);
       END_MENU();
