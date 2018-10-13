@@ -256,7 +256,7 @@
 
   //TEMP : Ensure_safe_temperature	
   LCD_MESSAGEPGM(MSG_FILAMENT_CHANGE_HEATING_1);    
-  while (thermalManager.wait_for_heating(active_extruder)) idle();
+  while (thermalManager.wait_for_hotend(active_extruder)) idle();
   LCD_MESSAGEPGM(" "); 
 
   // LOADING NEW EXTRUDER
