@@ -110,7 +110,7 @@
    #if DISABLED(FWRETRACT)
      bucket_retract_feedrate
    #else
-     fwretract.retract_feedrate_mm_s
+     fwretract.settings.retract_feedrate_mm_s
    #endif
    );
    return;
@@ -120,7 +120,7 @@
    #if DISABLED(FWRETRACT)
      bucket_recover_feedrate
    #else
-     fwretract.retract_recover_feedrate_mm_s
+     fwretract.settings.retract_recover_feedrate_mm_s
    #endif
    );
    return;
@@ -190,7 +190,7 @@
   
   // Here the process continue if a desired migration :M600 T<...> or automatic :M606
   float resume_position[XYZE];
-  int16_t fansp=fanSpeeds[BUCKET_FAN];
+  int16_t fansp=fan_speed[BUCKET_FAN];
   planner.synchronize();
   // Save current position
   COPY(resume_position, current_position);
@@ -225,7 +225,7 @@
   #if ENABLED(FWRETRACT)	
     if (fwretract.retracted[active_extruder]) {
 					//Unloading of old extruder
-     tool_migration_e_move( -RETRACT_LENGTH_SWAP + fwretract.retract_length, RETRACT_FEEDRATE);					
+     tool_migration_e_move( -RETRACT_LENGTH_SWAP + fwretract.settings.retract_length, RETRACT_FEEDRATE);					
     }	
     else {
 					//If negative position ' rare or impossible when FWRETRACT used '
@@ -272,7 +272,7 @@
 		// RETRACT : 10mm retract min , to ensure no oozing and easy separation after cooling
 		tool_migration_e_move(-bucket_retract, 
    #if ENABLED(FWRETRACT)
-     fwretract.retract_feedrate_mm_s
+     fwretract.settings.retract_feedrate_mm_s
    #else
      bucket_retract_feedrate
    #endif
@@ -280,8 +280,8 @@
    
 		// BLOWING FULL POWER : To cold the filament in the bucket 
   #if (BUCKET_FAN_SPEED >0 && BUCKET_FAN < FAN_COUNT)
-    fansp=fanSpeeds[BUCKET_FAN];
-    fanSpeeds[BUCKET_FAN]=BUCKET_FAN_SPEED ;
+    fansp=fan_speed[BUCKET_FAN];
+    fan_speed[BUCKET_FAN]=BUCKET_FAN_SPEED ;
   #endif
 		
 		// PAUSE : Time of filament cooling
@@ -289,7 +289,7 @@
 		
 		// STOP BLOWING : Resume old fanspeed
 		#if (BUCKET_FAN_SPEED >0 && BUCKET_FAN < FAN_COUNT)
-    fanSpeeds[BUCKET_FAN]=fansp;
+    fan_speed[BUCKET_FAN]=fansp;
   #endif	  
 		
   // BACK TO PRINT : Move XY to starting position, then Z
@@ -305,7 +305,7 @@
 		// RESUME FWRETRACT STATUSES : If FWretracted before goto pause 
   #if ENABLED(FWRETRACT)    
     if (fwretract.retracted[active_extruder]) {							
-     tool_migration_e_move( - fwretract.retract_length , fwretract.retract_feedrate_mm_s); 
+     tool_migration_e_move( - fwretract.settings.retract_length , fwretract.settings.retract_feedrate_mm_s); 
     }
   #endif    
 
@@ -321,7 +321,7 @@
 		// RECOVER : Recover the long retract inside the bucket
 		tool_migration_e_move(bucket_retract, 
    #if ENABLED(FWRETRACT)
-     fwretract.retract_feedrate_mm_s
+     fwretract.settings.retract_feedrate_mm_s
    #else
      bucket_retract_feedrate
    #endif
