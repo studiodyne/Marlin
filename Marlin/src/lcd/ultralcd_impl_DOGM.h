@@ -269,6 +269,7 @@ static void lcd_setFont(const char font_nr) {
   void lcd_bootscreen() {
     #if ENABLED(SHOW_CUSTOM_BOOTSCREEN)
       lcd_custom_bootscreen();
+      return;
     #endif
 
     constexpr uint8_t offy =

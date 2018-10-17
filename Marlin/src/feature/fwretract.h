@@ -28,7 +28,12 @@
 #include "../inc/MarlinConfigPre.h"
 
 class FWRetract {
-private:
+  #if ENABLED(BUCKET_FEATURE) 
+    public:
+  #else
+    private:			
+  #endif
+		
   #if EXTRUDERS > 1
     static bool retracted_swap[EXTRUDERS];         // Which extruders are swap-retracted
   #endif
