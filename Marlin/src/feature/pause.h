@@ -32,8 +32,17 @@ typedef struct {
 
 #include "../inc/MarlinConfigPre.h"
 
-#if ENABLED(ADVANCED_PAUSE_FEATURE)
+#if ENABLED(BUCKET_FEATURE)
+  extern int tool_migration_last_target; // Define if tool migration enabled and the last extruder to reach
+  extern float bucket_purge_length , bucket_purge_feedrate , bucket_retract ;
+  #if DISABLED(FWRETRACT)
+    extern float bucket_retract_feedrate
+               , bucket_recover_feedrate;
+  #endif
+  extern int bucket_fan_dwell;
+#endif
 
+#if ENABLED(ADVANCED_PAUSE_FEATURE)
 #include "../libs/nozzle.h"
 
 enum AdvancedPauseMode : char {

@@ -594,6 +594,36 @@ float soft_endstop_min[XYZ] = { X_MIN_BED, Y_MIN_BED, Z_MIN_POS },
     SERIAL_EOL();
     //*/
 
+    #if HAS_FEEDRATE_SCALING
+      // SCARA needs to scale the feed rate from mm/s to degrees/s
+      // i.e., Complete the angular vector in the given time.
+      const float segment_length = cartesian_mm * inv_segments,
+                  inv_segment_length = 1.0f / segment_length, // 1/mm/segs
+                  inverse_secs = inv_segment_length * _feedrate_mm_s;
+
+      float oldA = planner.position_float[A_AXIS],
+            oldB = planner.position_float[B_AXIS]
+            #if ENABLED(DELTA_FEEDRATE_SCALING)
+              , oldC = planner.position_float[C_AXIS]
+            #endif
+            ;
+
+      /*
+      SERIAL_ECHOPGM("Scaled kinematic move: ");
+      SERIAL_ECHOPAIR(" segment_length (inv)=", segment_length);
+      SERIAL_ECHOPAIR(" (", inv_segment_length);
+      SERIAL_ECHOPAIR(") _feedrate_mm_s=", _feedrate_mm_s);
+      SERIAL_ECHOPAIR(" inverse_secs=", inverse_secs);
+      SERIAL_ECHOPAIR(" oldA=", oldA);
+      SERIAL_ECHOPAIR(" oldB=", oldB);
+      #if ENABLED(DELTA_FEEDRATE_SCALING)
+        SERIAL_ECHOPAIR(" oldC=", oldC);
+      #endif
+      SERIAL_EOL();
+      safe_delay(5);
+      //*/
+    #endif
+
     // Get the current position as starting point
     float raw[XYZE];
     COPY(raw, current_position);

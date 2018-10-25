@@ -35,10 +35,15 @@
 #if ENABLED(EXTENSIBLE_UI)
   #include "../lcd/extensible_ui/ui_api.h"
 #endif
-
+#if ENABLED(BUCKET_FEATURE)
+  #include "../feature/pause.h"
+#endif
 //#define FILAMENT_RUNOUT_SENSOR_DEBUG
 
+
 class FilamentSensorBase {
+class FilamentRunoutSensor {
+
   public:
     static bool enabled;
 
@@ -58,6 +63,7 @@ class TFilamentSensor : public FilamentSensorBase {
     static void setup() {
       sensor.setup();
     }
+
 
     inline static void reset() {
       filament_ran_out = false;
@@ -83,11 +89,18 @@ class TFilamentSensor : public FilamentSensorBase {
           #if ENABLED(EXTENSIBLE_UI)
             UI::onFilamentRunout();
           #endif
+          #if ENABLED(BUCKET_FEATURE)
+          //If last migration tool enabled
+          if (active_extruder < tool_migration_last_target ) {																						
+            enqueue_and_echo_commands_P(PSTR("M606"));											
+            return;
+          }
+          #endif
           enqueue_and_echo_commands_P(PSTR(FILAMENT_RUNOUT_SCRIPT));
           planner.synchronize();
         }
-      }
-    }
+
+     }
 };
 
 /*************************** FILAMENT PRESENCE SENSORS ***************************/
