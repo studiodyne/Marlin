@@ -25,20 +25,30 @@
 #include "../core/types.h"
 
 #if EXTRUDERS > 1
-
   typedef struct {
     #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
       float swap_length, extra_prime;
-      int16_t prime_speed, retract_speed;
+      int16_t prime_speed, retract_speed, unretract_speed,fan ,fan_speed,fan_time;
     #endif
     #if ENABLED(TOOLCHANGE_PARK)
+      bool enable_park;
       xy_pos_t change_point;
     #endif
     float z_raise;
+
+    #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
+      int16_t migration_ending, migration_target;
+      bool migration_auto;
+    #endif
+
   } toolchange_settings_t;
 
   extern toolchange_settings_t toolchange_settings;
+  extern void tool_change_prime();
 
+  #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
+    extern void extruder_migration();
+  #endif
 #endif
 
 #if DO_SWITCH_EXTRUDER
