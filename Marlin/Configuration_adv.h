@@ -1858,8 +1858,7 @@
     // By using TOOLCHANGE_FIL_SWAP_PRIME_SPEED for all lengths
     #define TOOLCHANGE_FIL_INIT_BEFORE_SWAP
 
-    // Prime the first called command T[...]
-    // To solve priming of the first extruder if no toolchange/swap)
+    // Prime the first called command T[...] even is the same or no toolchange/swap)
     // Enable it (M217 V[0/1]) before printing, to avoid unwanted priming on host connect
     #define TOOLCHANGE_FIL_PRIME_FIRST_USED
 
