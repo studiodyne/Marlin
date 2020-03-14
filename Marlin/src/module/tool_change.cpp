@@ -37,6 +37,11 @@
   toolchange_settings_t toolchange_settings;  // Initialized by settings.load()
 #endif
 
+#if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
+  int16_t migration_ending, migration_target;
+  bool migration_auto;
+#endif
+
 #if ENABLED(SINGLENOZZLE)
   uint16_t singlenozzle_temp[EXTRUDERS];
   #if FAN_COUNT > 0
@@ -912,7 +917,9 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
     //First tool priming
     #if ENABLED(TOOLCHANGE_FIL_PRIME_FIRST_USED) && ENABLED(TOOLCHANGE_FILAMENT_SWAP)
       static bool first_tool_is_primed = false;
-      if (new_tool == old_tool  && first_tool_is_primed == false ) { // if no swap
+      if (  new_tool == old_tool
+         && first_tool_is_primed == false // if no swap
+         && toolchange_settings.enable_first_prime == true ) {
         tool_change_prime();
       }
     #endif
@@ -1219,21 +1226,21 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
     if (thermalManager.targetTooColdToExtrude(active_extruder)) return;
     int16_t migration_extruder;
     //Disable auto migration if no more extruders
-    if  (active_extruder >= toolchange_settings.migration_ending ) toolchange_settings.migration_auto = false;
-    else  toolchange_settings.migration_auto = true;//Auto migration only possible next extruder available
+    if  (active_extruder >= migration_ending ) migration_auto = false;
+    else  migration_auto = true;//Auto migration only possible next extruder available
 
     // For auto migration
-    if (    (toolchange_settings.migration_target < 0) // -1 disabled
-         && (toolchange_settings.migration_auto == true)
+    if (    (migration_target < 0) // -1 disabled
+         && (migration_auto == true)
          && (active_extruder < EXTRUDERS - 1)
-         && (active_extruder < toolchange_settings.migration_ending )
+         && (active_extruder < migration_ending )
        )
       migration_extruder = active_extruder + 1;
     // For choosen target
-    if (  (toolchange_settings.migration_target > -1)
-        &&(toolchange_settings.migration_target !=active_extruder)
+    if (  (migration_target > -1)
+        &&(migration_target !=active_extruder)
        )
-      migration_extruder = toolchange_settings.migration_target;
+      migration_extruder = migration_target;
 
     //Migration begins
     //Same temp
@@ -1265,9 +1272,9 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
    #endif
 
    if (    (active_extruder >= EXTRUDERS - 2) //No extruder available
-       || (active_extruder == toolchange_settings.migration_ending )
+       || (active_extruder == migration_ending )
       )
-     toolchange_settings.migration_auto = false;
+     migration_auto = false;
    else return;
   };
 #endif

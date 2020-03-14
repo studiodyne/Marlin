@@ -135,11 +135,11 @@ void menu_advanced_settings();
     START_MENU();
     BACK_ITEM(MSG_BACK);
     //Show ON/OFF
-    PGM_P const migration_on_off = toolchange_settings.migration_ending? GET_TEXT(MSG_TOOL_MIGRATION_ON): GET_TEXT(MSG_TOOL_MIGRATION_OFF);
+    PGM_P const migration_on_off = migration_ending? GET_TEXT(MSG_TOOL_MIGRATION_ON): GET_TEXT(MSG_TOOL_MIGRATION_OFF);
     STATIC_ITEM_P(migration_on_off);
     //Manual Migration
     PGM_P const  migration_stop =  GET_TEXT(MSG_TOOL_MIGRATION_END);
-        EDIT_ITEM_P(int3,migration_stop, &toolchange_settings.migration_ending, 0, EXTRUDERS-1);
+        EDIT_ITEM_P(int3,migration_stop, &migration_ending, 0, EXTRUDERS-1);
     if (active_extruder !=0)
      GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP0, PSTR("M217 T0"));
     if (active_extruder !=1)

@@ -131,7 +131,7 @@ void event_filament_runout() {
 
   if (run_runout_script){
    #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
-      if (toolchange_settings.migration_auto) extruder_migration();
+      if (migration_auto) extruder_migration();
       else queue.inject_P(PSTR(FILAMENT_RUNOUT_SCRIPT));
    #else
      queue.inject_P(PSTR(FILAMENT_RUNOUT_SCRIPT));

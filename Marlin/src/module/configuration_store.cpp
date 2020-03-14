@@ -2404,20 +2404,20 @@ void MarlinSettings::reset() {
       toolchange_settings.fan_time = TOOLCHANGE_FIL_SWAP_FAN_TIME;
     #endif
 
+    #if ENABLED(TOOLCHANGE_FIL_PRIME_FIRST_USED)
+      toolchange_settings.enable_first_prime = true;
+    #endif
+
     #if ENABLED(TOOLCHANGE_PARK)
       constexpr xyz_pos_t tpxy = TOOLCHANGE_PARK_XY;
       toolchange_settings.enable_park = true;
       toolchange_settings.change_point = tpxy;
     #endif
-
-      toolchange_settings.z_raise = TOOLCHANGE_ZRAISE;
-
     #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
-        toolchange_settings.migration_ending
-      = toolchange_settings.migration_target
-      = toolchange_settings.migration_auto = 0;
+      migration_ending = 0 ;
+      migration_target = -1 ;//disable
+      migration_auto = 0 ;
     #endif
-
   #endif
 
   #if ENABLED(BACKLASH_GCODE)

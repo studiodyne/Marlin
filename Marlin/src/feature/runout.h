@@ -36,6 +36,9 @@
 #if ENABLED(EXTENSIBLE_UI)
   #include "../lcd/extensible_ui/ui_api.h"
 #endif
+#if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
+#include "../module/tool_change.h"
+#endif
 
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   #include "pause.h"

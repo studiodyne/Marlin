@@ -43,11 +43,16 @@ void M217_report(const bool eeprom=false) {
     SERIAL_ECHOPAIR_P(SP_P_STR, LINEAR_UNIT(toolchange_settings.prime_speed));
     SERIAL_ECHOPAIR(" R", LINEAR_UNIT(toolchange_settings.retract_speed));
     SERIAL_ECHOPAIR(" UR", LINEAR_UNIT(toolchange_settings.unretract_speed));
-    SERIAL_ECHOPAIR(" FANS", LINEAR_UNIT(toolchange_settings.fan_speed));
+    SERIAL_ECHOPAIR(" FanS", LINEAR_UNIT(toolchange_settings.fan_speed));
     SERIAL_ECHOPAIR(" FanT", LINEAR_UNIT(toolchange_settings.fan_time));
+
+    #if ENABLED(TOOLCHANGE_FIL_PRIME_FIRST_USED)
+     SERIAL_ECHOPAIR(" AutoP", LINEAR_UNIT(toolchange_settings.enable_first_prime));
+    #endif
+
     #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
-      SERIAL_ECHOPAIR(" AutoMig", LINEAR_UNIT(toolchange_settings.migration_auto));
-      SERIAL_ECHOPAIR(" MigL", LINEAR_UNIT(toolchange_settings.migration_ending));
+      SERIAL_ECHOPAIR(" AutoM", LINEAR_UNIT(migration_auto));
+      SERIAL_ECHOPAIR(" MigL", LINEAR_UNIT(migration_ending));
     #endif
 
     #if ENABLED(TOOLCHANGE_PARK)
@@ -74,7 +79,8 @@ void M217_report(const bool eeprom=false) {
  *  P[linear/m] Prime speed
  *  R[linear/m] Retract speed
  *  U[linear/m] UnRetract speed
- *  W[linear]   Enable park & Z Raise
+ *  V[linear]   0/1 Enable auto prime first extruder used
+ *  W[linear]   0/1 Enable park & Z Raise
  *  X[linear]   Park X (Requires TOOLCHANGE_PARK)
  *  Y[linear]   Park Y (Requires TOOLCHANGE_PARK)
  *  Z[linear]   Z Raise
@@ -123,6 +129,10 @@ void GcodeSuite::M217() {
     #endif
   #endif
 
+  #if ENABLED(TOOLCHANGE_FIL_PRIME_FIRST_USED)
+    if (parser.seenval('V')) { toolchange_settings.enable_first_prime = parser.value_linear_units(); }
+  #endif
+
   #if ENABLED(TOOLCHANGE_PARK)
     #undef XY_PARAM
     #define XY_PARAM "XY"
@@ -134,19 +144,19 @@ void GcodeSuite::M217() {
   if (parser.seenval('Z')) { toolchange_settings.z_raise = parser.value_linear_units(); }
 
   #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
-    toolchange_settings.migration_target = -1;// init = disable = negative
+    migration_target = -1;// init = disable = negative
 
     if (parser.seenval('L')) { //ending
      if(   (parser.value_linear_units() > 0 ) && (parser.value_linear_units() < EXTRUDERS )){
-       toolchange_settings.migration_ending = parser.value_linear_units();
-       if  (active_extruder >= toolchange_settings.migration_ending ) toolchange_settings.migration_auto = false;
-       else  toolchange_settings.migration_auto = true;     }
+       migration_ending = parser.value_linear_units();
+       if  (active_extruder >= migration_ending ) migration_auto = false;
+       else  migration_auto = true;     }
      else return;
     }
 
     if (parser.seenval('N')) { //auto on/off
       if((parser.value_linear_units() >= 0 ) && (parser.value_linear_units() <= 1))
-        toolchange_settings.migration_auto = parser.value_linear_units();
+        migration_auto = parser.value_linear_units();
       else return;
     }
 
@@ -155,7 +165,7 @@ void GcodeSuite::M217() {
          && (parser.value_linear_units() < EXTRUDERS )
          && (parser.value_linear_units() != active_extruder)
         ){
-        toolchange_settings.migration_target = parser.value_linear_units();
+        migration_target = parser.value_linear_units();
         extruder_migration();
         return ;
       }

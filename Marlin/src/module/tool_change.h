@@ -31,22 +31,21 @@
       int16_t prime_speed, retract_speed, unretract_speed,fan ,fan_speed,fan_time;
     #endif
     #if ENABLED(TOOLCHANGE_PARK)
-      bool enable_park;
+      bool enable_park, enable_first_prime;
       xy_pos_t change_point;
     #endif
     float z_raise;
 
-    #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
-      int16_t migration_ending, migration_target;
-      bool migration_auto;
-    #endif
-
   } toolchange_settings_t;
-
   extern toolchange_settings_t toolchange_settings;
-  extern void tool_change_prime();
+
+  #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
+    extern void tool_change_prime();
+  #endif
 
   #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
+    extern int16_t migration_ending, migration_target;
+    extern bool migration_auto;
     extern void extruder_migration();
   #endif
 #endif
