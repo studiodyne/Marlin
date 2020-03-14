@@ -1825,6 +1825,8 @@
   #define TOOLCHANGE_PARK
   #if ENABLED(TOOLCHANGE_PARK)
     #define TOOLCHANGE_PARK_XY { X_MAX_POS, Y_MAX_POS/2 } //-1 for disable axis
+    #define TOOLCHANGE_PARK_X_ONLY // X axis only move
+    //#define TOOLCHANGE_PARK_Y_ONLY  // Y axis only move
     #define TOOLCHANGE_PARK_XY_FEEDRATE 200*60  // (mm/m)
   #endif
   // Z raise distance for tool-change, as needed for some extruders
@@ -1854,13 +1856,13 @@
     #define TOOLCHANGE_FIL_SWAP_FAN_SPEED          255  // 0 - 255
     #define TOOLCHANGE_FIL_SWAP_FAN_TIME            10  // s
 
-    // Swap an extruder not initialised can break filament (Because not retracted before)
-    // By using TOOLCHANGE_FIL_SWAP_PRIME_SPEED for all lengths
+    // Swap an extruder not initialised (Can break filament because not retracted before)
+    // By using TOOLCHANGE_FIL_SWAP_PRIME_SPEED for all lengths(recover and prime)
     #define TOOLCHANGE_FIL_INIT_BEFORE_SWAP
 
     // Prime the first called command T[...] even is the same or no toolchange/swap)
     // Enable it (M217 V[0/1]) before printing, to avoid unwanted priming on host connect
-    #define TOOLCHANGE_FIL_PRIME_FIRST_USED
+    #define TOOLCHANGE_FIL_PRIME_FIRST_USED //false by default
 
     /**
      * Tool change migration Feature

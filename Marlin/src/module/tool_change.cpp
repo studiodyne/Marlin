@@ -782,14 +782,10 @@ inline void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_a
  */
 #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
   void tool_change_prime(){
-    if(all_axes_homed()
-       && !thermalManager.targetTooColdToExtrude(active_extruder)
-       && toolchange_settings.extra_prime > 0
-    ){
-     if (toolchange_settings.enable_park) {
-      #if ENABLED(TOOLCHANGE_PARK)
-        destination = current_position;
-      #endif
+    if(!thermalManager.targetTooColdToExtrude(active_extruder) && toolchange_settings.extra_prime > 0 ){
+
+     if (toolchange_settings.enable_park && all_axes_homed() ) {
+      destination = current_position;
       // Z raise
       #if DISABLED(SWITCHING_NOZZLE)
         // Do a small lift to avoid the workpiece in the move back (below)
@@ -803,10 +799,17 @@ inline void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_a
       //Park
       #if ENABLED(TOOLCHANGE_PARK)
         current_position = toolchange_settings.change_point;
+        #if ENABLED(TOOLCHANGE_PARK_X_ONLY)
+          current_position.y = destination.y;
+        #endif
+        #if ENABLED(TOOLCHANGE_PARK_Y_ONLY)
+          current_position.x = destination.x;
+        #endif
         planner.buffer_line(current_position,MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), active_extruder);
         planner.synchronize();
       #endif
       }//enable.park
+      
       //Prime
       #if ENABLED(ADVANCED_PAUSE_FEATURE)
         do_pause_e_move( toolchange_settings.extra_prime, MMM_TO_MMS(toolchange_settings.prime_speed));
@@ -1008,6 +1011,12 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
           #if ENABLED(TOOLCHANGE_PARK)
             current_position = toolchange_settings.change_point;
+            #if ENABLED(TOOLCHANGE_PARK_X_ONLY)
+              current_position.y = destination.y;
+            #endif
+            #if ENABLED(TOOLCHANGE_PARK_Y_ONLY)
+              current_position.x = destination.x;
+            #endif
             planner.buffer_line(current_position,MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), old_tool);
           #endif
           planner.synchronize();
