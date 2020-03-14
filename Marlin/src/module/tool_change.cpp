@@ -930,6 +930,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
     #endif
 
     if (new_tool != old_tool) {
+      destination = current_position;
 
       // Z raise before retractation
       #if ENABLED(TOOLCHANGE_ZRAISE_BEFORE_RETRACT)
@@ -993,8 +994,6 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
           update_software_endstops(Z_AXIS _EXT_ARGS);
         #endif
       #endif
-
-      destination = current_position;
 
       // Toolchange park
       #if DISABLED(SWITCHING_NOZZLE)
@@ -1235,7 +1234,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
   void extruder_migration() {
     if (thermalManager.targetTooColdToExtrude(active_extruder)) return;
-    int16_t migration_extruder;
+    int16_t migration_extruder=0;
     //Disable auto migration if no more extruders
     if  (active_extruder >= migration_ending ) migration_auto = false;
     else  migration_auto = true;//Auto migration only possible next extruder available
