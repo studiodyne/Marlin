@@ -921,6 +921,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
          && first_tool_is_primed == false // if no swap
          && toolchange_settings.enable_first_prime == true ) {
         tool_change_prime();
+        first_tool_is_primed = true;
       }
     #endif
 

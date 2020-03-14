@@ -175,6 +175,7 @@ void GcodeSuite::M217() {
     if (parser.seen('Q')) { extruder_migration(); return; }
 
   #endif
-  if (!parser.seen(SPR_PARAM XY_PARAM "Z")) M217_report();
+  //if (!parser.seen(SPR_PARAM XY_PARAM "Z"))
+  M217_report();
   }
 #endif // EXTRUDERS > 1
