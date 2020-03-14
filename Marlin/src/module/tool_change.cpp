@@ -1256,8 +1256,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
     //Now we have calculate migration_extruder
     if ( migration_extruder == active_extruder)  return;
-        
-      SERIAL_ECHOLNPAIR("on est la", int(active_extruder));
+
     //Migration begins
     //Same temp
    thermalManager.setTargetHotend(thermalManager.degTargetHotend(active_extruder), migration_extruder);
