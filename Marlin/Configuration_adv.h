@@ -1847,17 +1847,20 @@
 
     // Single Nozzle utility : Purge length/feedrate (Prevent color mixing/dirty priming)
     // Can be changed in real time to adjust the amount of filament if needed
-    #define TOOLCHANGE_FIL_INIT_PRIME              100  // (mm) (Prime active extruder, without retractation )
-    #define TOOLCHANGE_FIL_EXTRA_PRIME             100  // (mm) (ex:50~150mm to purge a Volcano and have no mixed color extrusion)
-    #define TOOLCHANGE_FIL_SWAP_PRIME_SPEED    4.6*60  // (mm/m)(ex:Max feedrate for 0.4 nozzle/volcano/50w heater)
+    #define TOOLCHANGE_FIL_EXTRA_PRIME             100  // (mm) (Ex:50~150mm to purge a Volcano for no mixed color extrusion)
+    #define TOOLCHANGE_FIL_SWAP_PRIME_SPEED     4.6*60  // (mm/m)(Ex:Max feedrate for 0.4 nozzle/volcano/50w heater)
     // Cooling after priming (To avoid stringing and a clean nozzle on resume)
     #define TOOLCHANGE_FIL_SWAP_FAN                  0  // Fan count (-1 for disabling blowing)
-    #define TOOLCHANGE_FIL_SWAP_FAN_SPEED          255  // 0 - 255 (ex:Max speed for gain of time)
-    #define TOOLCHANGE_FIL_SWAP_FAN_TIME            10  // s (can be changed in real time to ensure minimum timing)
+    #define TOOLCHANGE_FIL_SWAP_FAN_SPEED          255  // 0 - 255
+    #define TOOLCHANGE_FIL_SWAP_FAN_TIME            10  // s
 
-    // The firmware can break filament if it recovers an extruder not initialised (Not retracted before)
-    // The first extrusion will only use prime_speed
-    #define TOOLCHANGE_FIL_SWAP_INIT_FIRST_TIME
+    // Swap an extruder not initialised can break filament (Because not retracted before)
+    // Only use TOOLCHANGE_FIL_SWAP_PRIME_SPEED
+    #define TOOLCHANGE_FIL_INIT_BEFORE_SWAP
+
+    // Prime the first called command T[...]
+    // To solve priming of the first extruder if no toolchange/swap)
+    #define TOOLCHANGE_FIL_PRIME_FIRST_USED
 
     /**
      * Tool change migration Feature
