@@ -775,10 +775,12 @@ inline void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_a
 /**
  * Prime active tool using TOOLCHANGE_FILAMENT_SWAP settings
  */
-void tool_change_prime(){
-
-  #if ENABLED(TOOLCHANGE_FILAMENT_SWAP) && TOOLCHANGE_FIL_EXTRA_PRIME > 0
-    if(all_axes_homed() && !thermalManager.targetTooColdToExtrude(active_extruder)){
+#if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
+  void tool_change_prime(){
+    if(all_axes_homed()
+       && !thermalManager.targetTooColdToExtrude(active_extruder)
+       && toolchange_settings.extra_prime > 0
+    ){
      if (toolchange_settings.enable_park) {
       #if ENABLED(TOOLCHANGE_PARK)
         destination = current_position;
@@ -802,9 +804,9 @@ void tool_change_prime(){
       }//enable.park
       //Prime
       #if ENABLED(ADVANCED_PAUSE_FEATURE)
-        do_pause_e_move( (TOOLCHANGE_FIL_EXTRA_PRIME), MMM_TO_MMS(toolchange_settings.prime_speed));
+        do_pause_e_move( toolchange_settings.extra_prime, MMM_TO_MMS(toolchange_settings.prime_speed));
       #endif
-      current_position.e += (TOOLCHANGE_FIL_EXTRA_PRIME) / planner.e_factor[active_extruder];
+      current_position.e += toolchange_settings.extra_prime / planner.e_factor[active_extruder];
       planner.buffer_line(current_position, MMM_TO_MMS(toolchange_settings.prime_speed), active_extruder);
       planner.synchronize();
       planner.set_e_position_mm(destination.e = current_position.e = 0.0 ); //Extruder is primed and set to 0
@@ -829,8 +831,8 @@ void tool_change_prime(){
         #endif
       #endif
     }
-  #endif
-};
+  };
+#endif
 
 /**
  * Perform a tool-change, which may result in moving the
@@ -907,6 +909,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       TEMPORARY_BED_LEVELING_STATE(false);
     #endif
 
+    //First tool priming
     #if ENABLED(TOOLCHANGE_FIL_PRIME_FIRST_USED) && ENABLED(TOOLCHANGE_FILAMENT_SWAP)
       static bool first_tool_is_primed = false;
       if (new_tool == old_tool  && first_tool_is_primed == false ) {
