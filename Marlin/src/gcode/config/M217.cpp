@@ -151,13 +151,10 @@ void GcodeSuite::M217() {
        migration_ending = parser.value_linear_units();
        if  (active_extruder < migration_ending ) migration_auto = true;
        else  migration_auto = false;     }
-     else return;
-
 
     if (parser.seenval('N'),0) { //auto on/off
       if((parser.value_linear_units() >= 0 ) && (parser.value_linear_units() <= 1))
         migration_auto = parser.value_linear_units();
-      else return;
     }
 
     if (parser.seenval('T'), -1) { //specific
@@ -169,7 +166,6 @@ void GcodeSuite::M217() {
         extruder_migration();
         return ;
       }
-      else return;
     }
 
     if (parser.seen('Q')) { extruder_migration(); return; }
