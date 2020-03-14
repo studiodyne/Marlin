@@ -1855,7 +1855,7 @@
     #define TOOLCHANGE_FIL_SWAP_FAN_TIME            10  // s
 
     // Swap an extruder not initialised can break filament (Because not retracted before)
-    // Only use TOOLCHANGE_FIL_SWAP_PRIME_SPEED
+    // By using TOOLCHANGE_FIL_SWAP_PRIME_SPEED for all lengths
     #define TOOLCHANGE_FIL_INIT_BEFORE_SWAP
 
     // Prime the first called command T[...]
