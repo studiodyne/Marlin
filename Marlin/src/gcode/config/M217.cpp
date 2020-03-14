@@ -146,18 +146,19 @@ void GcodeSuite::M217() {
   #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
     migration_target = -1;// init = disable = negative
 
-    if (parser.seenval('L'),0) { //ending
+    if (parser.seenval('L')) { //ending
      if(   (parser.value_linear_units() >= 0 ) && (parser.value_linear_units() < EXTRUDERS ))
        migration_ending = parser.value_linear_units();
        if  (active_extruder < migration_ending ) migration_auto = true;
-       else  migration_auto = false;     }
+       else  migration_auto = false;
+     }
 
-    if (parser.seenval('N'),0) { //auto on/off
-      if((parser.value_linear_units() >= 0 ) && (parser.value_linear_units() <= 1))
-        migration_auto = parser.value_linear_units();
+    if (parser.seenval('N')) { //auto on/off
+     if((parser.value_linear_units() >= 0 ) && (parser.value_linear_units() <= 1))
+      migration_auto = parser.value_linear_units();
     }
 
-    if (parser.seenval('T'), -1) { //specific
+    if (parser.seenval('T')) { //specific
       if(   (parser.value_linear_units() >= 0 )
          && (parser.value_linear_units() < EXTRUDERS )
          && (parser.value_linear_units() != active_extruder)
@@ -166,6 +167,7 @@ void GcodeSuite::M217() {
         extruder_migration();
         return ;
       }
+      else migration_target = -1;//disable
     }
 
     if (parser.seen('Q')) { extruder_migration(); return; }

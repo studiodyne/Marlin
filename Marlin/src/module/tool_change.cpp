@@ -1233,8 +1233,9 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
 #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
   void extruder_migration() {
-    if (thermalManager.targetTooColdToExtrude(active_extruder)) return;
+    if (thermalManager.targetTooColdToExtrude(active_extruder) ) return;
     int16_t migration_extruder=0;
+
     //Disable auto migration if no more extruders
     if  (active_extruder >= migration_ending ) migration_auto = false;
     else  migration_auto = true;//Auto migration only possible next extruder available
@@ -1246,12 +1247,17 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
          && (active_extruder < migration_ending )
        )
       migration_extruder = active_extruder + 1;
+
     // For choosen target
     if (  (migration_target > -1)
-        &&(migration_target !=active_extruder)
+        &&( migration_target != active_extruder)
        )
       migration_extruder = migration_target;
 
+    //Now we have calculate migration_extruder
+    if ( migration_extruder == active_extruder)  return;
+        
+      SERIAL_ECHOLNPAIR("on est la", int(active_extruder));
     //Migration begins
     //Same temp
    thermalManager.setTargetHotend(thermalManager.degTargetHotend(active_extruder), migration_extruder);
