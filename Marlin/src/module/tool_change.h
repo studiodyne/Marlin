@@ -31,7 +31,7 @@
       int16_t prime_speed, retract_speed, unretract_speed,fan ,fan_speed,fan_time;
     #endif
     #if ENABLED(TOOLCHANGE_PARK)
-      bool enable_park, enable_first_prime;
+      bool enable_park;
       xy_pos_t change_point;
     #endif
     float z_raise;
@@ -41,6 +41,10 @@
 
   #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
     extern void tool_change_prime();
+  #endif
+
+  #if ENABLED(TOOLCHANGE_FIL_PRIME_FIRST_USED)
+    extern bool enable_first_prime;
   #endif
 
   #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)

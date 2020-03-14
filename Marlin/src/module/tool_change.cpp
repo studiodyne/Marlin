@@ -39,7 +39,7 @@
 
 #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
   int16_t migration_ending, migration_target;
-  bool migration_auto;
+  bool migration_auto, enable_first_prime;
 #endif
 
 #if ENABLED(SINGLENOZZLE)
@@ -809,7 +809,7 @@ inline void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_a
         planner.synchronize();
       #endif
       }//enable.park
-      
+
       //Prime
       #if ENABLED(ADVANCED_PAUSE_FEATURE)
         do_pause_e_move( toolchange_settings.extra_prime, MMM_TO_MMS(toolchange_settings.prime_speed));
@@ -920,12 +920,12 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
     //First tool priming
     #if ENABLED(TOOLCHANGE_FIL_PRIME_FIRST_USED) && ENABLED(TOOLCHANGE_FILAMENT_SWAP)
       static bool first_tool_is_primed = false;
-
       if (  new_tool == old_tool
          && first_tool_is_primed == false // if no swap
-         && toolchange_settings.enable_first_prime == true ) {
+         && enable_first_prime == true ) {
         tool_change_prime();
         first_tool_is_primed = true;
+        enable_first_prime = false;
       }
     #endif
 

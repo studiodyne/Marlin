@@ -47,7 +47,7 @@ void M217_report(const bool eeprom=false) {
     SERIAL_ECHOPAIR(" FanT", LINEAR_UNIT(toolchange_settings.fan_time));
 
     #if ENABLED(TOOLCHANGE_FIL_PRIME_FIRST_USED)
-     SERIAL_ECHOPAIR(" AutoP", LINEAR_UNIT(toolchange_settings.enable_first_prime));
+     SERIAL_ECHOPAIR(" AutoP", LINEAR_UNIT(enable_first_prime));
     #endif
 
     #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
@@ -130,7 +130,7 @@ void GcodeSuite::M217() {
   #endif
 
   #if ENABLED(TOOLCHANGE_FIL_PRIME_FIRST_USED)
-    if (parser.seenval('V')) { toolchange_settings.enable_first_prime = parser.value_linear_units(); }
+    if (parser.seenval('V')) { enable_first_prime = parser.value_linear_units(); }
   #endif
 
   #if ENABLED(TOOLCHANGE_PARK)

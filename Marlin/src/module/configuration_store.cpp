@@ -2405,7 +2405,7 @@ void MarlinSettings::reset() {
     #endif
 
     #if ENABLED(TOOLCHANGE_FIL_PRIME_FIRST_USED)
-      toolchange_settings.enable_first_prime = false;
+      enable_first_prime = false;
     #endif
 
     #if ENABLED(TOOLCHANGE_PARK)
