@@ -165,6 +165,7 @@ void GcodeSuite::M217() {
         ){
         migration_target = parser.value_linear_units();
         extruder_migration();
+        migration_target = -1;//disable
         return ;
       }
       else migration_target = -1;//disable

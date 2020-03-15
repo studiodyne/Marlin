@@ -1236,11 +1236,12 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
     if (thermalManager.targetTooColdToExtrude(active_extruder) ) return;
     int16_t migration_extruder=0;
 
-    //Disable auto migration if no more extruders
-    if  (active_extruder >= migration_ending ) migration_auto = false;
-    else  migration_auto = true;//Auto migration only possible next extruder available
-
-    // For auto migration
+    //No auto migration
+    if  ((active_extruder >= migration_ending) && (migration_target < 0) ){
+      migration_auto = false;
+      return;
+    }
+    // Auto migration
     if (    (migration_target < 0) // -1 disabled
          && (migration_auto == true)
          && (active_extruder < EXTRUDERS - 1)
