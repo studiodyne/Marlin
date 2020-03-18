@@ -1852,8 +1852,8 @@
     // Can be changed in real time to adjust the amount of filament if needed
     #define TOOLCHANGE_FIL_EXTRA_PRIME             100  // (mm) (Ex:50~150mm to purge a Volcano for no mixed color extrusion)
     #define TOOLCHANGE_FIL_SWAP_PRIME_SPEED     4.6*60  // (mm/m)(Ex:Max feedrate for 0.4 nozzle/volcano/50w heater)
-    #define TOOLCHANGE_FIL_RETRACT_AFTER_PRIME      10  // (mm/m)(Retract before fan to avoid stringing while cooling and ease to cut filament on back)
     // Cooling after priming (To avoid stringing and a clean nozzle on resume)
+    #define TOOLCHANGE_FIL_SWAP_FAN_RETRACT         10  // (mm/m)(Retract before fan to avoid stringing while cooling and ease to cut filament on back)
     #define TOOLCHANGE_FIL_SWAP_FAN                  0  // Fan count (-1 for disabling blowing)
     #define TOOLCHANGE_FIL_SWAP_FAN_SPEED          255  // 0 - 255
     #define TOOLCHANGE_FIL_SWAP_FAN_TIME            10  // s.
