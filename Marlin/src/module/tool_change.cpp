@@ -1260,7 +1260,9 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
     //Migration begins
     //Same temp
-   thermalManager.setTargetHotend(thermalManager.degTargetHotend(active_extruder), migration_extruder);
+   #if HOTENDS >1
+     thermalManager.setTargetHotend(thermalManager.degTargetHotend(active_extruder), migration_extruder);
+   #endif
    // Same flow
    planner.flow_percentage[migration_extruder] = planner.flow_percentage[active_extruder];
    // Same FwRetract

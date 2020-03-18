@@ -1828,6 +1828,7 @@
     #define TOOLCHANGE_PARK_X_ONLY // X axis only move
     //#define TOOLCHANGE_PARK_Y_ONLY  // Y axis only move
     #define TOOLCHANGE_PARK_XY_FEEDRATE 200*60  // (mm/m)
+    #define TOOLCHANGE_FIL_BACK_RETRACT   3  // (mm) Retract & recover on back of park (To avoid stringing while return)
   #endif
   // Z raise distance for tool-change, as needed for some extruders
   #define TOOLCHANGE_ZRAISE     2  // (mm)
@@ -1851,10 +1852,11 @@
     // Can be changed in real time to adjust the amount of filament if needed
     #define TOOLCHANGE_FIL_EXTRA_PRIME             100  // (mm) (Ex:50~150mm to purge a Volcano for no mixed color extrusion)
     #define TOOLCHANGE_FIL_SWAP_PRIME_SPEED     4.6*60  // (mm/m)(Ex:Max feedrate for 0.4 nozzle/volcano/50w heater)
+    #define TOOLCHANGE_FIL_RETRACT_AFTER_PRIME      10  // (mm/m)(Retract before fan to avoid stringing while cooling and ease to cut filament on back)
     // Cooling after priming (To avoid stringing and a clean nozzle on resume)
     #define TOOLCHANGE_FIL_SWAP_FAN                  0  // Fan count (-1 for disabling blowing)
     #define TOOLCHANGE_FIL_SWAP_FAN_SPEED          255  // 0 - 255
-    #define TOOLCHANGE_FIL_SWAP_FAN_TIME            10  // s
+    #define TOOLCHANGE_FIL_SWAP_FAN_TIME            10  // s.
 
     // Swap an extruder not initialised (Can break filament because not retracted before)
     // By using TOOLCHANGE_FIL_SWAP_PRIME_SPEED for all lengths(recover and prime)
@@ -1870,7 +1872,7 @@
      *   Tool/Spool Swapping during a print(On Runout/LCD/Gcode)
      *   Transfer all properties : Temp + Flow + Gear position + Fwretract(Retract only, no swap status)
      *   On runout/manually/Gcode
-     *   Utility to : Use another extruder to continue the printing automaticly
+     *   Utility to : Change color by one click/gcode while printing
                     : Finish old ended spool and start another automaticly
      *              : Use another extruder if current jammed
      *              Requires 2 or more extruders.
