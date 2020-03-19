@@ -54,7 +54,7 @@
 
   #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
     extern int16_t migration_ending, migration_target;
-    extern bool migration_auto;
+    extern bool migration_auto, migration_in_progress;
     extern void extruder_migration();
   #endif
 #endif

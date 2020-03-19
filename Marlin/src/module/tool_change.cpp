@@ -39,7 +39,7 @@
 
 #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
   int16_t migration_ending, migration_target;
-  bool migration_auto, enable_first_prime;
+  bool migration_auto, enable_first_prime, migration_in_progress;
 #endif
 
 #if ENABLED(TOOLCHANGE_FIL_INIT_BEFORE_SWAP)
@@ -1254,6 +1254,8 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
 #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
   void extruder_migration() {
+    migration_in_progress = true;//to avoid repeting runout script
+
     #if ENABLED(PREVENT_COLD_EXTRUSION)
       if (thermalManager.targetTooColdToExtrude(active_extruder) ) return;
     #endif
@@ -1291,7 +1293,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
     planner.flow_percentage[migration_extruder] = planner.flow_percentage[active_extruder];
     // Same FwRetract status
     #if ENABLED(FWRETRACT)
-	  fwretract.retracted[migration_extruder] = fwretract.retracted[active_extruder];
+	    fwretract.retracted[migration_extruder] = fwretract.retracted[active_extruder];
     #endif
 
     #if HOTENDS >1
@@ -1307,10 +1309,9 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         tool_change_e_move( -fwretract.settings.retract_length, fwretract.settings.retract_feedrate_mm_s);
        } ;
     #endif
+    
+    if ( (active_extruder >= EXTRUDERS - 2) || (active_extruder == migration_ending )) migration_auto = false;
 
-    if (    (active_extruder >= EXTRUDERS - 2) //No extruder available
-       || (active_extruder == migration_ending )
-       )
-      migration_auto = false;
+    migration_in_progress = false;//to avoid repeting runout script
   };
 #endif

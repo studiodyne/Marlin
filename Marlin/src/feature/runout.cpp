@@ -82,6 +82,11 @@ void event_filament_runout() {
     if (did_pause_print) return;  // Action already in progress. Purge triggered repeated runout.
   #endif
 
+  #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
+    if (migration_in_progress) return;  // Action already in progress. Purge triggered repeated runout.
+  #endif
+
+
   #if ENABLED(EXTENSIBLE_UI)
     ExtUI::onFilamentRunout(ExtUI::getActiveTool());
   #endif

@@ -2415,9 +2415,10 @@ void MarlinSettings::reset() {
       toolchange_settings.change_point = tpxy;
     #endif
     #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
-      migration_ending = 0 ;
-      migration_target = -1 ;//disable
-      migration_auto = 0 ;
+      migration_ending = 0;
+      migration_target = -1;//disable
+      migration_auto = false;
+      migration_in_progress = false;
     #endif
   #endif
 
