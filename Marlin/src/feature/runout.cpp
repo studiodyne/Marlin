@@ -87,7 +87,6 @@ void event_filament_runout() {
     if (migration_auto) {extruder_migration(); return; };
   #endif
 
-
   #if ENABLED(EXTENSIBLE_UI)
     ExtUI::onFilamentRunout(ExtUI::getActiveTool());
   #endif
