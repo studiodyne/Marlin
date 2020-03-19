@@ -37,6 +37,7 @@
     #endif
     float z_raise;
   } toolchange_settings_t;
+  
   extern toolchange_settings_t toolchange_settings;
 
   #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)

@@ -145,8 +145,6 @@ void GcodeSuite::M217() {
     if (parser.seenval('W')) { toolchange_settings.enable_park = parser.value_linear_units(); }
     if (parser.seenval('X')) { const int16_t v = parser.value_linear_units(); toolchange_settings.change_point.x = constrain(v, X_MIN_POS, X_MAX_POS); }
     if (parser.seenval('Y')) { const int16_t v = parser.value_linear_units(); toolchange_settings.change_point.y = constrain(v, Y_MIN_POS, Y_MAX_POS); }
-   /* if (parser.seenval('X')) { toolchange_settings.change_point.x = parser.value_linear_units(); }
-    if (parser.seenval('Y')) { toolchange_settings.change_point.y = parser.value_linear_units(); } */
   #endif
 
   if (parser.seenval('Z')) { toolchange_settings.z_raise = parser.value_linear_units(); }
