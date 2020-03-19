@@ -48,6 +48,10 @@
     extern bool enable_first_prime;
   #endif
 
+  #if ENABLED(TOOLCHANGE_FIL_INIT_BEFORE_SWAP)
+    extern bool toolchange_extruder_ready[EXTRUDERS];
+  #endif
+
   #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
     extern int16_t migration_ending, migration_target;
     extern bool migration_auto;
