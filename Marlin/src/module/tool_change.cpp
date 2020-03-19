@@ -1047,7 +1047,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
             planner.buffer_line(current_position,MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), old_tool);
           #endif
           planner.synchronize();
-        }
+        }//can_move_away && toolchange_settings.enable_park
       #endif
 
       #if HAS_HOTEND_OFFSET
@@ -1186,7 +1186,8 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
               do_blocking_move_to_xy(destination);
             #endif
           #endif
-        }//if (can_move_away)
+        }//can_move_away
+
         else if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPGM("Move back skipped");
 
         //Cutting recover
@@ -1197,7 +1198,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
   	     toolchange_settings.extra_resume, MMM_TO_MMS(toolchange_settings.unretract_speed));
 
          planner.synchronize();
-         planner.set_e_position_mm(destination.e = current_position.e = 0.0 ); //Extruder is primed and set to 0
+         planner.set_e_position_mm(destination.e = current_position.e = 0.0 ); //New extruder is primed and set to 0
 
          #if ENABLED(DUAL_X_CARRIAGE)
            active_extruder_parked = false;
