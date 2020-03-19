@@ -373,6 +373,7 @@ namespace Language_en {
   PROGMEM Language_Str MSG_TOOL_MIGRATION_ON               = _UxGT("Auto ON");
   PROGMEM Language_Str MSG_TOOL_MIGRATION_OFF              = _UxGT("Auto OFF");
   PROGMEM Language_Str MSG_TOOL_MIGRATION                  = _UxGT("Tool Migration");
+  PROGMEM Language_Str MSG_TOOL_MIGRATION_AUTO             = _UxGT("Migration auto");
   PROGMEM Language_Str MSG_TOOL_MIGRATION_END              = _UxGT("Final Extruder");
   PROGMEM Language_Str MSG_TOOL_MIGRATION_SWAP0            = _UxGT("Migrate to ") LCD_STR_E0;
   PROGMEM Language_Str MSG_TOOL_MIGRATION_SWAP1            = _UxGT("Migrate to ") LCD_STR_E1;

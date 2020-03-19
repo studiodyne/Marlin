@@ -137,11 +137,9 @@ void menu_advanced_settings();
       START_MENU();
       BACK_ITEM(MSG_BACK);
       //Show ON/OFF
-      PGM_P const migration_on_off = migration_auto? GET_TEXT(MSG_TOOL_MIGRATION_ON): GET_TEXT(MSG_TOOL_MIGRATION_OFF);
-
-      //Manual Migration
+      PGM_P const migration_on_off = migration_auto? GET_TEXT(MSG_TOOL_MIGRATION_ON) : GET_TEXT(MSG_TOOL_MIGRATION_OFF);
       STATIC_ITEM_P(migration_on_off);
-      EDIT_ITEM(bool,MSG_TOOL_MIGRATION, &migration_auto);
+      EDIT_ITEM(bool, MSG_TOOL_MIGRATION_AUTO, &migration_auto);
       PGM_P const  migration_stop =  GET_TEXT(MSG_TOOL_MIGRATION_END);
       EDIT_ITEM_P(int3,migration_stop, &migration_ending, 0, EXTRUDERS-1);
       if (active_extruder !=0)

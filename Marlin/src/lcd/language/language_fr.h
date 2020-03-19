@@ -337,6 +337,7 @@ namespace Language_fr {
   PROGMEM Language_Str MSG_TOOL_MIGRATION_ON               = _UxGT("Auto ON");
   PROGMEM Language_Str MSG_TOOL_MIGRATION_OFF              = _UxGT("Auto OFF");
   PROGMEM Language_Str MSG_TOOL_MIGRATION                  = _UxGT("Migration d'outil");
+  PROGMEM Language_Str MSG_TOOL_MIGRATION_AUTO             = _UxGT("Migration auto");
   PROGMEM Language_Str MSG_TOOL_MIGRATION_END              = _UxGT("Extrudeur Final");
   PROGMEM Language_Str MSG_TOOL_MIGRATION_SWAP0            = _UxGT("Migrer vers ") LCD_STR_E0;
   PROGMEM Language_Str MSG_TOOL_MIGRATION_SWAP1            = _UxGT("Migrer vers ") LCD_STR_E1;
@@ -348,7 +349,7 @@ namespace Language_fr {
   PROGMEM Language_Str MSG_TOOL_MIGRATION_SWAP7            = _UxGT("Migrer vers ") LCD_STR_E7;
   PROGMEM Language_Str MSG_NOZZLE_STANDBY                  = _UxGT("Attente buse");
   PROGMEM Language_Str MSG_FILAMENT_SWAP_LENGTH            = _UxGT("Longueur retrait");
-  PROGMEM Language_Str MSG_FILAMENT_SWAP_EXTRA             = _UxGT("Longueur Extra");  
+  PROGMEM Language_Str MSG_FILAMENT_SWAP_EXTRA             = _UxGT("Longueur Extra");
   PROGMEM Language_Str MSG_FILAMENT_PURGE_LENGTH           = _UxGT("Longueur de purge");
   PROGMEM Language_Str MSG_FILAMENTCHANGE                  = _UxGT("Changer filament");
   PROGMEM Language_Str MSG_FILAMENTCHANGE_E                = _UxGT("Changer filament *");
