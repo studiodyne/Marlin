@@ -25,6 +25,7 @@
 #include "../core/types.h"
 
 #if EXTRUDERS > 1
+
   typedef struct {
     #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
       float swap_length, extra_prime, extra_resume;
@@ -35,7 +36,6 @@
       xy_pos_t change_point;
     #endif
     float z_raise;
-
   } toolchange_settings_t;
   extern toolchange_settings_t toolchange_settings;
 
