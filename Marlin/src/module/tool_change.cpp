@@ -1276,9 +1276,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       migration_extruder = active_extruder + 1;
 
     // Specified target ok
-    if (  (migration_target > -1)
-        &&( migration_target != active_extruder)
-       )
+    if (  (migration_target > -1) &&( migration_target != active_extruder))
       migration_extruder = migration_target;
 
     //Now we have calculate migration_extruder
@@ -1309,7 +1307,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         tool_change_e_move( -fwretract.settings.retract_length, fwretract.settings.retract_feedrate_mm_s);
        } ;
     #endif
-    
+    //If no available extruder
     if ( (active_extruder >= EXTRUDERS - 2) || (active_extruder == migration_ending )) migration_auto = false;
 
     migration_in_progress = false;//to avoid repeting runout script
