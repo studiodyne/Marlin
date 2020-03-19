@@ -360,6 +360,7 @@ namespace Language_en {
   PROGMEM Language_Str MSG_CONTROL_RETRACT_RECOVER_SWAPF   = _UxGT("S UnRet V");
   PROGMEM Language_Str MSG_AUTORETRACT                     = _UxGT("AutoRetr.");
   PROGMEM Language_Str MSG_FILAMENT_SWAP_LENGTH            = _UxGT("Swap Length");
+  PROGMEM Language_Str MSG_FILAMENT_SWAP_EXTRA             = _UxGT("Swap Extra");
   PROGMEM Language_Str MSG_FILAMENT_PURGE_LENGTH           = _UxGT("Purge Length");
   PROGMEM Language_Str MSG_TOOL_CHANGE                     = _UxGT("Tool Change");
   PROGMEM Language_Str MSG_TOOL_CHANGE_ZLIFT               = _UxGT("Z Raise");

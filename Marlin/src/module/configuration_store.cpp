@@ -2396,6 +2396,7 @@ void MarlinSettings::reset() {
   #if EXTRUDERS > 1
     #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
       toolchange_settings.swap_length = TOOLCHANGE_FIL_SWAP_LENGTH;
+	  toolchange_settings.extra_resume = TOOLCHANGE_FIL_EXTRA_RESUME_LENGTH;
       toolchange_settings.retract_speed = TOOLCHANGE_FIL_SWAP_RETRACT_SPEED;
       toolchange_settings.unretract_speed = TOOLCHANGE_FIL_SWAP_UNRETRACT_SPEED;
       toolchange_settings.extra_prime = TOOLCHANGE_FIL_EXTRA_PRIME;

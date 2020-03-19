@@ -1828,11 +1828,12 @@
     #define TOOLCHANGE_PARK_X_ONLY // X axis only move
     //#define TOOLCHANGE_PARK_Y_ONLY  // Y axis only move
     #define TOOLCHANGE_PARK_XY_FEEDRATE 200*60  // (mm/m)
-    #define TOOLCHANGE_FIL_BACK_RETRACT   3  // (mm) Retract & recover on back of park (To avoid stringing while return)
+	//Retract & recover from park to resume position (To avoid stringing while travel)
+	//Fine tune by lcd/Gcode for a perfect restart extrusion
   #endif
   // Z raise distance for tool-change, as needed for some extruders
   #define TOOLCHANGE_ZRAISE     2  // (mm)
-  #define TOOLCHANGE_ZRAISE_BEFORE_RETRACT  // Z raise applied before retraction
+  #define TOOLCHANGE_ZRAISE_BEFORE_RETRACT  // Z raise applied before swap retraction(if enabled)
   //#define TOOLCHANGE_NO_RETURN   // Never return to the previous position on tool-change
   #if ENABLED(TOOLCHANGE_NO_RETURN)
     //#define EVENT_GCODE_AFTER_TOOLCHANGE "G12X"   // G-code to run after tool-change is complete
@@ -1845,6 +1846,7 @@
   #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
     // load/Unload
     #define TOOLCHANGE_FIL_SWAP_LENGTH              60  // (mm)
+    #define TOOLCHANGE_FIL_EXTRA_RESUME_LENGTH       0  // (mm)	(added to swap length for better restart, fine tune by LCD/Gcode)
     #define TOOLCHANGE_FIL_SWAP_RETRACT_SPEED    50*60  // (mm/m) (Unloading)
     #define TOOLCHANGE_FIL_SWAP_UNRETRACT_SPEED  25*60  // (mm/m) (On SINGLENOZZLE or bowden, loading must be slowed down)
 
@@ -1853,7 +1855,7 @@
     #define TOOLCHANGE_FIL_EXTRA_PRIME             100  // (mm) (Ex:50~150mm to purge a Volcano for no mixed color extrusion)
     #define TOOLCHANGE_FIL_SWAP_PRIME_SPEED     4.6*60  // (mm/m)(Ex:Max feedrate for 0.4 nozzle/volcano/50w heater)
     // Cooling after priming (To avoid stringing and a clean nozzle on resume)
-    #define TOOLCHANGE_FIL_SWAP_FAN_RETRACT         10  // (mm/m)(Retract before fan to avoid stringing while cooling and ease to cut filament on back)
+    #define TOOLCHANGE_FIL_SWAP_CUT_RETRACT         10  // (mm/m)(Retract before fan and recover after to avoid stringing while cooling and ease to cut filament on back)
     #define TOOLCHANGE_FIL_SWAP_FAN                  0  // Fan count (-1 for disabling blowing)
     #define TOOLCHANGE_FIL_SWAP_FAN_SPEED          255  // 0 - 255
     #define TOOLCHANGE_FIL_SWAP_FAN_TIME            10  // s.
