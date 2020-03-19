@@ -131,8 +131,8 @@ void event_filament_runout() {
 
   if (run_runout_script){
    #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
-      if (migration_auto && ) extruder_migration();
-      else queue.inject_P(PSTR(M217 Q));
+      if (migration_auto) extruder_migration();
+      else queue.inject_P(PSTR("M217 Q"));
    #else
      queue.inject_P(PSTR(FILAMENT_RUNOUT_SCRIPT));
   #endif
