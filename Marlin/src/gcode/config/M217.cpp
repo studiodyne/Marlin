@@ -68,6 +68,7 @@ void M217_report(const bool eeprom=false) {
     UNUSED(eeprom);
 
   #endif
+  
   SERIAL_ECHOPAIR_P(SP_Z_STR, LINEAR_UNIT(toolchange_settings.z_raise));
   SERIAL_EOL();
 }
@@ -120,7 +121,7 @@ void GcodeSuite::M217() {
         500
       #endif
     ;
-    
+
     if (parser.seen('A')) { tool_change_prime(); return; }
     if (parser.seenval('S')) { const float v = parser.value_linear_units(); toolchange_settings.swap_length = constrain(v, 0, max_extrude); }
     if (parser.seenval('B')) { const float v = parser.value_linear_units(); toolchange_settings.extra_resume = constrain(v, -10, 10); }
