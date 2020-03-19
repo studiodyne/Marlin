@@ -132,45 +132,49 @@ void menu_advanced_settings();
    *
    */
   //Submenu
-  void toolchange_migration_submenu(){
-    START_MENU();
-    BACK_ITEM(MSG_BACK);
-    //Show ON/OFF
-    PGM_P const migration_on_off = migration_ending? GET_TEXT(MSG_TOOL_MIGRATION_ON): GET_TEXT(MSG_TOOL_MIGRATION_OFF);
-    STATIC_ITEM_P(migration_on_off);
-    //Manual Migration
-    PGM_P const  migration_stop =  GET_TEXT(MSG_TOOL_MIGRATION_END);
-        EDIT_ITEM_P(int3,migration_stop, &migration_ending, 0, EXTRUDERS-1);
-    if (active_extruder !=0)
-     GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP0, PSTR("M217 T0"));
-    if (active_extruder !=1)
-     GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP1, PSTR("M217 T1"));
-     #if EXTRUDERS > 2
-       if (active_extruder !=2)
-        GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP2, PSTR("M217 T2"));
-     #endif
-     #if EXTRUDERS > 3
-       if (active_extruder !=3)
-        GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP3, PSTR("M217 T3"));
-     #endif
-     #if EXTRUDERS > 4
-       if (active_extruder !=4)
-        GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP4, PSTR("M217 T4"));
-     #endif
-     #if EXTRUDERS > 5
-       if (active_extruder !=5)
-        GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP4, PSTR("M217 T5"));
-     #endif
-     #if EXTRUDERS > 6
-       if (active_extruder !=6)
-        GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP4, PSTR("M217 T6"));
-     #endif
-     #if EXTRUDERS > 7
-       if (active_extruder !=7)
-        GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP4, PSTR("M217 T7"));
-     #endif
-     END_MENU();
-}
+  #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
+    void toolchange_migration_submenu(){
+      START_MENU();
+      BACK_ITEM(MSG_BACK);
+      //Show ON/OFF
+      PGM_P const migration_on_off = migration_auto? GET_TEXT(MSG_TOOL_MIGRATION_ON): GET_TEXT(MSG_TOOL_MIGRATION_OFF);
+
+      //Manual Migration
+      STATIC_ITEM_P(migration_on_off);
+      EDIT_ITEM(bool,MSG_TOOL_MIGRATION, &migration_auto);
+      PGM_P const  migration_stop =  GET_TEXT(MSG_TOOL_MIGRATION_END);
+      EDIT_ITEM_P(int3,migration_stop, &migration_ending, 0, EXTRUDERS-1);
+      if (active_extruder !=0)
+       GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP0, PSTR("M217 T0"));
+      if (active_extruder !=1)
+       GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP1, PSTR("M217 T1"));
+       #if EXTRUDERS > 2
+         if (active_extruder !=2)
+          GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP2, PSTR("M217 T2"));
+       #endif
+       #if EXTRUDERS > 3
+         if (active_extruder !=3)
+          GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP3, PSTR("M217 T3"));
+       #endif
+       #if EXTRUDERS > 4
+         if (active_extruder !=4)
+          GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP4, PSTR("M217 T4"));
+       #endif
+       #if EXTRUDERS > 5
+         if (active_extruder !=5)
+          GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP4, PSTR("M217 T5"));
+       #endif
+       #if EXTRUDERS > 6
+         if (active_extruder !=6)
+          GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP4, PSTR("M217 T6"));
+       #endif
+       #if EXTRUDERS > 7
+         if (active_extruder !=7)
+          GCODES_ITEM( MSG_TOOL_MIGRATION_SWAP4, PSTR("M217 T7"));
+       #endif
+       END_MENU();
+    }
+  #endif
 
 #endif
 
