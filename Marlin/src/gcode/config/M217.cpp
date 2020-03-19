@@ -23,6 +23,7 @@
 #include "../../inc/MarlinConfigPre.h"
 
 #if EXTRUDERS > 1
+
 #include "../gcode.h"
 #include "../../module/tool_change.h"
 
