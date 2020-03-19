@@ -951,12 +951,9 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
     //First tool priming
     #if ENABLED (TOOLCHANGE_FILAMENT_SWAP) && ENABLED(TOOLCHANGE_FIL_PRIME_FIRST_USED)
       static bool first_tool_is_primed = false;
-      if (  new_tool == old_tool
-         && first_tool_is_primed == false // if no swap
-         && enable_first_prime == true ) {
+      if ( new_tool == old_tool && first_tool_is_primed == false && enable_first_prime == true ) {
         tool_change_prime();
         first_tool_is_primed = true;
-        enable_first_prime = false;
       }
     #endif
 
