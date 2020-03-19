@@ -1851,17 +1851,17 @@
     #define TOOLCHANGE_FIL_SWAP_UNRETRACT_SPEED  25*60  // (mm/m) (On SINGLENOZZLE or bowden, loading must be slowed down)
 
     // Single Nozzle utility : Purge length/feedrate (Prevent color mixing/dirty priming)
-    // Can be changed in real time to adjust the amount of filament if needed
     #define TOOLCHANGE_FIL_EXTRA_PRIME             100  // (mm) (Ex:50~150mm to purge a Volcano for no mixed color extrusion)
     #define TOOLCHANGE_FIL_SWAP_PRIME_SPEED     4.6*60  // (mm/m)(Ex:Max feedrate for 0.4 nozzle/volcano/50w heater)
-    // Cooling after priming (To avoid stringing and a clean nozzle on resume)
     #define TOOLCHANGE_FIL_SWAP_CUT_RETRACT         10  // (mm/m)(Retract before fan and recover after to avoid stringing while cooling and ease to cut filament on back)
+
+    // Blowing after priming (To avoid stringing and a clean nozzle on resume)
     #define TOOLCHANGE_FIL_SWAP_FAN                  0  // Fan count (-1 for disabling blowing)
     #define TOOLCHANGE_FIL_SWAP_FAN_SPEED          255  // 0 - 255
     #define TOOLCHANGE_FIL_SWAP_FAN_TIME            10  // s.
 
     // Swap an extruder not initialised (Can break filament because not retracted before)
-    // By using TOOLCHANGE_FIL_SWAP_PRIME_SPEED for all lengths(recover and prime)
+    // By using TOOLCHANGE_FIL_SWAP_PRIME_SPEED for all lengths(recover + prime)
     #define TOOLCHANGE_FIL_INIT_BEFORE_SWAP
 
     // Prime the first called command T[...] even is the same or no toolchange/swap)

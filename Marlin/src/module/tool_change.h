@@ -40,7 +40,7 @@
   extern toolchange_settings_t toolchange_settings;
 
   #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
-	extern void tool_change_e_move();
+	  extern void tool_change_e_move();
     extern void tool_change_prime();
   #endif
 
