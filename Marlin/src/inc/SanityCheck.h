@@ -270,6 +270,8 @@
   #error "Replace SLED_PIN with SOL1_PIN (applies to both Z_PROBE_SLED and SOLENOID_PROBE)."
 #elif defined(CONTROLLERFAN_PIN)
   #error "CONTROLLERFAN_PIN is now CONTROLLER_FAN_PIN, enabled with USE_CONTROLLER_FAN. Please update your Configuration_adv.h."
+#elif defined(CONTROLLERFAN_SPEED)
+  #error "CONTROLLERFAN_SPEED is now CONTROLLERFAN_SPEED_ACTIVE. Please update your Configuration_adv.h."
 #elif defined(MIN_RETRACT)
   #error "MIN_RETRACT is now MIN_AUTORETRACT and MAX_AUTORETRACT. Please update your Configuration_adv.h."
 #elif defined(ADVANCE)
@@ -1993,7 +1995,22 @@ static_assert(Y_MAX_LENGTH >= Y_BED_SIZE, "Movement bounds (Y_MIN_POS, Y_MAX_POS
     static_assert(PWM_PIN(E2_AUTO_FAN_PIN), "E2" AF_ERR_SUFF);
   #elif HAS_AUTO_FAN_3
     static_assert(PWM_PIN(E3_AUTO_FAN_PIN), "E3" AF_ERR_SUFF);
+  #elif HAS_AUTO_FAN_4
+    static_assert(PWM_PIN(E4_AUTO_FAN_PIN), "E4" AF_ERR_SUFF);
+  #elif HAS_AUTO_FAN_5
+    static_assert(PWM_PIN(E5_AUTO_FAN_PIN), "E5" AF_ERR_SUFF);
+  #elif HAS_AUTO_FAN_6
+    static_assert(PWM_PIN(E6_AUTO_FAN_PIN), "E6" AF_ERR_SUFF);
+  #elif HAS_AUTO_FAN_7
+    static_assert(PWM_PIN(E7_AUTO_FAN_PIN), "E7" AF_ERR_SUFF);
   #endif
+#endif
+
+/**
+ * Make sure only one EEPROM type is enabled
+ */
+#if ENABLED(EEPROM_SETTINGS) && 1 < ENABLED(SDCARD_EEPROM_EMULATION) + ENABLED(FLASH_EEPROM_EMULATION) + ENABLED(SRAM_EEPROM_EMULATION)
+  #error "Please select only one of SDCARD, FLASH, or SRAM_EEPROM_EMULATION."
 #endif
 
 /**
@@ -2509,8 +2526,8 @@ static_assert(   _ARR_TEST(3,0) && _ARR_TEST(3,1) && _ARR_TEST(3,2)
     #error "Z_STEPPER_AUTO_ALIGN requires NUM_Z_STEPPER_DRIVERS greater than 1."
   #elif !HAS_BED_PROBE
     #error "Z_STEPPER_AUTO_ALIGN requires a Z-bed probe."
-  #elif ENABLED(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS) && NUM_Z_STEPPER_DRIVERS != 3
-    #error "Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS requires NUM_Z_STEPPER_DRIVERS to be 3."
+  #elif ENABLED(Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS) && NUM_Z_STEPPER_DRIVERS < 3
+    #error "Z_STEPPER_ALIGN_KNOWN_STEPPER_POSITIONS requires NUM_Z_STEPPER_DRIVERS to be 3 or 4."
   #endif
 #endif
 
