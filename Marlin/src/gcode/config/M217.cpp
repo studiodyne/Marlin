@@ -68,7 +68,7 @@ void M217_report(const bool eeprom=false) {
     UNUSED(eeprom);
 
   #endif
-  
+
   SERIAL_ECHOPAIR_P(SP_Z_STR, LINEAR_UNIT(toolchange_settings.z_raise));
   SERIAL_EOL();
 }
