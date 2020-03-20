@@ -1255,7 +1255,10 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
 #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
   void extruder_migration() {
-    float resume_position = current_position.e;//store exact position of all
+
+    const float resume_current_e = current_position.e;
+    const float resume_destination_e = destination.e;
+
     migration_in_progress = true;//to avoid repeting runout script
 
     #if ENABLED(PREVENT_COLD_EXTRUSION)
@@ -1313,6 +1316,8 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
     if ( (active_extruder >= EXTRUDERS - 2) || (active_extruder == migration_ending )) migration_auto = false;
 
     migration_in_progress = false;//To avoid repeting runout script
-    current_position.e = resume_position ;//Resume position of the gear for exact print restart
+    current_position.e = resume_current_e;
+    destination.e = resume_destination_e ;
+
   };
 #endif
