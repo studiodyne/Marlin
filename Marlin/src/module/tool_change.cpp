@@ -1130,9 +1130,10 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
         #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
           if (should_swap && !too_cold) {
-
-            //Swap
             #if ENABLED(TOOLCHANGE_FIL_INIT_BEFORE_SWAP)
+              if (toolchange_extruder_ready[new_tool]) {
+                 tool_change_e_move(0.0000000000000001, toolchange_settings.prime_speed);
+                 tool_change_e_move(-0.0000000000000001, toolchange_settings.prime_speed);};
               tool_change_e_move(toolchange_settings.swap_length, MMM_TO_MMS(
                 toolchange_extruder_ready[new_tool]? toolchange_settings.unretract_speed : toolchange_settings.prime_speed));
                 toolchange_extruder_ready[new_tool] = true; // Primed and initialised
