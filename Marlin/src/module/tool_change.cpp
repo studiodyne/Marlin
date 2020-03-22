@@ -781,18 +781,20 @@ inline void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_a
 
 #endif // DUAL_X_CARRIAGE
 
-void tool_change_e_move(const float &length, const feedRate_t &fr_mm_s) {
-  #if ENABLED(ADVANCED_PAUSE_FEATURE)
-    do_pause_e_move(length,fr_mm_s);
-  #else
-    #if HAS_FILAMENT_SENSOR
-      runout.reset();
+#if EXTRUDERS
+  void tool_change_e_move(const float &length, const feedRate_t &fr_mm_s) {
+    #if ENABLED(ADVANCED_PAUSE_FEATURE)
+      do_pause_e_move(length,fr_mm_s);
+    #else
+      #if HAS_FILAMENT_SENSOR
+        runout.reset();
+      #endif
+      current_position.e += length / planner.e_factor[active_extruder];
+      line_to_current_position(fr_mm_s);
+      planner.synchronize();
     #endif
-    current_position.e += length / planner.e_factor[active_extruder];
-    line_to_current_position(fr_mm_s);
-    planner.synchronize();
-  #endif
-};
+  };
+#endif
 
 /**
  * Prime active tool using TOOLCHANGE_FILAMENT_SWAP settings
