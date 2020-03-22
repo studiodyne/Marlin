@@ -971,16 +971,18 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       // Z raise before retractation
       #if ENABLED(TOOLCHANGE_ZRAISE_BEFORE_RETRACT)
         #if DISABLED(SWITCHING_NOZZLE)
-          if (can_move_away && toolchange_settings.enable_park) {
-            // Do a small lift to avoid the workpiece in the move back (below)
-            current_position.z += toolchange_settings.z_raise;
-            #if HAS_SOFTWARE_ENDSTOPS
-              NOMORE(current_position.z, soft_endstop.max.z);
-            #endif
-            fast_line_to_current(Z_AXIS);
-            planner.synchronize();
-          #endif
-        }
+          #if ENABLED(TOOLCHANGE_PARK)
+            if (can_move_away && toolchange_settings.enable_park) {
+              // Do a small lift to avoid the workpiece in the move back (below)
+              current_position.z += toolchange_settings.z_raise;
+              #if HAS_SOFTWARE_ENDSTOPS
+                NOMORE(current_position.z, soft_endstop.max.z);
+              #endif
+              fast_line_to_current(Z_AXIS);
+              planner.synchronize();
+            }
+           #endif
+         #endif
       #endif
 
       // Tool change unload/Retract
