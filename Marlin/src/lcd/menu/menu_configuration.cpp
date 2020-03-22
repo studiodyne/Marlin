@@ -128,6 +128,7 @@ void menu_advanced_settings();
     EDIT_ITEM(float3, MSG_TOOL_CHANGE_ZLIFT, &toolchange_settings.z_raise, 0, 10);
     END_MENU();
   }
+  
  /**
    *
    * Tool Migration"  submenu
