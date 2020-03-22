@@ -128,7 +128,7 @@ void menu_advanced_settings();
     EDIT_ITEM(float3, MSG_TOOL_CHANGE_ZLIFT, &toolchange_settings.z_raise, 0, 10);
     END_MENU();
   }
-  
+
  /**
    *
    * Tool Migration"  submenu
@@ -136,6 +136,8 @@ void menu_advanced_settings();
    */
   //Submenu
   #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
+    #include "../../module/motion.h" // for active_extruder and current_position
+
     void toolchange_migration_submenu(){
       START_MENU();
       BACK_ITEM(MSG_BACK);
