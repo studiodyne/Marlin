@@ -173,7 +173,6 @@ void menu_advanced_settings();
        END_MENU();
     }
   #endif
-
 #endif
 
 #if HAS_HOTEND_OFFSET
@@ -427,7 +426,9 @@ void menu_configuration() {
   //
   #if EXTRUDERS > 1
     SUBMENU(MSG_TOOL_CHANGE, menu_tool_change);
-    SUBMENU(MSG_TOOL_MIGRATION, toolchange_migration_submenu);
+    #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
+      SUBMENU(MSG_TOOL_MIGRATION, toolchange_migration_submenu);
+    #endif
   #endif
 
   //
