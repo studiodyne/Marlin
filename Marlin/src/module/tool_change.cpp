@@ -808,32 +808,33 @@ inline void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_a
 		toolchange_settings.extra_prime > 0 ){
 
      destination = current_position;
+     #if ENABLED(TOOLCHANGE_PARK)
+	     //Park
+       if (toolchange_settings.enable_park && all_axes_homed() ) {
+        // Z raise
+        #if DISABLED(SWITCHING_NOZZLE)
+          // Do a small lift to avoid the workpiece in the move back (below)
+          current_position.z += toolchange_settings.z_raise;
+          #if HAS_SOFTWARE_ENDSTOPS
+            NOMORE(current_position.z, soft_endstop.max.z);
+          #endif
+          fast_line_to_current(Z_AXIS);
+          planner.synchronize();
+        #endif
 
-	 //Park
-     if (toolchange_settings.enable_park && all_axes_homed() ) {
-      // Z raise
-      #if DISABLED(SWITCHING_NOZZLE)
-        // Do a small lift to avoid the workpiece in the move back (below)
-        current_position.z += toolchange_settings.z_raise;
-        #if HAS_SOFTWARE_ENDSTOPS
-          NOMORE(current_position.z, soft_endstop.max.z);
+        #if ENABLED(TOOLCHANGE_PARK)
+          current_position = toolchange_settings.change_point;
+          #if ENABLED(TOOLCHANGE_PARK_X_ONLY)
+            current_position.y = destination.y;
+          #endif
+          #if ENABLED(TOOLCHANGE_PARK_Y_ONLY)
+            current_position.x = destination.x;
+          #endif
+          planner.buffer_line(current_position,MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), active_extruder);
+          planner.synchronize();
         #endif
-        fast_line_to_current(Z_AXIS);
-        planner.synchronize();
+        }
       #endif
-
-      #if ENABLED(TOOLCHANGE_PARK)
-        current_position = toolchange_settings.change_point;
-        #if ENABLED(TOOLCHANGE_PARK_X_ONLY)
-          current_position.y = destination.y;
-        #endif
-        #if ENABLED(TOOLCHANGE_PARK_Y_ONLY)
-          current_position.x = destination.x;
-        #endif
-        planner.buffer_line(current_position,MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), active_extruder);
-        planner.synchronize();
-      #endif
-      }
 
       //Prime (All distances are added and slowed down to ensure secure priming in all circumstances)
       tool_change_e_move( (toolchange_settings.swap_length + toolchange_settings.extra_prime), MMM_TO_MMS(toolchange_settings.prime_speed));
