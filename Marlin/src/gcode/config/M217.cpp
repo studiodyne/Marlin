@@ -153,22 +153,19 @@ void GcodeSuite::M217() {
     migration_target = -1;// init = disable = negative
 
     if (parser.seenval('L')) { //ending
-     if(   (parser.value_linear_units() >= 0 ) && (parser.value_linear_units() < EXTRUDERS ))
-       migration_ending = parser.value_linear_units();
-       if  (active_extruder < migration_ending ) migration_auto = true;
-       else  migration_auto = false;
+     if(( parser.value_linear_units() >= 0 ) && (parser.value_linear_units() < EXTRUDERS ) )
+      migration_ending = parser.value_linear_units();
+      if  (active_extruder < migration_ending ) migration_auto = true;
+      else  migration_auto = false;
      }
 
     if (parser.seenval('N')) { //auto on/off
-     if((parser.value_linear_units() >= 0 ) && (parser.value_linear_units() <= 1))
+     if((parser.value_linear_units() >= 0 ) && (parser.value_linear_units() <= 1) )
       migration_auto = parser.value_linear_units();
     }
 
     if (parser.seenval('T')) { //specific
-      if(   (parser.value_linear_units() >= 0 )
-         && (parser.value_linear_units() < EXTRUDERS )
-         && (parser.value_linear_units() != active_extruder)
-        ){
+      if((parser.value_linear_units() >= 0 ) && (parser.value_linear_units() < EXTRUDERS ) && (parser.value_linear_units() != active_extruder)){
         migration_target = parser.value_linear_units();
         extruder_migration();
         migration_target = -1;//disable
