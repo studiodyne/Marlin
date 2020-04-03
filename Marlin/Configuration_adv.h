@@ -2905,6 +2905,19 @@
 
   #define USER_DESC_5 "Homing Z"
   #define USER_GCODE_5 "G28 Z"
+
+  #define USER_DESC_6 "Retract S0"
+  #define USER_GCODE_6 "M207 S0"
+
+  #define USER_DESC_7 "Retract S3"
+  #define USER_GCODE_7 "M207 S3"
+
+  #define USER_DESC_8 "Retract Z0"
+  #define USER_GCODE_8 "M207 Z0"
+
+  #define USER_DESC_9 "Retract Z2"
+  #define USER_GCODE_9 "M207 Z2"
+
 #endif
 
 /**
