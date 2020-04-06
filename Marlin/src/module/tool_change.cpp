@@ -972,7 +972,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       #if ENABLED(TOOLCHANGE_ZRAISE_BEFORE_RETRACT)
         #if DISABLED(SWITCHING_NOZZLE)
           #if ENABLED(TOOLCHANGE_PARK)
-            if (can_move_away && toolchange_settings.enable_park) {
+          if (all_axes_homed() && can_move_away && toolchange_settings.enable_park) {
               // Do a small lift to avoid the workpiece in the move back (below)
               current_position.z += toolchange_settings.z_raise;
               #if HAS_SOFTWARE_ENDSTOPS
@@ -1029,8 +1029,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
       // Toolchange park
       #if DISABLED(SWITCHING_NOZZLE) && ENABLED(TOOLCHANGE_PARK)
-        if (can_move_away && toolchange_settings.enable_park) {
-
+        if (all_axes_homed() && can_move_away && toolchange_settings.enable_park) {
           #if DISABLED(TOOLCHANGE_ZRAISE_BEFORE_RETRACT)
             // Do a small lift to avoid the workpiece in the move back (below)
             current_position.z += toolchange_settings.z_raise;
