@@ -2936,13 +2936,11 @@ void Planner::set_max_jerk(const AxisEnum axis, float targetValue) {
     if (parser.seen('S')) autotemp_min = parser.value_celsius();
     if (parser.seen('B')) autotemp_max = parser.value_celsius();
 
-    #if ENABLED(AUTOTEMP_PROPORTIONNAL)
+    #if ENABLED(AUTOTEMP_PROPORTIONAL)
       autotemp_min = thermalManager.degTargetHotend(active_extruder) + AUTOTEMP_MIN_P;
       autotemp_max = thermalManager.degTargetHotend(active_extruder) + AUTOTEMP_MAX_P;
       autotemp_factor = AUTOTEMP_FACTOR_P;
     #endif
-
-
   }
 
 #endif
