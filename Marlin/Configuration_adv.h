@@ -277,8 +277,8 @@
   // On M109 command , start autotemp with this proportional values of target hotend temp
   #define AUTOTEMP_PROPORTIONAL
   #if ENABLED(AUTOTEMP_PROPORTIONAL)
-    #define AUTOTEMP_MIN_P 0      // Added to target temp value
-    #define AUTOTEMP_MAX_P 5      // Added to target temp value
+    #define AUTOTEMP_MIN_P    0   // Added to target temp value
+    #define AUTOTEMP_MAX_P    5   // Added to target temp value
    #define AUTOTEMP_FACTOR_P  1  // Apply value
   #endif
 #endif
