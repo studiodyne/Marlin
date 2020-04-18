@@ -2938,15 +2938,19 @@ void Planner::set_max_jerk(const AxisEnum axis, float targetValue) {
 #if ENABLED(AUTOTEMP)
 
   void Planner::autotemp_M104_M109() {
-    #if ENABLED(AUTOTEMP_PROPORTIONAL)
-      autotemp_min = thermalManager.degTargetHotend(active_extruder) + AUTOTEMP_MIN_P;
-      autotemp_max = thermalManager.degTargetHotend(active_extruder) + AUTOTEMP_MAX_P;
-      autotemp_factor = AUTOTEMP_FACTOR_P;
-    #endif
-    //F0 gcode to disable autotemp & F'Positive' to enable
-    if (parser.seen('S')) autotemp_min = parser.value_celsius();
-    if (parser.seen('B')) autotemp_max = parser.value_celsius();
-    if (parser.seenval('F')) autotemp_enabled = (autotemp_factor = parser.value_float());
 
+    #if ENABLED(AUTOTEMP_PROPORTIONAL)
+      const int16_t target = thermalManager.degTargetHotend(active_extruder);
+      autotemp_min = target + AUTOTEMP_MIN_P;
+      autotemp_max = target + AUTOTEMP_MAX_P;
+    #endif
+
+    if (parser.seenval('S')) autotemp_min = parser.value_celsius();
+    if (parser.seenval('B')) autotemp_max = parser.value_celsius();
+
+    // When AUTOTEMP_PROPORTIONAL is enabled, F0 disables autotemp.
+    // Normally, leaving off F also disables autotemp.
+    autotemp_factor = parser.seen('F') ? parser.value_float() : TERN(AUTOTEMP_PROPORTIONAL, AUTOTEMP_FACTOR_P, 0);
+    autotemp_enabled = autotemp_factor != 0;
   }
 #endif
