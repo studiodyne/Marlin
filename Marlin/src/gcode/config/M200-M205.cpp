@@ -62,7 +62,7 @@ void GcodeSuite::M201() {
 
   #ifdef XY_FREQUENCY_LIMIT
     if ( parser.seenval('F') ) frequency_settings  = parser.value_linear_units();
-    if ( parser.seenval('G') ) frequency_min_f  = parser.value_linear_units();
+    if ( parser.seenval('G') ) freq_min_feedrate  = parser.value_linear_units();
 
   #endif
 

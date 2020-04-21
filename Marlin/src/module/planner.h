@@ -210,7 +210,7 @@ typedef struct {
 
 #ifdef XY_FREQUENCY_LIMIT
   extern uint16_t frequency_settings;
-  extern uint16_t frequency_min_f;
+  extern uint16_t freq_min_feedrate;
 
 #endif
 
@@ -346,7 +346,7 @@ class Planner {
     #ifdef XY_FREQUENCY_LIMIT
       // Used for the frequency limit
       #define MAX_FREQ_TIME_US (uint32_t)(1000000.0 / XY_FREQUENCY_LIMIT)
-      static uint32_t max_frequency_time ;
+      static uint32_t max_frequency_time_us ;
       // Old direction bits. Used for speed calculations
       static unsigned char old_direction_bits;
       // Segment times (in µs). Used for speed calculations

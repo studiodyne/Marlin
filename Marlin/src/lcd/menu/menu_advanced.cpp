@@ -54,7 +54,7 @@
 
 #ifdef XY_FREQUENCY_LIMIT
   uint16_t frequency_settings  = XY_FREQUENCY_LIMIT ;
-  uint16_t frequency_min_f  = XY_FREQUENCY_MIN_FEEDRATE ;
+  uint16_t freq_min_feedrate  = XY_FREQUENCY_MIN_FEEDRATE ;
 #endif
 
 void menu_tmc();
@@ -422,7 +422,7 @@ void menu_cancelobject();
 
     #ifdef XY_FREQUENCY_LIMIT
       EDIT_ITEM(uint16_3, MSG_XY_FREQUENCY_LIMIT, &frequency_settings, 0, 100);
-      EDIT_ITEM(uint16_3, MSG_XY_FREQUENCY_FEEDRATE, &frequency_min_f, 1, 100);
+      EDIT_ITEM(uint16_3, MSG_XY_FREQUENCY_FEEDRATE, &freq_min_feedrate, 1, 100);
     #endif
 
     END_MENU();

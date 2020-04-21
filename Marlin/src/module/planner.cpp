@@ -210,8 +210,7 @@ float Planner::previous_nominal_speed_sqr;
   // Old direction bits. Used for speed calculations
   unsigned char Planner::old_direction_bits = 0;
   // Segment times (in µs). Used for speed calculations
-  xy_ulong_t Planner::axis_segment_time_us[3] = { { MAX_FREQ_TIME_US + 1, MAX_FREQ_TIME_US + 1 } };
-  uint32_t Planner::max_frequency_time  = MAX_FREQ_TIME_US;
+  uint32_t Planner::max_frequency_time_us  = MAX_FREQ_TIME_US;
 #endif
 
 #if ENABLED(LIN_ADVANCE)
@@ -2110,7 +2109,7 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
   // Max segment time in µs.
   #ifdef XY_FREQUENCY_LIMIT
     if (frequency_settings){
-      max_frequency_time = ( 1000000.0f /frequency_settings ) ;
+      max_frequency_time_us = ( 1000000.0f /frequency_settings ) ;
 
       // Check and limit the xy direction change frequency
       const unsigned char direction_change = block->direction_bits ^ old_direction_bits;
@@ -2120,35 +2119,30 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
       static uint32_t xs0 , xs1 , xs2 ,
                       ys0 , ys1 , ys2 ;
 
-      xs2 = xs1;
-      xs1 = xs0;
-      xs0 = max_frequency_time ;
-      ys2 = ys1 ;
-      ys1 = ys0;
-      ys0 = max_frequency_time ;
+      xs2 = xs1 ; xs1 = xs0 ; xs0 = max_frequency_time_us ;
+      ys2 = ys1 ; ys1 = ys0 ; ys0 = max_frequency_time_us ;
 
-      if(segment_time_us>max_frequency_time){
-        xs2 = xs1 = xs0 = max_frequency_time ;
-        ys2 = ys1 = ys0 = max_frequency_time ;
+      if( segment_time_us > max_frequency_time_us ) {
+        xs2 = xs1 = xs0 = max_frequency_time_us ;
+        ys2 = ys1 = ys0 = max_frequency_time_us ;
       }
       if (TEST(direction_change, X_AXIS)) {
         xs0 = segment_time_us;
       }
-
       if (TEST(direction_change, Y_AXIS)) {
         ys0 = segment_time_us;
       }
 
-      if (segment_time_us < max_frequency_time){
+      if (segment_time_us < max_frequency_time_us){
 
         const uint32_t max_x_segment_time = _MAX(xs0, xs1, xs2),
         max_y_segment_time = _MAX(ys0, ys1, ys2),
         min_xy_segment_time = _MIN(max_x_segment_time, max_y_segment_time);
 
-        if (min_xy_segment_time < max_frequency_time){
-          float low_sf = speed_factor * min_xy_segment_time / (max_frequency_time);
-          NOLESS(low_sf,(frequency_min_f/100));
-          NOMORE(speed_factor, low_sf);
+        if (min_xy_segment_time < max_frequency_time_us){
+          const float freq_xy_feedrate = ( speed_factor * min_xy_segment_time ) / max_frequency_time_us;
+          NOMORE(speed_factor, freq_xy_feedrate);
+          NOLESS(speed_factor,(freq_min_feedrate/100));
         }
 
       }
