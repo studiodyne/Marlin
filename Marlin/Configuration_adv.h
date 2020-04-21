@@ -779,7 +779,8 @@
 // Not working O
 // M201 F<positive>
 
-#define XY_FREQUENCY_LIMIT  10
+#define XY_FREQUENCY_LIMIT  10 // hz (M201 F..)
+#define XY_FREQUENCY_MIN_FEEDRATE  1  //(M201 G..) Minimum percent of current feedrate when segment slowdown to avoid extra long movement
 
 // Minimum planner junction speed. Sets the default minimum speed the planner plans for at the end
 // of the buffer and all stops. This should not be much greater than zero and should only be changed
@@ -1001,7 +1002,7 @@
 #endif // HAS_LCD_MENU
 
 // Scroll a longer status message into view
-#define STATUS_MESSAGE_SCROLLING
+//#define STATUS_MESSAGE_SCROLLING
 
 // On the Info Screen, display XY with one decimal place when possible
 //#define LCD_DECIMAL_SMALL_XY
@@ -1127,7 +1128,7 @@
   //#define LONG_FILENAME_HOST_SUPPORT
 
   // Enable this option to scroll long filenames in the SD card menu
-  #define SCROLL_LONG_FILENAMES
+  //#define SCROLL_LONG_FILENAMES
 
   // Leave the heaters on after Stop Print (not recommended!)
   //#define SD_ABORT_NO_COOLDOWN

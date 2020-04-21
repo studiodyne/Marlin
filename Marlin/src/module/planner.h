@@ -209,7 +209,9 @@ typedef struct {
 } skew_factor_t;
 
 #ifdef XY_FREQUENCY_LIMIT
-  extern uint16_t max_frequency_time_lcd_gcode;
+  extern uint16_t frequency_settings;
+  extern uint16_t frequency_min_f;
+
 #endif
 
 class Planner {

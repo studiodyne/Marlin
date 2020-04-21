@@ -61,7 +61,9 @@ void GcodeSuite::M201() {
   if (target_extruder < 0) return;
 
   #ifdef XY_FREQUENCY_LIMIT
-    if ( parser.seenval('F') ) max_frequency_time_lcd_gcode  = parser.value_linear_units();
+    if ( parser.seenval('F') ) frequency_settings  = parser.value_linear_units();
+    if ( parser.seenval('G') ) frequency_min_f  = parser.value_linear_units();
+
   #endif
 
   LOOP_XYZE(i) {

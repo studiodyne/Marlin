@@ -2109,46 +2109,50 @@ bool Planner::_populate_block(block_t * const block, bool split_move,
 
   // Max segment time in µs.
   #ifdef XY_FREQUENCY_LIMIT
+    if (frequency_settings){
+      max_frequency_time = ( 1000000.0f /frequency_settings ) ;
 
-    max_frequency_time = ( max_frequency_time_lcd_gcode / 1000000 ) ;
-    LOOP_L_N(i, 2) {
-      axis_segment_time_us[i].x = max_frequency_time +1 ;
-      axis_segment_time_us[i].y = max_frequency_time +1 ;
-    }
+      // Check and limit the xy direction change frequency
+      const unsigned char direction_change = block->direction_bits ^ old_direction_bits;
+      old_direction_bits = block->direction_bits;
+      segment_time_us = LROUND((float)segment_time_us / speed_factor);
 
-    // Check and limit the xy direction change frequency
-    const unsigned char direction_change = block->direction_bits ^ old_direction_bits;
-    old_direction_bits = block->direction_bits;
-    segment_time_us = LROUND((float)segment_time_us / speed_factor);
+      static uint32_t xs0 , xs1 , xs2 ,
+                      ys0 , ys1 , ys2 ;
 
-    uint32_t xs0 = axis_segment_time_us[0].x,
-             xs1 = axis_segment_time_us[1].x,
-             xs2 = axis_segment_time_us[2].x,
-             ys0 = axis_segment_time_us[0].y,
-             ys1 = axis_segment_time_us[1].y,
-             ys2 = axis_segment_time_us[2].y;
+      xs2 = xs1;
+      xs1 = xs0;
+      xs0 = max_frequency_time ;
+      ys2 = ys1 ;
+      ys1 = ys0;
+      ys0 = max_frequency_time ;
 
-    if (TEST(direction_change, X_AXIS)) {
-      xs2 = axis_segment_time_us[2].x = xs1;
-      xs1 = axis_segment_time_us[1].x = xs0;
-      xs0 = 0;
-    }
-    xs0 = axis_segment_time_us[0].x = xs0 + segment_time_us;
+      if(segment_time_us>max_frequency_time){
+        xs2 = xs1 = xs0 = max_frequency_time ;
+        ys2 = ys1 = ys0 = max_frequency_time ;
+      }
+      if (TEST(direction_change, X_AXIS)) {
+        xs0 = segment_time_us;
+      }
 
-    if (TEST(direction_change, Y_AXIS)) {
-      ys2 = axis_segment_time_us[2].y = axis_segment_time_us[1].y;
-      ys1 = axis_segment_time_us[1].y = axis_segment_time_us[0].y;
-      ys0 = 0;
-    }
-    ys0 = axis_segment_time_us[0].y = ys0 + segment_time_us;
+      if (TEST(direction_change, Y_AXIS)) {
+        ys0 = segment_time_us;
+      }
 
-    const uint32_t max_x_segment_time = _MAX(xs0, xs1, xs2),
-                   max_y_segment_time = _MAX(ys0, ys1, ys2),
-                   min_xy_segment_time = _MIN(max_x_segment_time, max_y_segment_time);
-    if (min_xy_segment_time < max_frequency_time) {
-      const float low_sf = speed_factor * min_xy_segment_time / (max_frequency_time);
-      NOMORE(speed_factor, low_sf);
-    }
+      if (segment_time_us < max_frequency_time){
+
+        const uint32_t max_x_segment_time = _MAX(xs0, xs1, xs2),
+        max_y_segment_time = _MAX(ys0, ys1, ys2),
+        min_xy_segment_time = _MIN(max_x_segment_time, max_y_segment_time);
+
+        if (min_xy_segment_time < max_frequency_time){
+          float low_sf = speed_factor * min_xy_segment_time / (max_frequency_time);
+          NOLESS(low_sf,(frequency_min_f/100));
+          NOMORE(speed_factor, low_sf);
+        }
+
+      }
+   }
   #endif // XY_FREQUENCY_LIMIT
 
   // Correct the speed

@@ -53,7 +53,8 @@
 #endif
 
 #ifdef XY_FREQUENCY_LIMIT
-  uint16_t max_frequency_time_lcd_gcode  = XY_FREQUENCY_LIMIT ;
+  uint16_t frequency_settings  = XY_FREQUENCY_LIMIT ;
+  uint16_t frequency_min_f  = XY_FREQUENCY_MIN_FEEDRATE ;
 #endif
 
 void menu_tmc();
@@ -420,7 +421,8 @@ void menu_cancelobject();
     #endif
 
     #ifdef XY_FREQUENCY_LIMIT
-      EDIT_ITEM(uint16_3, MSG_XY_FREQUENCY_LIMIT, &max_frequency_time_lcd_gcode, 1, 100);
+      EDIT_ITEM(uint16_3, MSG_XY_FREQUENCY_LIMIT, &frequency_settings, 0, 100);
+      EDIT_ITEM(uint16_3, MSG_XY_FREQUENCY_FEEDRATE, &frequency_min_f, 1, 100);
     #endif
 
     END_MENU();
