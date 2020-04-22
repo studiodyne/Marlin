@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<profile name="MT3" version="2020-04-09 13:45:43" app="S3D-Software 4.1.2">
+<profile name="MT3" version="2020-04-22 14:10:25" app="S3D-Software 4.1.2">
   <baseProfile>Default</baseProfile>
   <printMaterial>PLA</printMaterial>
   <printQuality>Medium</printQuality>
@@ -43,8 +43,8 @@
   <perimeterOutlines>2</perimeterOutlines>
   <printPerimetersInsideOut>1</printPerimetersInsideOut>
   <startPointOption>3</startPointOption>
-  <startPointOriginX>200</startPointOriginX>
-  <startPointOriginY>400</startPointOriginY>
+  <startPointOriginX>215</startPointOriginX>
+  <startPointOriginY>375</startPointOriginY>
   <sequentialIslands>0</sequentialIslands>
   <spiralVaseMode>0</spiralVaseMode>
   <firstLayerHeightPercentage>100</firstLayerHeightPercentage>
@@ -78,7 +78,7 @@
   <infillExtruder>0</infillExtruder>
   <internalInfillPattern>Grid</internalInfillPattern>
   <externalInfillPattern>Rectilinear</externalInfillPattern>
-  <infillPercentage>20</infillPercentage>
+  <infillPercentage>50</infillPercentage>
   <outlineOverlapPercentage>15</outlineOverlapPercentage>
   <infillExtrusionWidthPercentage>100</infillExtrusionWidthPercentage>
   <minInfillLength>5</minInfillLength>
@@ -107,22 +107,25 @@
     <isHeatedBed>0</isHeatedBed>
     <stabilizeAtStartup>1</stabilizeAtStartup>
     <setpoint layer="1" temperature="220"/>
+    <setpoint layer="2" temperature="205"/>
   </temperatureController>
   <temperatureController name="Bed">
     <temperatureNumber>0</temperatureNumber>
     <isHeatedBed>1</isHeatedBed>
     <stabilizeAtStartup>1</stabilizeAtStartup>
     <setpoint layer="1" temperature="70"/>
+    <setpoint layer="2" temperature="60"/>
   </temperatureController>
   <fanSpeed>
     <setpoint layer="1" speed="0"/>
+    <setpoint layer="50" speed="10"/>
   </fanSpeed>
   <blipFanToFullPower>0</blipFanToFullPower>
   <adjustSpeedForCooling>1</adjustSpeedForCooling>
-  <minSpeedLayerTime>7</minSpeedLayerTime>
-  <minCoolingSpeedSlowdown>90</minCoolingSpeedSlowdown>
+  <minSpeedLayerTime>10</minSpeedLayerTime>
+  <minCoolingSpeedSlowdown>50</minCoolingSpeedSlowdown>
   <increaseFanForCooling>1</increaseFanForCooling>
-  <minFanLayerTime>5</minFanLayerTime>
+  <minFanLayerTime>10</minFanLayerTime>
   <maxCoolingFanSpeed>30</maxCoolingFanSpeed>
   <increaseFanForBridging>1</increaseFanForBridging>
   <bridgingFanSpeed>60</bridgingFanSpeed>
@@ -161,12 +164,12 @@
   <layerChangeGcode></layerChangeGcode>
   <retractionGcode></retractionGcode>
   <toolChangeGcode></toolChangeGcode>
-  <endingGcode>G11,G10 S1,G91,G1 Z10 F1000,G90,M104 S0 T0 ; cool down right extruder,M104 S0 T1 ; cool down left extruder,M107 ; stop blower fan,M84 ; disable motors,M117 Impression OK!</endingGcode>
+  <endingGcode>G11,G10 S1,G91,G1 Z10 F1000,G90,G1 X467 F12000,M104 S0 T0 ; cool down right extruder,M104 S0 T1 ; cool down left extruder,M107 ; stop blower fan,M84 ; disable motors,M117 Impression OK!</endingGcode>
   <exportFileFormat>gcode</exportFileFormat>
   <celebration>0</celebration>
   <celebrationSong>Random Song</celebrationSong>
   <postProcessing>{REPLACE &quot;G1 E-2.0000 F1800&quot; &quot;G10&quot;},{REPLACE &quot;G1 E0.2000 F1800&quot; &quot;G11&quot;},{REPLACE &quot;G92 E0.0000&quot; &quot;G92 E0&quot;},{STRIP &quot;;&quot;},</postProcessing>
-  <defaultSpeed>5400</defaultSpeed>
+  <defaultSpeed>4800</defaultSpeed>
   <outlineUnderspeed>0.7</outlineUnderspeed>
   <solidInfillUnderspeed>1</solidInfillUnderspeed>
   <supportUnderspeed>1</supportUnderspeed>
@@ -174,7 +177,7 @@
   <rapidZspeed>720</rapidZspeed>
   <minBridgingArea>50</minBridgingArea>
   <bridgingExtraInflation>0.5</bridgingExtraInflation>
-  <bridgingExtrusionMultiplier>0.2</bridgingExtrusionMultiplier>
+  <bridgingExtrusionMultiplier>0.33</bridgingExtrusionMultiplier>
   <bridgingSpeedMultiplier>0.5</bridgingSpeedMultiplier>
   <useFixedBridgingAngle>0</useFixedBridgingAngle>
   <fixedBridgingAngle>90</fixedBridgingAngle>
@@ -190,7 +193,7 @@
   <diaphragmLayerInterval>20</diaphragmLayerInterval>
   <robustSlicing>1</robustSlicing>
   <mergeAllIntoSolid>0</mergeAllIntoSolid>
-  <onlyRetractWhenCrossingOutline>0</onlyRetractWhenCrossingOutline>
+  <onlyRetractWhenCrossingOutline>1</onlyRetractWhenCrossingOutline>
   <retractBetweenLayers>0</retractBetweenLayers>
   <useRetractionMinTravel>1</useRetractionMinTravel>
   <retractionMinTravel>3</retractionMinTravel>
@@ -222,7 +225,7 @@
     <topSolidLayers>2</topSolidLayers>
     <bottomSolidLayers>2</bottomSolidLayers>
     <skirtLayers>1</skirtLayers>
-    <infillPercentage>20</infillPercentage>
+    <infillPercentage>50</infillPercentage>
     <supportInfillPercentage>30</supportInfillPercentage>
   </autoConfigureQuality>
   <autoConfigureQuality name="High">
@@ -270,7 +273,13 @@
     <startingGcode>G28 ;Homing,G29 L0 ; Load mesh,G29 A ;Ubl activation,G29 F10 ;Fade height,M207 F3000 S3 W60 Z0 ;Set FwRetract,M208 F1500 S0 W0 R1500 ;Set FwRetract recovery,M900 K0.06 ;Set K-Factor,M217 S60       ; Swap length,M217 B0         ; Extra length,M217 E100     ; Prime length,M217 P276     ; Prime speed,M217 R3000   ; Retract speed,M217 U1500   ; UnRetract speed,M217 X467     ; Park X; Park Y,M217 Z2         ; Z Raise,M217 F255     ; Fan Speed,M217 G10      ; Fan time;,M217 V1        ; Enable first tool priming,M217 W1       ; Enable park &amp; Z Raise</startingGcode>
   </autoConfigureExtruders>
   <autoConfigureMaterial name="PLA">
-    <globalBedTemperature>70</globalBedTemperature>
+    <temperatureController name="Bed">
+      <temperatureNumber>0</temperatureNumber>
+      <isHeatedBed>1</isHeatedBed>
+      <stabilizeAtStartup>1</stabilizeAtStartup>
+      <setpoint layer="1" temperature="70"/>
+      <setpoint layer="2" temperature="60"/>
+    </temperatureController>
     <extruder name="Extruder 1">
       <toolheadNumber>1</toolheadNumber>
       <diameter>0.4</diameter>
@@ -289,6 +298,7 @@
     </extruder>
     <fanSpeed>
       <setpoint layer="1" speed="0"/>
+      <setpoint layer="50" speed="10"/>
     </fanSpeed>
   </autoConfigureMaterial>
 </profile>
