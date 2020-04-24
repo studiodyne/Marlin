@@ -779,7 +779,7 @@
 // Not working O
 // M201 F<positive>
 #define XY_FREQUENCY_LIMIT  10 // hz (M201 F..)
-#ifdef (XY_FREQUENCY_LIMIT)
+#ifdef XY_FREQUENCY_LIMIT
   #define XY_FREQUENCY_MIN_FEEDRATE  1  //(M201 G..) Minimum percent of current feedrate when segment slowdown to avoid extra long movement
 #endif
 
@@ -3197,7 +3197,7 @@
 //
 // M100 Free Memory Watcher to debug memory usage
 //
-#define M100_FREE_MEMORY_WATCHER
+//#define M100_FREE_MEMORY_WATCHER
 
 //
 // M43 - display pin status, toggle pins, watch pins, watch endstops & toggle LED, test servo probe

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<profile name="MT3" version="2020-04-22 14:10:25" app="S3D-Software 4.1.2">
+<profile name="MT3 v6" version="2020-04-24 01:06:36" app="S3D-Software 4.1.2">
   <baseProfile>Default</baseProfile>
   <printMaterial>PLA</printMaterial>
   <printQuality>Medium</printQuality>
-  <printExtruders>All Extruders</printExtruders>
+  <printExtruders>Extruder 1 Only</printExtruders>
   <extruder name="Extruder 0">
     <toolheadNumber>0</toolheadNumber>
     <diameter>0.4</diameter>
@@ -37,9 +37,9 @@
     <wipeDistance>5</wipeDistance>
   </extruder>
   <primaryExtruder>0</primaryExtruder>
-  <layerHeight>0.3</layerHeight>
-  <topSolidLayers>2</topSolidLayers>
-  <bottomSolidLayers>2</bottomSolidLayers>
+  <layerHeight>0.2</layerHeight>
+  <topSolidLayers>4</topSolidLayers>
+  <bottomSolidLayers>4</bottomSolidLayers>
   <perimeterOutlines>2</perimeterOutlines>
   <printPerimetersInsideOut>1</printPerimetersInsideOut>
   <startPointOption>3</startPointOption>
@@ -78,7 +78,7 @@
   <infillExtruder>0</infillExtruder>
   <internalInfillPattern>Grid</internalInfillPattern>
   <externalInfillPattern>Rectilinear</externalInfillPattern>
-  <infillPercentage>50</infillPercentage>
+  <infillPercentage>33</infillPercentage>
   <outlineOverlapPercentage>15</outlineOverlapPercentage>
   <infillExtrusionWidthPercentage>100</infillExtrusionWidthPercentage>
   <minInfillLength>5</minInfillLength>
@@ -87,11 +87,11 @@
   <overlapInternalInfillAngles>1</overlapInternalInfillAngles>
   <externalInfillAngles>0,90</externalInfillAngles>
   <generateSupport>0</generateSupport>
-  <supportExtruder>1</supportExtruder>
+  <supportExtruder>0</supportExtruder>
   <supportInfillPercentage>30</supportInfillPercentage>
   <supportExtraInflation>3</supportExtraInflation>
   <supportBaseLayers>0</supportBaseLayers>
-  <denseSupportExtruder>1</denseSupportExtruder>
+  <denseSupportExtruder>0</denseSupportExtruder>
   <denseSupportLayers>0</denseSupportLayers>
   <denseSupportInfillPercentage>70</denseSupportInfillPercentage>
   <supportLayerInterval>1</supportLayerInterval>
@@ -114,7 +114,6 @@
     <isHeatedBed>1</isHeatedBed>
     <stabilizeAtStartup>1</stabilizeAtStartup>
     <setpoint layer="1" temperature="70"/>
-    <setpoint layer="2" temperature="60"/>
   </temperatureController>
   <fanSpeed>
     <setpoint layer="1" speed="0"/>
@@ -123,7 +122,7 @@
   <blipFanToFullPower>0</blipFanToFullPower>
   <adjustSpeedForCooling>1</adjustSpeedForCooling>
   <minSpeedLayerTime>10</minSpeedLayerTime>
-  <minCoolingSpeedSlowdown>50</minCoolingSpeedSlowdown>
+  <minCoolingSpeedSlowdown>90</minCoolingSpeedSlowdown>
   <increaseFanForCooling>1</increaseFanForCooling>
   <minFanLayerTime>10</minFanLayerTime>
   <maxCoolingFanSpeed>30</maxCoolingFanSpeed>
@@ -160,7 +159,7 @@
   <baudRateOverride>250000</baudRateOverride>
   <overridePrinterModels>0</overridePrinterModels>
   <printerModelsOverride></printerModelsOverride>
-  <startingGcode>G28 ;Homing,G29 L0 ; Load mesh,G29 A ;Ubl activation,G29 F10 ;Fade height,M207 F3000 S3 W60 Z0 ;Set FwRetract,M208 F1500 S0 W0 R1500 ;Set FwRetract recovery,M900 K0.06 ;Set K-Factor,M217 S60       ; Swap length,M217 B0         ; Extra length,M217 E100     ; Prime length,M217 P276     ; Prime speed,M217 R3000   ; Retract speed,M217 U1500   ; UnRetract speed,M217 X467     ; Park X; Park Y,M217 Z2         ; Z Raise,M217 F255     ; Fan Speed,M217 G10      ; Fan time;,M217 V1        ; Enable first tool priming,M217 W1       ; Enable park &amp; Z Raise</startingGcode>
+  <startingGcode>G28 ;Homing,G29 L0 ; Load mesh,G29 A ;Ubl activation,G29 F10 ;Fade height,M207 F3000 S3 W60 Z0 ;Set FwRetract,M208 F1500 S0 W0 R1500 ;Set FwRetract recovery,M900 K0.06 ;Set K-Factor,M217 S60       ; Swap length,M217 B-1.5     ; Extra length,M217 E100     ; Prime length,M217 P276     ; Prime speed,M217 R3000   ; Retract speed,M217 U1500   ; UnRetract speed,M217 X467     ; Park X; Park Y,M217 Z2         ; Z Raise,M217 F255     ; Fan Speed,M217 G10      ; Fan time;,M217 V1        ; Enable first tool priming,M217 W1       ; Enable park &amp; Z Raise</startingGcode>
   <layerChangeGcode></layerChangeGcode>
   <retractionGcode></retractionGcode>
   <toolChangeGcode></toolChangeGcode>
@@ -177,11 +176,11 @@
   <rapidZspeed>720</rapidZspeed>
   <minBridgingArea>50</minBridgingArea>
   <bridgingExtraInflation>0.5</bridgingExtraInflation>
-  <bridgingExtrusionMultiplier>0.33</bridgingExtrusionMultiplier>
+  <bridgingExtrusionMultiplier>0.5</bridgingExtrusionMultiplier>
   <bridgingSpeedMultiplier>0.5</bridgingSpeedMultiplier>
   <useFixedBridgingAngle>0</useFixedBridgingAngle>
   <fixedBridgingAngle>90</fixedBridgingAngle>
-  <applyBridgingToPerimeters>1</applyBridgingToPerimeters>
+  <applyBridgingToPerimeters>0</applyBridgingToPerimeters>
   <filamentDiameters>1.75|1.75|1.75|1.75|1.75|1.75</filamentDiameters>
   <filamentPricesPerKg>17|23|23|23|23|23</filamentPricesPerKg>
   <filamentDensities>1.25|1.25|1.25|1.25|1.25|1.25</filamentDensities>
@@ -193,7 +192,7 @@
   <diaphragmLayerInterval>20</diaphragmLayerInterval>
   <robustSlicing>1</robustSlicing>
   <mergeAllIntoSolid>0</mergeAllIntoSolid>
-  <onlyRetractWhenCrossingOutline>1</onlyRetractWhenCrossingOutline>
+  <onlyRetractWhenCrossingOutline>0</onlyRetractWhenCrossingOutline>
   <retractBetweenLayers>0</retractBetweenLayers>
   <useRetractionMinTravel>1</useRetractionMinTravel>
   <retractionMinTravel>3</retractionMinTravel>
@@ -221,11 +220,11 @@
     <supportInfillPercentage>25</supportInfillPercentage>
   </autoConfigureQuality>
   <autoConfigureQuality name="Medium">
-    <layerHeight>0.3</layerHeight>
-    <topSolidLayers>2</topSolidLayers>
-    <bottomSolidLayers>2</bottomSolidLayers>
+    <layerHeight>0.2</layerHeight>
+    <topSolidLayers>4</topSolidLayers>
+    <bottomSolidLayers>4</bottomSolidLayers>
     <skirtLayers>1</skirtLayers>
-    <infillPercentage>50</infillPercentage>
+    <infillPercentage>33</infillPercentage>
     <supportInfillPercentage>30</supportInfillPercentage>
   </autoConfigureQuality>
   <autoConfigureQuality name="High">
@@ -258,7 +257,7 @@
     <useSkirt>1</useSkirt>
     <usePrimePillar>0</usePrimePillar>
     <useOozeShield>0</useOozeShield>
-    <startingGcode>G28 ;Homing,G29 L0 ; Load mesh,G29 A ;Ubl activation,G29 F10 ;Fade height,M207 F3000 S3 W60 Z0 ;Set FwRetract,M208 F1500 S0 W0 R1500 ;Set FwRetract recovery,M900 K0.06 ;Set K-Factor,M217 S60       ; Swap length,M217 B0         ; Extra length,M217 E100     ; Prime length,M217 P276     ; Prime speed,M217 R3000   ; Retract speed,M217 U1500   ; UnRetract speed,M217 X467     ; Park X; Park Y,M217 Z2         ; Z Raise,M217 F255     ; Fan Speed,M217 G10      ; Fan time;,M217 V1        ; Enable first tool priming,M217 W1       ; Enable park &amp; Z Raise</startingGcode>
+    <startingGcode>G28 ;Homing,G29 L0 ; Load mesh,G29 A ;Ubl activation,G29 F10 ;Fade height,M207 F3000 S3 W60 Z0 ;Set FwRetract,M208 F1500 S0 W0 R1500 ;Set FwRetract recovery,M900 K0.06 ;Set K-Factor,M217 S60       ; Swap length,M217 B-1.5     ; Extra length,M217 E100     ; Prime length,M217 P276     ; Prime speed,M217 R3000   ; Retract speed,M217 U1500   ; UnRetract speed,M217 X467     ; Park X; Park Y,M217 Z2         ; Z Raise,M217 F255     ; Fan Speed,M217 G10      ; Fan time;,M217 V1        ; Enable first tool priming,M217 W1       ; Enable park &amp; Z Raise</startingGcode>
   </autoConfigureExtruders>
   <autoConfigureExtruders name="All Extruders" allowedToolheads="2">
     <primaryExtruder>0</primaryExtruder>
@@ -270,16 +269,10 @@
     <useSkirt>1</useSkirt>
     <usePrimePillar>0</usePrimePillar>
     <useOozeShield>0</useOozeShield>
-    <startingGcode>G28 ;Homing,G29 L0 ; Load mesh,G29 A ;Ubl activation,G29 F10 ;Fade height,M207 F3000 S3 W60 Z0 ;Set FwRetract,M208 F1500 S0 W0 R1500 ;Set FwRetract recovery,M900 K0.06 ;Set K-Factor,M217 S60       ; Swap length,M217 B0         ; Extra length,M217 E100     ; Prime length,M217 P276     ; Prime speed,M217 R3000   ; Retract speed,M217 U1500   ; UnRetract speed,M217 X467     ; Park X; Park Y,M217 Z2         ; Z Raise,M217 F255     ; Fan Speed,M217 G10      ; Fan time;,M217 V1        ; Enable first tool priming,M217 W1       ; Enable park &amp; Z Raise</startingGcode>
+    <startingGcode>G28 ;Homing,G29 L0 ; Load mesh,G29 A ;Ubl activation,G29 F10 ;Fade height,M207 F3000 S3 W60 Z0 ;Set FwRetract,M208 F1500 S0 W0 R1500 ;Set FwRetract recovery,M900 K0.06 ;Set K-Factor,M217 S60       ; Swap length,M217 B-1.5     ; Extra length,M217 E100     ; Prime length,M217 P276     ; Prime speed,M217 R3000   ; Retract speed,M217 U1500   ; UnRetract speed,M217 X467     ; Park X; Park Y,M217 Z2         ; Z Raise,M217 F255     ; Fan Speed,M217 G10      ; Fan time;,M217 V1        ; Enable first tool priming,M217 W1       ; Enable park &amp; Z Raise</startingGcode>
   </autoConfigureExtruders>
   <autoConfigureMaterial name="PLA">
-    <temperatureController name="Bed">
-      <temperatureNumber>0</temperatureNumber>
-      <isHeatedBed>1</isHeatedBed>
-      <stabilizeAtStartup>1</stabilizeAtStartup>
-      <setpoint layer="1" temperature="70"/>
-      <setpoint layer="2" temperature="60"/>
-    </temperatureController>
+    <globalBedTemperature>70</globalBedTemperature>
     <extruder name="Extruder 1">
       <toolheadNumber>1</toolheadNumber>
       <diameter>0.4</diameter>

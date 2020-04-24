@@ -473,7 +473,7 @@
 #define PID_MAX BANG_MAX // Limits current to nozzle while PID is active (see PID_FUNCTIONAL_RANGE below); 255=full current
 #define PID_K1 0.95      // Smoothing factor within any PID loop
 #if ENABLED(PIDTEMP)
-  #define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
+  //#define PID_EDIT_MENU         // Add PID editing to the "Advanced Settings" menu. (~700 bytes of PROGMEM)
   //#define PID_AUTOTUNE_MENU     // Add PID auto-tuning to the "Advanced Settings" menu. (~250 bytes of PROGMEM)
   //#define PID_DEBUG             // Sends debug data to the serial port.
   //#define PID_OPENLOOP 1        // Puts PID in open loop. M104/M140 sets the output power from 0 to PID_MAX
@@ -817,7 +817,7 @@
  */
 #if DISABLED(CLASSIC_JERK)
 // 0.4 * jerk²=100 / accelleration=600
-  #define JUNCTION_DEVIATION_MM 0.066 // (mm) Distance from real junction edge
+  #define JUNCTION_DEVIATION_MM 0.027 // (mm) Distance from real junction edge
 #endif
 
 /**
@@ -828,7 +828,7 @@
  *
  * See https://github.com/synthetos/TinyG/wiki/Jerk-Controlled-Motion-Explained
  */
-#define S_CURVE_ACCELERATION
+//#define S_CURVE_ACCELERATION
 
 //===========================================================================
 //============================= Z Probe Options =============================
@@ -1292,7 +1292,7 @@
   //#define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 
   #define MESH_INSET 0              // Set Mesh bounds as an inset region of the bed
-  #define GRID_MAX_POINTS_X  5      // Don't use more than 15 points per axis, implementation limited.
+  #define GRID_MAX_POINTS_X  9      // Don't use more than 15 points per axis, implementation limited.
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   #define UBL_MESH_EDIT_MOVES_Z     // Sophisticated users prefer no movement of nozzle
@@ -1507,7 +1507,7 @@
 #if ENABLED(NOZZLE_PARK_FEATURE)
   // Specify a park position as { X, Y, Z_raise }
   #define NOZZLE_PARK_POINT { X_MAX_POS, (Y_MAX_POS/2), 5 }
-  #define NOZZLE_PARK_XY_FEEDRATE 2000   // (mm/s) X and Y axes feedrate (also used for delta Z axis)
+  #define NOZZLE_PARK_XY_FEEDRATE 12000   // (mm/s) X and Y axes feedrate (also used for delta Z axis)
   #define NOZZLE_PARK_Z_FEEDRATE 10      // (mm/s) Z axis feedrate (not used for delta printers)
 #endif
 
