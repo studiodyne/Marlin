@@ -198,7 +198,7 @@ Nozzle nozzle;
         do_blocking_move_to_z(_MAX(park.z, current_position.z), fr_z);
     }
 
-    do_blocking_move_to_xy(park, fr_xy);
+    do_blocking_move_to_xy(park.x,current_position.y, fr_xy);
 
     report_current_position();
   }
