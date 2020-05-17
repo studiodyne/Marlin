@@ -827,6 +827,11 @@ void tool_change_prime() {
     planner.synchronize();
     current_position.e = destination.e;
     sync_plan_position_e(); // Resume at the old E position
+
+    // Restart Fan
+    #if HAS_FAN && TOOLCHANGE_FS_FAN >= 0
+      RESTORE(fan);
+    #endif
   }
 }
 #endif
