@@ -46,6 +46,7 @@ uint32_t PrintJobRecovery::cmd_sdpos, // = 0
 #include "../gcode/gcode.h"
 #include "../module/motion.h"
 #include "../module/planner.h"
+#include "../module/tool_change.h"
 #include "../module/printcounter.h"
 #include "../module/temperature.h"
 #include "../core/serial.h"
@@ -229,10 +230,110 @@ void PrintJobRecovery::save(const bool force/*=false*/) {
       if (lock) return; // No re-entrance from idle() during raise_z()
       lock = true;
     #endif
-    if (IS_SD_PRINTING()) save(true);
-    TERN_(BACKUP_POWER_SUPPLY, raise_z());
 
-    kill(GET_TEXT(MSG_OUTAGE_RECOVERY));
+    #if ENABLED(BACKUP_POWER_PARK_WAITING)
+      planner.synchronize();
+
+      // Save
+      if (IS_SD_PRINTING()) save(true);
+
+      // Return if the pin is no longer active
+      if (READ(POWER_LOSS_PIN) != POWER_LOSS_STATE) { lock = false; return; }
+
+      // Retract
+      unscaled_e_move(-POWER_LOSS_RETRACT_L, POWER_LOSS_RETRACT_F);
+
+      // Remember the current position
+      destination = current_position;
+
+      // Park Position
+      constexpr xy_pos_t parkpos = POWER_LOSS_PARK_POS;
+      TERN_(POWER_LOSS_PARK_X_ONLY, current_position.x = parkpos.x);
+      TERN_(POWER_LOSS_PARK_Y_ONLY, current_position.y = parkpos.y);
+      current_position.z += POWER_LOSS_ZRAISE;
+      do_blocking_move_to(current_position, POWER_LOSS_F);
+
+      // Heaters and fans in low-power mode
+      #if HAS_HEATED_BED
+        const uint16_t bed_old_temp = thermalManager.temp_bed.target;
+        thermalManager.temp_bed.target = BACKUP_POWER_BED_TEMP;
+      #endif
+
+      #if EXTRUDERS
+        uint16_t old_temp[EXTRUDERS];
+        HOTEND_LOOP() {
+          old_temp[e] = thermalManager.temp_hotend[e].target;
+          thermalManager.temp_hotend[e].target = 0;
+        }
+      #endif
+
+      #if HAS_FAN
+        uint16_t fans_temps[FAN_COUNT];
+        LOOP_L_N(f, FAN_COUNT) {
+          fans_temps[f] = thermalManager.fan_speed[f];
+          thermalManager.fan_speed[f] = 0;
+        }
+      #endif
+
+      #if ENABLED(THERMAL_PROTECTION_BED)
+        const millis_t wtp_add = (WATCH_BED_TEMP_PERIOD * 1000) - 5000;
+        millis_t wtp = millis() + wtp_add; // -5 seconds for more security
+        thermalManager.reset_bed_idle_timer();
+      #endif
+      // Wait
+      do {
+         gcode.dwell(1000);
+         #if ENABLED(THERMAL_PROTECTION_BED)
+           if ( millis() > wtp)  ) {
+            thermalManager.reset_bed_idle_timer();
+            wtp = millis() + wtp_add;
+           }
+         #endif
+      } while (READ(POWER_LOSS_PIN) == POWER_LOSS_STATE); // Wait for power to return
+
+      // Restart heaters
+      #if HAS_HEATED_BED
+        thermalManager.temp_bed.target = bed_old_temp;
+        thermalManager.wait_for_bed_heating();
+      #endif
+
+      #if EXTRUDERS
+        HOTEND_LOOP() {
+          thermalManager.temp_hotend[e].target = old_temp[e];
+          TERN_(HAS_DISPLAY, thermalManager.set_heating_message(0));
+          thermalManager.wait_for_hotend(e, false);
+        };
+      #endif
+
+      TERN_(AUTOTEMP, planner.autotemp_update());
+
+      // Prime
+      #if BOTH(TOOLCHANGE_FS_PRIME_FIRST_USED, POWER_LOSS_USE_TOOLCHANGE_SWAP_PRIME)
+        unscaled_e_move(POWER_LOSS_RETRACT_L, POWER_LOSS_PURGE_F);
+        tool_change_prime(true);
+      #else
+        unscaled_e_move(POWER_LOSS_RETRACT_L + POWER_LOSS_PURGE_LEN, POWER_LOSS_PURGE_F);
+        unscaled_e_move(-POWER_LOSS_TRAVEL_RETRACT_L , POWER_LOSS_RETRACT_F);
+      #endif
+
+      do_blocking_move_to(destination, POWER_LOSS_F);
+      unscaled_e_move(POWER_LOSS_TRAVEL_RETRACT_L , POWER_LOSS_UNRETRACT_F);
+
+      #if HAS_FAN
+        LOOP_L_N(f, FAN_COUNT) thermalManager.fan_speed[f] = fans_temps[f];
+      #endif
+
+    #else
+
+      if (IS_SD_PRINTING()) save(true);
+      TERN_(BACKUP_POWER_SUPPLY, raise_z());
+      kill(GET_TEXT(MSG_OUTAGE_RECOVERY));
+
+    #endif
+
+    #if ENABLED(BACKUP_POWER_SUPPLY)
+      lock = false;
+    #endif
   }
 
   #if ENABLED(BACKUP_POWER_SUPPLY)
