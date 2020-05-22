@@ -849,6 +849,11 @@ void tool_change_prime(const bool keep_destination) {
     planner.synchronize();
     current_position.e = destination.e;
     sync_plan_position_e(); // Resume at the old E position
+
+    // Restart Fan
+    #if HAS_FAN && TOOLCHANGE_FS_FAN >= 0
+      RESTORE(fan);
+    #endif
   }
 }
 #endif
@@ -1293,6 +1298,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
     planner.synchronize();
     planner.set_e_position_mm(current_position.e); // New extruder primed and ready
+
   }
 
 #endif // TOOLCHANGE_MIGRATION_FEATURE

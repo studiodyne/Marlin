@@ -3080,6 +3080,8 @@ void Temperature::tick() {
         TERN_(PRINTER_EVENT_LEDS, printerEventLEDs.onHeatingDone());
       }
 
+      TERN_(AUTOTEMP, planner.autotemp_enabled = true);
+
       return wait_for_heatup;
     }
 
