@@ -53,6 +53,10 @@
   #include "../lcd/extui/ui_api.h"
 #endif
 
+#if ENABLED(POWER_LOSS_RECOVERY)
+  #include "powerloss.h"
+#endif
+
 #include "../lcd/ultralcd.h"
 
 #if HAS_BUZZER

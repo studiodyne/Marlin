@@ -247,10 +247,12 @@ void PrintJobRecovery::save(const bool force/*=false*/) {
       destination = current_position;
 
       // Park Position
-      constexpr xy_pos_t parkpos = POWER_LOSS_PARK_POS;
+      #if EITHER(POWER_LOSS_PARK_X_ONLY, POWER_LOSS_PARK_Y_ONLY)
+        const xy_pos_t parkpos = POWER_LOSS_PARK_POS;
+      #endif
       TERN_(POWER_LOSS_PARK_X_ONLY, current_position.x = parkpos.x);
       TERN_(POWER_LOSS_PARK_Y_ONLY, current_position.y = parkpos.y);
-      current_position.z += POWER_LOSS_ZRAISE;
+      NOMORE(current_position.z += POWER_LOSS_ZRAISE, Z_MAX_POS);
       do_blocking_move_to(current_position, POWER_LOSS_F);
 
       // Heaters and fans in low-power mode
@@ -276,15 +278,15 @@ void PrintJobRecovery::save(const bool force/*=false*/) {
       #endif
 
       #if ENABLED(THERMAL_PROTECTION_BED)
-        const millis_t wtp_add = (WATCH_BED_TEMP_PERIOD * 1000) - 5000;
+        constexpr millis_t wtp_add = (WATCH_BED_TEMP_PERIOD - 5) * 1000UL;
         millis_t wtp = millis() + wtp_add; // -5 seconds for more security
         thermalManager.reset_bed_idle_timer();
       #endif
       // Wait
       do {
-         gcode.dwell(1000);
+         idle_no_sleep();
          #if ENABLED(THERMAL_PROTECTION_BED)
-           if ( millis() > wtp)  ) {
+           if ( millis() > wtp) {
             thermalManager.reset_bed_idle_timer();
             wtp = millis() + wtp_add;
            }
@@ -294,10 +296,12 @@ void PrintJobRecovery::save(const bool force/*=false*/) {
       // Restart heaters
       #if HAS_HEATED_BED
         thermalManager.temp_bed.target = bed_old_temp;
+        TERN_(HAS_DISPLAY, ui.set_status_P(thermalManager.isHeatingBed() ? GET_TEXT(MSG_BED_HEATING) : GET_TEXT(MSG_BED_COOLING)));
         thermalManager.wait_for_bed_heating();
       #endif
 
       #if EXTRUDERS
+        TERN_(AUTOTEMP, planner.autotemp_enabled = false);
         HOTEND_LOOP() {
           thermalManager.temp_hotend[e].target = old_temp[e];
           TERN_(HAS_DISPLAY, thermalManager.set_heating_message(0));

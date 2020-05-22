@@ -1143,7 +1143,7 @@
         #define POWER_LOSS_UNRETRACT_L       10 // (mm) Length of filament to recover
 
         // Park using POWER_LOSS_ZRAISE
-        //#define POWER_LOSS_PARK_X_ONLY
+        #define POWER_LOSS_PARK_X_ONLY
         //#define POWER_LOSS_PARK_Y_ONLY
         #define POWER_LOSS_PARK_POS {  5,  5 }  // (mm) XY position to park the nozzle
 
