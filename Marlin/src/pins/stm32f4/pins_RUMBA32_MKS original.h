@@ -46,8 +46,6 @@
   #define FLASH_EEPROM_LEVELING
 #endif
 
-#define ENABLE_SPI1
-
 #include "pins_RUMBA32_common.h"
 
 #if HAS_TMC_UART
@@ -89,24 +87,4 @@
 
   #define E2_SERIAL_TX_PIN                  PD12
   #define E2_SERIAL_RX_PIN                  PD1
-
 #endif
-
-#define Z2_STEP_PIN                         PD2
-#define Z2_DIR_PIN                          PD3
-#define Z2_ENABLE_PIN                       PD0
-#define Z2_CS_PIN                           PD1
-
-#define FIL_RUNOUT_PIN                     PB13 // X_MAX_PIN
-#define FIL_RUNOUT2_PIN                     PD8  // Y_MAX_PIN
-
-#define SERVO0_PIN                          PD10 // Z_MAX_PIN
-#define SERVO1_PIN                          PD10
-
-#define RGB_LED_R_PIN                       PD10
-#define RGB_LED_G_PIN                       PD10
-#define RGB_LED_B_PIN                       PD10
-#define RGB_LED_W_PIN                       PD10
-#define TEMP_CHAMBER_PIN                    PC2 // TEMP_2_PIN
-#define CALIBRATION_PIN                     PD9 // Z_MIN_PIN
-#define POWER_LOSS_PIN                      PD9 // Z_MIN_PIN
