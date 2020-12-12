@@ -97,7 +97,7 @@
 #define Z2_ENABLE_PIN                       PD0
 #define Z2_CS_PIN                           PD1
 
-#define FIL_RUNOUT_PIN                     PB13 // X_MAX_PIN
+#define FIL_RUNOUT_PIN                      PB13 // X_MAX_PIN
 #define FIL_RUNOUT2_PIN                     PD8  // Y_MAX_PIN
 
 #define SERVO0_PIN                          PD10 // Z_MAX_PIN
