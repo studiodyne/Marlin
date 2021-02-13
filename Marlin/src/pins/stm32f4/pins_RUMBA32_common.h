@@ -52,11 +52,11 @@
 // Limit Switches
 //
 #define X_MIN_PIN                           PB12
-#define X_MAX_PIN                           PB13
+//#define X_MAX_PIN                           PB13
 #define Y_MIN_PIN                           PB15
-#define Y_MAX_PIN                           PD8
+//#define Y_MAX_PIN                           PD8
 #define Z_MIN_PIN                           PD9
-#define Z_MAX_PIN                           PD10
+//#define Z_MAX_PIN                           PD10
 
 //
 // Steppers
@@ -109,7 +109,7 @@
 #define TEMP_0_PIN                          PC4
 #define TEMP_1_PIN                          PC3
 #define TEMP_2_PIN                          PC2
-#define TEMP_3_PIN                          PC1
+//#define TEMP_3_PIN                          PC1
 #define TEMP_BED_PIN                        PC0
 
 //
@@ -134,7 +134,7 @@
 // Misc. Functions
 //
 #define LED_PIN                             PB14
-#define BTN_PIN                             PC10
+//#define BTN_PIN                             PC10
 #define PS_ON_PIN                           PE11
 #define KILL_PIN                            PC5
 
