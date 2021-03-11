@@ -46,6 +46,8 @@
   #define FLASH_EEPROM_LEVELING
 #endif
 
+#define ENABLE_SPI1
+
 #include "pins_RUMBA32_common.h"
 
 #if HAS_TMC_UART
@@ -70,6 +72,7 @@
   //
   // Software serial
   //
+  /*
   #define X_SERIAL_TX_PIN                   PA3
   #define X_SERIAL_RX_PIN                   PC14
 
@@ -87,4 +90,25 @@
 
   #define E2_SERIAL_TX_PIN                  PD12
   #define E2_SERIAL_RX_PIN                  PD1
+  */
+
 #endif
+#undef BTN_PIN
+//Inputs
+#define FIL_RUNOUT_PIN                      PB13 // X_MAX_PIN
+#define FIL_RUNOUT2_PIN                     PD8  // Y_MAX_PIN
+#define FIL_RUNOUT3_PIN                     PD8  // Z_MAX_PIN
+#define CALIBRATION_PIN                     PA3  // UART E2    //PC10 // BTN_PIN
+#define POWER_LOSS_PIN                      PA4  // TEMP_3_PIN
+
+//Outputs
+#define SERVO0_PIN                          PB8  // i2cbus
+#define SERVO1_PIN                          PB9  // i2cbus
+#define SMS_PAUSE_PIN                       PD12 // UART X
+#define SMS_STOP_PIN                        PD13 // UART Y
+#define NEOPIXEL_PIN                        PD14 // UART E0
+#define FAN3_PIN                            PD15 // UART Z
+//#define RGB_LED_R_PIN                     PD12 // UART E2
+//#define RGB_LED_G_PIN                     PD13 // UART Z
+//#define RGB_LED_B_PIN                     PD14 // UART E0
+//#define RGB_LED_W_PIN                     PD15 // UART E1
