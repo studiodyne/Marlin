@@ -94,21 +94,27 @@
 
 #endif
 #undef BTN_PIN
+#undef TEMP_3_PIN
+#undef X_MAX_PIN
+#undef Y_MAX_PIN
+#undef Z_MAX_PIN
+
+
 //Inputs
 #define FIL_RUNOUT_PIN                      PB13 // X_MAX_PIN
 #define FIL_RUNOUT2_PIN                     PD8  // Y_MAX_PIN
-#define FIL_RUNOUT3_PIN                     PD8  // Z_MAX_PIN
-#define CALIBRATION_PIN                     PA3  // UART E2    //PC10 // BTN_PIN
-#define POWER_LOSS_PIN                      PA4  // TEMP_3_PIN
+#define FIL_RUNOUT3_PIN                     PC10 // BTN_PIN
+#define CALIBRATION_PIN                     PB12 // X_MIN_PIN
+#define POWER_LOSS_PIN                      PD10 // Z_MAX_PIN
 
 //Outputs
 #define SERVO0_PIN                          PB8  // i2cbus
 #define SERVO1_PIN                          PB9  // i2cbus
-#define SMS_PAUSE_PIN                       PD12 // UART X
-#define SMS_STOP_PIN                        PD13 // UART Y
-#define NEOPIXEL_PIN                        PD14 // UART E0
-#define FAN3_PIN                            PD15 // UART Z
-//#define RGB_LED_R_PIN                     PD12 // UART E2
-//#define RGB_LED_G_PIN                     PD13 // UART Z
-//#define RGB_LED_B_PIN                     PD14 // UART E0
-//#define RGB_LED_W_PIN                     PD15 // UART E1
+#define SMS_PAUSE_PIN                       PA4  // TEMP_3_PIN
+#define SMS_STOP_PIN                        PA3  // UART E2
+//#define NEOPIXEL_PIN                        PD14 // UART E0
+//#define FAN3_PIN                            PD15 // UART Z
+#define RGB_LED_R_PIN                       PD12 // UART E2
+#define RGB_LED_G_PIN                       PD13 // UART Z
+#define RGB_LED_B_PIN                       PD14 // UART E0
+#define RGB_LED_W_PIN                       PD15 // UART E1
