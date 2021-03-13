@@ -110,8 +110,10 @@
 //Outputs
 #define SERVO0_PIN                          PB8  // i2cbus
 #define SERVO1_PIN                          PB9  // i2cbus
-#define SMS_PAUSE_PIN                       PA4  // TEMP_3_PIN
-#define SMS_STOP_PIN                        PA3  // UART E2
+//#define SMS_PAUSE_PIN                       PA4  // TEMP_3_PIN
+//#define SMS_STOP_PIN                        PA3  // UART E2
+#define COOLANT_FLOOD_PIN                   PA3
+#define COOLANT_MIST_PIN                    PA4
 //#define NEOPIXEL_PIN                        PD14 // UART E0
 //#define FAN3_PIN                            PD15 // UART Z
 #define RGB_LED_R_PIN                       PD12 // UART E2
