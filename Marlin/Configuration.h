@@ -1253,7 +1253,7 @@
 
   // Set one or more commands to execute on filament runout.
   // (After 'M412 H' Marlin will ask the host to handle the process.)
-  #define FILAMENT_RUNOUT_SCRIPT "M42 P17 S1/n G4 S1/n M42 P17 S0/n M600"
+  #define FILAMENT_RUNOUT_SCRIPT "M7/n G4 S2/n M9/n M600"
 
   // After a runout is detected, continue printing this length of filament
   // before executing the runout script. Useful for a sensor at the end of
