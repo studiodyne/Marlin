@@ -96,13 +96,13 @@
 #undef BTN_PIN
 #undef TEMP_3_PIN
 #undef X_MAX_PIN
-#undef Y_MAX_PIN
+#undef Y_MIN_PIN
 #undef Z_MAX_PIN
 
 
 //Inputs
 #define FIL_RUNOUT_PIN                      PB13 // X_MAX_PIN
-#define FIL_RUNOUT2_PIN                     PD8  // Y_MAX_PIN
+#define FIL_RUNOUT2_PIN                     PB15  // Y_MIN_PIN
 #define FIL_RUNOUT3_PIN                     PC10 // BTN_PIN
 #define CALIBRATION_PIN                     PB12 // X_MIN_PIN
 #define POWER_LOSS_PIN                      PD10 // Z_MAX_PIN
