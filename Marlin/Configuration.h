@@ -2630,10 +2630,15 @@
  *
  * Enable support for an RGB LED connected to 5V digital pins, or
  * an RGB Strip connected to MOSFETs controlled by digital pins.
- *
+ * RGB/W Strips can be driven by 12/24v of your power supply
+ * with no limits of size
+ * Neopixel, need an external 5v power supply
+ * Neopixel leds need precise timming
+ * More than 10 leds give imprevisible behavior
  * Adds the M150 command to set the LED (or LED strip) color.
  * If pins are PWM capable (e.g., 4, 5, 6, 11) then a range of
  * luminance values can be set from 0 to 255.
+ * Better RGB/W brightness effect if HARDWARE capable pins
  * For NeoPixel LED an overall brightness parameter is also available.
  *
  * *** CAUTION ***
@@ -2654,6 +2659,24 @@
   //#define RGB_LED_G_PIN 43
   //#define RGB_LED_B_PIN 35
   //#define RGB_LED_W_PIN -1
+
+  /*
+   * Hardware Pwm Feature(Experimental)
+   * Adjustable frequency (Better visual effect)
+   * Fading color transition
+   * Precise Gradient mix (unlimited colors)
+   * Professional look
+   * Startup animation
+   * Unlimited number of leds
+   * Require ALL PINS pwm capable and Mosfet interface
+   */
+  #define RGB_HW_PWM_FEATURE // If hardware pwm pins available
+  #if ENABLED(RGB_HW_PWM_FEATURE)
+    #define RGB_LED_DEFAULT_ON
+    #define RGB_LED_DEFAULT_ON
+    #define RGB_LED_STARTUP_ANIM
+    #define RGB_LED_FREQUENCY 75 // Fading works better at low frequency (75/100 hz required)
+  #endif
 #endif
 
 // Support for Adafruit NeoPixel LED driver

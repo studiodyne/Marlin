@@ -78,8 +78,10 @@ void CaseLight::update(const bool sflag) {
   #if CASE_LIGHT_IS_COLOR_LED
 
     leds.set_color(
-      MakeLEDColor(color.r, color.g, color.b, color.w, n10ct),
-      false
+      MakeLEDColor(color.r, color.g, color.b, color.w, n10ct)
+      #if ENABLED(NEOPIXEL_LED)
+        , false
+      #endif
     );
 
   #else // !CASE_LIGHT_IS_COLOR_LED
