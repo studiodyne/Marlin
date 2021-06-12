@@ -177,7 +177,7 @@
       #define BOARD_ST7920_DELAY_1 DELAY_NS(96)
     #endif
     #ifndef BOARD_ST7920_DELAY_2
-      #define BOARD_ST7920_DELAY_2 DELAY_NS(48)
+      #define BOARD_ST7920_DELAY_2 DELAY_NS(248)//steeve
     #endif
     #ifndef BOARD_ST7920_DELAY_3
       #define BOARD_ST7920_DELAY_3 DELAY_NS(640)
