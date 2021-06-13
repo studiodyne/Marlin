@@ -2673,7 +2673,6 @@
   #define RGB_HW_PWM_FEATURE // If hardware pwm pins available
   #if ENABLED(RGB_HW_PWM_FEATURE)
     #define RGB_LED_DEFAULT_ON
-    #define RGB_LED_DEFAULT_ON
     #define RGB_LED_STARTUP_ANIM
     #define RGB_LED_FREQUENCY 75 // Fading works better at low frequency (75/100 hz required)
   #endif
