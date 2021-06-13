@@ -246,7 +246,7 @@
 // Spindle/Laser power display types
 // Defined here so sanity checks can use them
 //
-#if EITHER(SPINDLE_FEATURE, LASER_FEATURE)
+#if ANY(FAST_PWM_FAN, SPINDLE_LASER_PWM)
   #define HAS_CUTTER 1
   #define _CUTTER_POWER_PWM255  1
   #define _CUTTER_POWER_PERCENT 2
@@ -256,7 +256,7 @@
 #endif
 
 // Add features that need hardware PWM here
-#if ANY(FAST_PWM_FAN, SPINDLE_LASER_PWM)
+#if ANY(FAST_PWM_FAN, SPINDLE_LASER_PWM, RGB_HW_PWM_FEATURE)
   #define NEEDS_HARDWARE_PWM 1
 #endif
 

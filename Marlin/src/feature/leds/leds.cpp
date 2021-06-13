@@ -69,6 +69,46 @@ void LEDLights::setup() {
     #if ENABLED(RGBW_LED)
       if (PWM_PIN(RGB_LED_W_PIN)) SET_PWM(RGB_LED_W_PIN); else SET_OUTPUT(RGB_LED_W_PIN);
     #endif
+    #ifdef RGB_HW_PWM_FEATURE
+      if (PWM_PIN(RGB_LED_R_PIN)) set_pwm_frequency(pin_t(RGB_LED_R_PIN), RGB_LED_FREQUENCY);
+      if (PWM_PIN(RGB_LED_G_PIN)) set_pwm_frequency(pin_t(RGB_LED_G_PIN), RGB_LED_FREQUENCY);
+      if (PWM_PIN(RGB_LED_B_PIN)) set_pwm_frequency(pin_t(RGB_LED_B_PIN), RGB_LED_FREQUENCY);
+      #define LED_PINS_COUNT 3
+      #if ENABLED(RGBW_LED)
+        if (PWM_PIN(RGB_LED_W_PIN)) set_pwm_frequency(pin_t(RGB_LED_W_PIN), RGB_LED_FREQUENCY);
+        #undef LED_PINS_COUNT
+        #define LED_PINS_COUNT 4
+      #endif
+      #ifdef RGB_LED_STARTUP_ANIM
+        //No optimisation to create natural delay
+        uint16_t led_pwm;
+        //Fading loop
+        for (uint8_t i = 0; i < LED_PINS_COUNT; i++) {
+          for (uint8_t b = 0; b < 201; b++) {
+            if (b <= 100) led_pwm = b;
+            if (b > 100) --led_pwm ;
+            LIMIT(led_pwm,0,100);
+            if (i == 0) set_pwm_duty(pin_t(RGB_LED_R_PIN), led_pwm);
+            if (i == 1) set_pwm_duty(pin_t(RGB_LED_G_PIN), led_pwm);
+            if (i == 2) set_pwm_duty(pin_t(RGB_LED_B_PIN), led_pwm);
+            #if ENABLED(RGBW_LED)
+              if (i == 3) set_pwm_duty(pin_t(RGB_LED_W_PIN), led_pwm);
+            #endif
+            if (i == 3) {
+              delay(5);
+            }
+            else delay(2);
+          }
+        }
+        //Ending
+        /*set_pwm_duty(pin_t(RGB_LED_R_PIN), 255); delay(300); set_pwm_duty(RGB_LED_R_PIN, LOW);
+        set_pwm_duty(pin_t(RGB_LED_G_PIN), 255); delay(300); set_pwm_duty(RGB_LED_G_PIN, LOW);
+        set_pwm_duty(pin_t(RGB_LED_B_PIN), 255); delay(300); set_pwm_duty(RGB_LED_B_PIN, LOW);
+        #if ENABLED(RGBW_LED)
+          set_pwm_duty(pin_t(RGB_LED_W_PIN), 255); delay(300); set_pwm_duty(RGB_LED_W_PIN, LOW);
+        #endif*/
+      #endif//RGB_LED_STARTUP_ANIM
+    #endif//RGB_HW_PWM_FEATURE
   #endif
   TERN_(NEOPIXEL_LED, neo.init());
   TERN_(PCA9533, PCA9533_init());
@@ -127,11 +167,58 @@ void LEDLights::set_color(const LEDColor &incol
       else                                        \
         WRITE(RGB_LED_##C##_PIN, c ? HIGH : LOW); \
     }while(0)
-    #define UPDATE_RGBW(C,c) _UPDATE_RGBW(C, TERN1(CASE_LIGHT_USE_RGB_LED, caselight.on) ? incol.c : 0)
-    UPDATE_RGBW(R,r); UPDATE_RGBW(G,g); UPDATE_RGBW(B,b);
-    #if ENABLED(RGBW_LED)
-      UPDATE_RGBW(W,w);
+    #ifdef RGB_HW_PWM_FEATURE
+      #undef _UPDATE_RGBW
+      #define _UPDATE_RGBW(C,c) do {                \
+      if (PWM_PIN(RGB_LED_##C##_PIN))             \
+        set_pwm_duty(pin_t(RGB_LED_##C##_PIN), c); \
+      else                                        \
+        WRITE(RGB_LED_##C##_PIN, c ? HIGH : LOW); \
+      }while(0)
     #endif
+    #define UPDATE_RGBW(C,c) _UPDATE_RGBW(C, TERN1(CASE_LIGHT_USE_RGB_LED, caselight.on) ? c : 0)
+    uint8_t new_r, new_g, new_b
+      #if ENABLED(RGBW_LED)
+        , new_w
+      #endif
+      ;
+    uint8_t old_r = leds.color.r,old_g = leds.color.g,old_b = leds.color.b
+      #if ENABLED(RGBW_LED)
+        ,old_w = leds.color.w;
+      #endif
+      ;
+      if (!leds.lights_on) {
+        old_r = old_g = old_b
+        #if ENABLED(RGBW_LED)
+          = old_w
+        #endif
+        = 0;
+      }
+      // To avoid fading loop when too little on LCD menu, and blocked screen
+      if (abs(incol.r - old_r) > 10 || abs(incol.g - old_g) > 10 || abs(incol.b - old_b) > 10
+       #if ENABLED(RGBW_LED)
+         || abs(incol.w - old_w) > 10
+       #endif
+         ) {
+        for (int16_t i = 0; i < 256; i++) {
+          new_r= old_r + ( (i * (incol.r - old_r) ) / 255);
+          new_g= old_g + ( (i * (incol.g - old_g) ) / 255);
+          new_b= old_b + ( (i * (incol.b - old_b) ) / 255);
+          UPDATE_RGBW(R,new_r); UPDATE_RGBW(G,new_g); UPDATE_RGBW(B,new_b);
+          #if ENABLED(RGBW_LED)
+            new_w= old_w + ( (i * (incol.w - old_w) ) / 255);
+            UPDATE_RGBW(W,new_w);
+          #endif
+          delay(1);
+        }
+      }
+      else
+      {
+        UPDATE_RGBW(R,incol.r); UPDATE_RGBW(G,incol.g); UPDATE_RGBW(B,incol.b);
+        #if ENABLED(RGBW_LED)
+          UPDATE_RGBW(W,incol.w);
+        #endif
+      }
 
   #endif
 
