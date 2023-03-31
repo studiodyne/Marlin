@@ -643,7 +643,7 @@ void MarlinUI::draw_status_screen() {
       static uint8_t fan_frame;
       if (old_blink != blink) {
         old_blink = blink;
-        if (!thermalManager.fan_speed[0] || ++fan_frame >= STATUS_FAN_FRAMES) fan_frame = 0;
+        if (!thermalManager.fan_speed[active_extruder] || ++fan_frame >= STATUS_FAN_FRAMES) fan_frame = 0;
       }
     #endif
     if (PAGE_CONTAINS(STATUS_FAN_Y, STATUS_FAN_Y + STATUS_FAN_HEIGHT - 1))
@@ -655,7 +655,7 @@ void MarlinUI::draw_status_screen() {
             fan_frame == 3 ? status_fan3_bmp :
           #endif
         #elif STATUS_FAN_FRAMES > 1
-          blink && thermalManager.fan_speed[0] ? status_fan1_bmp :
+          blink && thermalManager.fan_speed[active_extruder] ? status_fan1_bmp :
         #endif
         status_fan0_bmp
       );
@@ -727,7 +727,7 @@ void MarlinUI::draw_status_screen() {
     #if DO_DRAW_FAN
       if (PAGE_CONTAINS(STATUS_FAN_TEXT_Y - INFO_FONT_ASCENT, STATUS_FAN_TEXT_Y - 1)) {
         char c = '%';
-        uint16_t spd = thermalManager.fan_speed[0];
+        uint16_t spd = thermalManager.fan_speed[active_extruder];
         if (spd) {
           #if ENABLED(ADAPTIVE_FAN_SLOWING)
             if (!blink && thermalManager.fan_speed_scaler[0] < 128) {

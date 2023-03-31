@@ -38,6 +38,24 @@
  */
 void GcodeSuite::M280() {
 
+  //---------------------------------------
+  if (parser.seenval('H')) {
+    const int anew = parser.value_int();
+    if (anew > 0) {
+      servo[SWITCHING_NOZZLE_SERVO_NR].move(servo_angles[SWITCHING_NOZZLE_SERVO_NR][1]);
+      servo[SWITCHING_NOZZLE_E1_SERVO_NR].move(servo_angles[SWITCHING_NOZZLE_SERVO_NR][1]);
+    }
+    else {
+      servo[SWITCHING_NOZZLE_SERVO_NR].move(servo_angles[SWITCHING_NOZZLE_SERVO_NR][0]);
+      servo[SWITCHING_NOZZLE_E1_SERVO_NR].move(servo_angles[SWITCHING_NOZZLE_SERVO_NR][0]);
+    }
+    servo[SWITCHING_NOZZLE_SERVO_NR].detach();
+    servo[SWITCHING_NOZZLE_E1_SERVO_NR].detach();
+    return;
+  }
+
+  //-----------------------------------------------------------
+
   if (!parser.seenval('P')) return;
 
   TERN_(POLARGRAPH, planner.synchronize());

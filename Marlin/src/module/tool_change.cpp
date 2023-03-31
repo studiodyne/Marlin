@@ -124,7 +124,11 @@
 
     inline void _move_nozzle_servo(const uint8_t e, const uint8_t angle_index) {
       constexpr int8_t  sns_index[2] = { SWITCHING_NOZZLE_SERVO_NR, SWITCHING_NOZZLE_E1_SERVO_NR };
-      constexpr int16_t sns_angles[2] = SWITCHING_NOZZLE_SERVO_ANGLES;
+      #if ENABLED(EDITABLE_SERVO_ANGLES)
+        const uint16_t sns_angles[2] = {servo_angles[SWITCHING_NOZZLE_SERVO_NR][0], servo_angles[SWITCHING_NOZZLE_SERVO_NR][1]};
+      #else
+        constexpr int16_t sns_angles[2] = SWITCHING_NOZZLE_SERVO_ANGLES;
+      #endif
       planner.synchronize();
       servo[sns_index[e]].move(sns_angles[angle_index]);
       safe_delay(SWITCHING_NOZZLE_SERVO_DWELL);
@@ -909,9 +913,9 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
   // Cool down with fan
   inline void filament_swap_cooling() {
     #if HAS_FAN && TOOLCHANGE_FS_FAN >= 0
-      thermalManager.fan_speed[TOOLCHANGE_FS_FAN] = toolchange_settings.fan_speed;
+      thermalManager.fan_speed[active_extruder] = toolchange_settings.fan_speed;
       gcode.dwell(SEC_TO_MS(toolchange_settings.fan_time));
-      thermalManager.fan_speed[TOOLCHANGE_FS_FAN] = FAN_OFF_PWM;
+      thermalManager.fan_speed[active_extruder] = FAN_OFF_PWM;
     #endif
   }
 
@@ -1028,7 +1032,7 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
 
       #if HAS_FAN && TOOLCHANGE_FS_FAN >= 0
         // Store and stop fan. Restored on any exit.
-        REMEMBER(fan, thermalManager.fan_speed[TOOLCHANGE_FS_FAN], 0);
+        REMEMBER(fan, thermalManager.fan_speed[active_extruder], FAN_OFF_PWM);
       #endif
 
       // Z raise
@@ -1066,15 +1070,18 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
       #if ENABLED(TOOLCHANGE_PARK)
         if (ok) {
           #if ENABLED(TOOLCHANGE_NO_RETURN)
-            const float temp = destination.z;
-            destination = current_position;
-            destination.z = temp;
+            destination.x = current_position.x;
+            destination.y = current_position.y;
           #endif
           prepare_internal_move_to_destination(TERN(TOOLCHANGE_NO_RETURN, planner.settings.max_feedrate_mm_s[Z_AXIS], MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE)));
         }
       #endif
 
       extruder_cutting_recover(destination.e); // Cutting recover
+
+      #if HAS_FAN && TOOLCHANGE_FS_FAN >= 0
+        RESTORE(fan);
+      #endif
     }
 
     FS_DEBUG("<<< tool_change_prime");
@@ -1168,11 +1175,13 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
       #if BOTH(TOOLCHANGE_FILAMENT_SWAP, HAS_FAN) && TOOLCHANGE_FS_FAN >= 0
         // Store and stop fan. Restored on any exit.
-        REMEMBER(fan, thermalManager.fan_speed[TOOLCHANGE_FS_FAN], 0);
+        //REMEMBER(fan, thermalManager.fan_speed[active_extruder], FAN_OFF_PWM);
+        uint8_t stored_fan_speed = thermalManager.fan_speed[active_extruder];
+        thermalManager.fan_speed[active_extruder] = FAN_OFF_PWM;
       #endif
 
       // Z raise before retraction
-      #if ENABLED(TOOLCHANGE_ZRAISE_BEFORE_RETRACT) && !HAS_SWITCHING_NOZZLE
+      #if ENABLED(TOOLCHANGE_ZRAISE_BEFORE_RETRACT)
         if (can_move_away && TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park)) {
           // Do a small lift to avoid the workpiece in the move back (below)
           current_position.z += toolchange_settings.z_raise;
@@ -1216,7 +1225,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         #endif
       #endif
 
-      #if NONE(TOOLCHANGE_ZRAISE_BEFORE_RETRACT, HAS_SWITCHING_NOZZLE)
+      #if NONE(TOOLCHANGE_ZRAISE_BEFORE_RETRACT)
         if (can_move_away && TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park)) {
           // Do a small lift to avoid the workpiece in the move back (below)
           current_position.z += toolchange_settings.z_raise;
@@ -1226,7 +1235,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       #endif
 
       // Toolchange park
-      #if ENABLED(TOOLCHANGE_PARK) && !HAS_SWITCHING_NOZZLE
+      #if ENABLED(TOOLCHANGE_PARK)
         if (can_move_away && toolchange_settings.enable_park) {
           IF_DISABLED(TOOLCHANGE_PARK_Y_ONLY, current_position.x = toolchange_settings.change_point.x);
           IF_DISABLED(TOOLCHANGE_PARK_X_ONLY, current_position.y = toolchange_settings.change_point.y);
@@ -1240,6 +1249,16 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
               current_position.w = toolchange_settings.change_point.w
             );
           #endif
+
+          #if HAS_HOTEND_OFFSET
+            //Apply XY correction to park the new tool at the exact park pos before tool changing
+            if(new_tool != old_tool ) {
+              xyz_pos_t park_diff = hotend_offset[new_tool] - hotend_offset[old_tool];
+              park_diff.z = 0; // No Z offset applied before tool changed
+              current_position -= park_diff;
+            }
+          #endif
+
           planner.buffer_line(current_position, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), old_tool);
           planner.synchronize();
         }
@@ -1336,7 +1355,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
             // Just move back down
             DEBUG_ECHOLNPGM("Move back Z only");
 
-            if (TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park))
+            //if (TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park))
               do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
 
           #else
@@ -1373,7 +1392,8 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
             // Restart Fan
             #if HAS_FAN && TOOLCHANGE_FS_FAN >= 0
-              RESTORE(fan);
+              //RESTORE(fan);
+              thermalManager.fan_speed[active_extruder] = stored_fan_speed;
             #endif
           }
         #endif
@@ -1383,11 +1403,16 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
       #if HAS_SWITCHING_NOZZLE
         // Move back down. (Including when the new tool is higher.)
-        if (!should_move)
+        //if (!should_move)
           do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
       #endif
 
       TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+
+      #if HAS_FAN && TOOLCHANGE_FS_FAN >= 0
+        //RESTORE(fan);
+        thermalManager.fan_speed[active_extruder] = stored_fan_speed;
+      #endif
 
     } // (new_tool != old_tool)
 
@@ -1568,8 +1593,36 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
     // Migrate Linear Advance K factor to the new extruder
     TERN_(LIN_ADVANCE, planner.extruder_advance_K[active_extruder] = planner.extruder_advance_K[migration_extruder]);
 
+    #if ENABLED(MIGRATION_OVERRIDE_TOOLCHANGE_SETTINGS)
+      REMEMBER(tmp_mig_override, toolchange_settings);
+      #if BOTH(TOOLCHANGE_MIGRATION_ALWAYS_PARK,TOOLCHANGE_PARK)
+        toolchange_settings.enable_park = true;
+      #endif
+      #ifdef MIGRATION_FS_EXTRA_PRIME
+        toolchange_settings.extra_prime = MIGRATION_FS_EXTRA_PRIME;
+      #endif
+      #ifdef MIGRATION_FS_WIPE_RETRACT
+        toolchange_settings.wipe_retract = MIGRATION_FS_WIPE_RETRACT;
+      #endif
+      #ifdef MIGRATION_FS_FAN_SPEED
+        toolchange_settings.fan_speed = MIGRATION_FS_FAN_SPEED;
+      #endif
+      #ifdef MIGRATION_FS_FAN_TIME
+        toolchange_settings.fan_time = MIGRATION_FS_FAN_TIME;
+      #endif
+      #ifdef MIGRATION_ZRAISE
+        // Zraise for normal migration or current
+        toolchange_settings.z_raise = MIGRATION_ZRAISE;
+      #endif
+
+    #endif
+
     // Perform the tool change
     tool_change(migration_extruder);
+
+    #if ENABLED(MIGRATION_OVERRIDE_TOOLCHANGE_SETTINGS)
+      RESTORE(tmp_mig_override);
+    #endif
 
     // Retract if previously retracted
     #if ENABLED(FWRETRACT)

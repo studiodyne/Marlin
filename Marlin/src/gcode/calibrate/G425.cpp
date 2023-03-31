@@ -37,6 +37,12 @@
 #include "../../module/endstops.h"
 #include "../../feature/bedlevel/bedlevel.h"
 
+#include "../../core/macros.h"
+
+#if ENABLED(CALIBRATION_TOOLCHANGE_FEATURE_DISABLED)
+#include "../../module/servo.h"
+#endif
+
 #if !AXIS_CAN_CALIBRATE(X)
   #undef CALIBRATION_MEASURE_LEFT
   #undef CALIBRATION_MEASURE_RIGHT
@@ -163,7 +169,19 @@ inline void park_above_object(measurements_t &m, const float uncertainty) {
   inline void set_nozzle(measurements_t &m, const uint8_t extruder) {
     if (extruder != active_extruder) {
       park_above_object(m, CALIBRATION_MEASUREMENT_UNKNOWN);
-      tool_change(extruder);
+      #if ENABLED(CALIBRATION_TOOLCHANGE_FEATURE_DISABLED)
+        toolchange_settings_t tmp0 = {0};
+        REMEMBER(tmp, toolchange_settings);
+        toolchange_settings = tmp0;
+        uint8_t angle0 = servo_angles[SWITCHING_NOZZLE_SERVO_NR][0]
+               ,angle1 = servo_angles[SWITCHING_NOZZLE_SERVO_NR][1];
+        servo_angles[SWITCHING_NOZZLE_SERVO_NR][1] = angle0;
+        tool_change(extruder);
+        servo_angles[SWITCHING_NOZZLE_SERVO_NR][1] = angle1;
+        RESTORE(tmp);
+      #else
+        tool_change(extruder);
+      #endif
     }
   }
 #endif
@@ -883,6 +901,10 @@ void GcodeSuite::G425() {
   #ifdef CALIBRATION_SCRIPT_POST
     process_subcommands_now(F(CALIBRATION_SCRIPT_POST));
   #endif
+
+
+  TERN_(SWITCHING_NOZZLE, servo[active_extruder? SWITCHING_NOZZLE_SERVO_NR : SWITCHING_NOZZLE_E1_SERVO_NR].move(servo_angles[SWITCHING_NOZZLE_SERVO_NR][1]));
+
 }
 
 #endif // CALIBRATION_GCODE

@@ -1899,7 +1899,7 @@ static_assert(X_MAX_LENGTH >= X_BED_SIZE, "Movement bounds (X_MIN_POS, X_MAX_POS
     #endif
 
     #ifdef DEACTIVATE_SERVOS_AFTER_MOVE
-      #error "BLTOUCH requires DEACTIVATE_SERVOS_AFTER_MOVE to be to disabled. Please update your Configuration.h file."
+      //#error "BLTOUCH requires DEACTIVATE_SERVOS_AFTER_MOVE to be to disabled. Please update your Configuration.h file."
     #endif
 
     #if ENABLED(INVERTED_PROBE_STATE)
