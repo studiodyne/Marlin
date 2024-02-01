@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (c) 2020 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (C) 2016 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,116 +19,222 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-#pragma once
 
 /**
- * Arduino Mega with RAMPS v1.4 adjusted pin assignments
- * Schematic (1.4): https://green-candy.osdn.jp/external/MarlinFW/board_schematics/RAMPS/MKS%20GEN%20v1.4/MKS%20GEN%20V1.4_004%20SCH.pdf
- * Origin (1.4): https://github.com/makerbase-mks/MKS-GEN/blob/master/hardware/MKS%20GEN%20V1.4_004/MKS%20GEN%20V1.4_004%20SCH.pdf
- * ATmega2560, ATmega1280
- *
- *  MKS GEN v1.3  (Extruder, Fan, Bed)
- *  MKS GEN v1.3  (Extruder, Extruder, Fan, Bed)
- *  MKS GEN v1.4  (Extruder, Fan, Bed)
- *  MKS GEN v1.4  (Extruder, Extruder, Fan, Bed)
+ * Gen7 v1.4 pin assignments
  */
 
-#if HOTENDS > 2 || E_STEPPERS > 2
-  #error "MKS GEN 1.3/1.4 supports up to 2 hotends / E steppers."
+
+#define BOARD_NAME "Gen7 v1.4"
+
+#define GEN7_VERSION 14 // v1.4
+
+#define KNOWN_BOARD 1
+
+#define LARGE_FLASH        true
+
+#define X_STEP_PIN         54
+#define X_DIR_PIN          55
+#define X_ENABLE_PIN       38
+#define X_MIN_PIN           3
+#define X_MAX_PIN          -1 // 2
+
+#define Y_STEP_PIN         60
+#define Y_DIR_PIN          61
+#define Y_ENABLE_PIN       56
+#define Y_MIN_PIN          14
+#define Y_MAX_PIN          -1 // 15
+
+#define Z_STEP_PIN         46
+#define Z_DIR_PIN          48
+#define Z_ENABLE_PIN       62
+#define Z_MIN_PIN          18
+#define Z_MAX_PIN          -1 // 19
+
+#define Z2_STEP_PIN        36
+#define Z2_DIR_PIN         34
+#define Z2_ENABLE_PIN      30
+
+#define E0_STEP_PIN        26
+#define E0_DIR_PIN         28
+#define E0_ENABLE_PIN      24
+
+#define E1_STEP_PIN        36
+#define E1_DIR_PIN         34
+#define E1_ENABLE_PIN      30
+
+//#define SDPOWER            -1
+#define SDSS               53
+//#define LED_PIN            -1
+
+#define FAN0_PIN            9// D8 for dual extruder 131227
+
+#define PS_ON_PIN          12
+
+#define FIL_RUNOUT_PIN 15
+#define FIL_RUNOUT2_PIN 2
+
+//#define LASER_PIN   -1
+
+#define HEATER_0_PIN       7   // EXTRUDER 1
+#define HEATER_1_PIN       10    // EXTRUDER 2 (FAN On Sprinter)
+
+#define TEMP_0_PIN         3   // ANALOG NUMBERING
+#define TEMP_1_PIN         4 //14   // ANALOG NUMBERING
+
+#define HEATER_BED_PIN     8    // was 14 or 15 BED
+#define TEMP_BED_PIN       14   // ANALOG NUMBERING
+
+#define SERVO0_PIN         11
+//#define SERVO1_PIN         -1
+//#define SERVO2_PIN         -1
+//#define SERVO3_PIN         -1
+
+
+#if ENABLED (MINIPANEL)
+#define BEEPER_PIN 37
+#define DOGLCD_A0  27
+#define DOGLCD_CS  25
+#define LCD_BACKLIGHT_PIN 65  // backlight LED on A11/D65
+#define SDSS   53
+#define KILL_PIN 64
+#define LCD_CONTRAST 190
+#define BTN_EN1 31
+#define BTN_EN2 33
+#define BTN_ENC 35  //the click switch
+#define SD_DETECT_PIN 49
+// Uncomment screen orientation
+//#define LCD_SCREEN_ROT_90
+//#define LCD_SCREEN_ROT_180
+//#define LCD_SCREEN_ROT_270
 #endif
 
-#define BOARD_INFO_NAME "MKS GEN >= v1.3"
+#if ENABLED (REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER)
 
-//
-// Heaters / Fans
-//
-#define MOSFET_B_PIN                           7
-#define FAN0_PIN                               9
+		//#define DOGLCD_A0  27
+		//#define DOGLCD_CS  25
+		//#define LCD_BACKLIGHT_PIN 65  // backlight LED on A11/D65
 
-//
-// PSU / SERVO
-//
-// If PSU_CONTROL is specified, always hijack Servo 3
-//
-#if ENABLED(PSU_CONTROL)
-  #define SERVO3_PIN                          -1
-  #define PS_ON_PIN                            4
+		// GLCD features
+		#define LCD_CONTRAST 190
+
+		#define BEEPER_PIN 37
+		#define BTN_ENC 35  //the click switch
+		#define LCD_PINS_RS     16
+  #define LCD_PINS_EN 17
+  #define LCD_PINS_D4     23
+  #define LCD_PINS_D5     25
+  #define LCD_PINS_D6     27
+		#define LCD_PINS_D7     29
+		#define BTN_EN2 31
+		#define SDSS   53
+		#define BTN_EN1 33
+		#define SD_DETECT_PIN 49
+		#define KILL_PIN 64
+
+		// Uncomment screen orientation
+//#define LCD_SCREEN_ROT_90
+//#define LCD_SCREEN_ROT_180
+//#define LCD_SCREEN_ROT_270
+	/**
+		*   REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER
+		*   physical pin  function
+		*   EXP1.1        BEEPER
+		*   EXP1.2        BTN_ENC
+		*   EXP1.3        LCD_PINS_ENABLE
+		*   EXP1.4        LCD_PINS_RS
+		*   EXP1.5        LCD_PINS_D4
+		*   EXP1.6        LCD_PINS_D5 (not used)
+		*   EXP1.7        LCD_PINS_D6 (not used)
+		*   EXP1.8        LCD_PINS_D7 (not used)
+		*   EXP1.9        GND
+		*   EXP1.10       VCC
+		*
+		*
+		*   EXP2.1        MISO
+		*   EXP2.2        SCK
+		*   EXP2.3        BTN_EN2
+		*   EXP2.4        SDSS
+		*   EXP2.5        BTN_EN1
+		*   EXP2.6        MOSI
+		*   EXP2.7        SD_DETECT_PIN
+		*   EXP2.8        button
+		*   EXP2.9        GND
+		*   EXP2.10       NC
+ */
 #endif
-
-#include "pins_RAMPS.h"
-
-#undef EXP2_08_PIN
-#define EXP2_08_PIN                           -1  // RESET
-
-//
-// LCD / Controller
-//
-
-#if ANY(VIKI2, miniVIKI)
-  /**
-   * VIKI2 Has two groups of wires with...
+#if ENABLED(HAVE_TMC2208)
+/**
+   * TMC2208 stepper drivers
    *
-   * +Vin     + Input supply, requires 120ma for LCD and mSD card
-   * GND      Ground Pin
-   * MOSI     Data input for LCD and SD
-   * MISO     Data output for SD
-   * SCK      Clock for LCD and SD
-   * AO       Reg. Sel for LCD
-   * LCS      Chip Select for LCD
-   * SDCS     Chip Select for SD
-   * SDCD     Card Detect pin for SD
-   * ENCA     Encoder output A
-   * ENCB     Encoder output B
-   * ENCBTN   Encoder button switch
-   *
-   * BTN      Panel mounted button switch
-   * BUZZER   Piezo buzzer
-   * BLUE-LED Blue LED ring pin (3 to 5v, mosfet buffered)
-   * RED-LED  Red LED ring pin (3 to 5v, mosfet buffered)
-   *
-   * This configuration uses the following arrangement:
-   *
-   *             ------                       ------
-   *       ENCB | 1  2 |  ENCA          MISO | 1  2 | SCK
-   *   BLUE_LED | 3  4 |  RED_LED     ENCBTN | 3  4 | SDCS
-   *       KILL   5  6 |  BEEPER               5  6 | MOSI
-   *         A0 | 7  8 |  LCD_CS        SDCD | 7  8 |
-   *        GND | 9 10 | 5V              GND | 9 10 | --
-   *             ------                       ------
-   *              EXP1                         EXP2
+   * Hardware serial communication ports.
+   * If undefined software serial is used according to the pins below
    */
-  #undef SD_DETECT_PIN
-  #undef BTN_EN1
-  #undef BTN_EN2
-  #undef BTN_ENC
-  #undef DOGLCD_A0
-  #undef DOGLCD_CS
-  #undef BEEPER_PIN
-  #undef KILL_PIN
-  #undef STAT_LED_RED_PIN
-  #undef STAT_LED_BLUE_PIN
+  //#define X_HARDWARE_SERIAL  Serial1
+  //#define X2_HARDWARE_SERIAL Serial1
+  //#define Y_HARDWARE_SERIAL  Serial1
+  //#define Y2_HARDWARE_SERIAL Serial1
+  //#define Z_HARDWARE_SERIAL  Serial1
+  //#define Z2_HARDWARE_SERIAL Serial1
+  //#define E0_HARDWARE_SERIAL Serial1
+  //#define E1_HARDWARE_SERIAL Serial1
+  //#define E2_HARDWARE_SERIAL Serial1
+  //#define E3_HARDWARE_SERIAL Serial1
+  //#define E4_HARDWARE_SERIAL Serial1
 
-  //
-  // VIKI2 12-wire lead
-  //
-  #define SD_DETECT_PIN              EXP2_07_PIN  // SDCD     orange/white
-  #define BTN_EN1                    EXP1_02_PIN  // ENCA     white
-  #define BTN_EN2                    EXP1_01_PIN  // ENCB     green
-  #define BTN_ENC                    EXP2_03_PIN  // ENCBTN   purple
-  #define DOGLCD_A0                  EXP1_07_PIN  // A0       brown
-  #define DOGLCD_CS                  EXP1_08_PIN  // LCS      green/white
+  /**
+   * Software serial
+   */
 
-  // EXP2_01_PIN  gray   MISO
-  // EXP2_06_PIN  yellow MOSI
-  // EXP2_02_PIN  orange SCK
+  #define X_SERIAL_TX_PIN    -1//40
+  #define X_SERIAL_RX_PIN    -1//63
+  #define X2_SERIAL_TX_PIN   -1
+  #define X2_SERIAL_RX_PIN   -1
 
-  //#define SDSS                     EXP2_04_PIN  // SDCS     blue
+  #define Y_SERIAL_TX_PIN    -1//59
+  #define Y_SERIAL_RX_PIN    -1//64
+  #define Y2_SERIAL_TX_PIN   -1
+  #define Y2_SERIAL_RX_PIN   -1
 
-  //
-  // VIKI2 4-wire lead
-  //
-  #define KILL_PIN                   EXP1_05_PIN  // BTN      blue
-  #define BEEPER_PIN                 EXP1_06_PIN  // BUZZER   green
-  #define STAT_LED_RED_PIN           EXP1_04_PIN  // RED-LED  yellow
-  #define STAT_LED_BLUE_PIN          EXP1_03_PIN  // BLUE-LED white
+  #define Z_SERIAL_TX_PIN    -1//42
+  #define Z_SERIAL_RX_PIN    -1//65
+  #define Z2_SERIAL_TX_PIN   -1
+  #define Z2_SERIAL_RX_PIN   -1
+
+  #define E0_SERIAL_TX_PIN   -1//44
+  #define E0_SERIAL_RX_PIN   -1//66
+  #define E1_SERIAL_TX_PIN   -1
+  #define E1_SERIAL_RX_PIN   -1
+  #define E2_SERIAL_TX_PIN   -1
+  #define E2_SERIAL_RX_PIN   -1
+  #define E3_SERIAL_TX_PIN   -1
+  #define E3_SERIAL_RX_PIN   -1
+  #define E4_SERIAL_TX_PIN   -1
+  #define E4_SERIAL_RX_PIN   -1
 #endif
+
+//Test----------------------
+#define FIL_RUNOUT3_PIN 15
+#define FIL_RUNOUT4_PIN 2
+#define FIL_RUNOUT5_PIN 2
+
+#define E2_STEP_PIN        36
+#define E2_DIR_PIN         34
+#define E2_ENABLE_PIN      30
+
+#define E3_STEP_PIN        36
+#define E3_DIR_PIN         34
+#define E3_ENABLE_PIN      30
+
+#define E4_STEP_PIN        36
+#define E4_DIR_PIN         34
+#define E4_ENABLE_PIN      30
+
+#define TEMP_2_PIN         3   // ANALOG NUMBERING
+#define TEMP_3_PIN         3   // ANALOG NUMBERING
+#define TEMP_4_PIN         3
+
+#define HEATER_2_PIN       7
+#define HEATER_3_PIN       7
+#define HEATER_4_PIN       7
+//Test----------------------
