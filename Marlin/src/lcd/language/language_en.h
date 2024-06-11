@@ -724,7 +724,6 @@ namespace LanguageNarrow_en {
   LSTR MSG_RUNOUT_ACTIVE                  = _UxGT("Runout Active");
   LSTR MSG_RUNOUT_INVERSION               = _UxGT("Inv sensor.");
   LSTR MSG_INVERT_EXTRUDER                = _UxGT("Invert Extruder");
-  LSTR MSG_EXTRUDER_MIN_TEMP              = _UxGT("Extruder Min Temp.");
   LSTR MSG_FANCHECK                       = _UxGT("Fan Tacho Check");
   LSTR MSG_KILL_HOMING_FAILED             = _UxGT("Homing Failed");
   LSTR MSG_LCD_PROBING_FAILED             = _UxGT("Probing Failed");
