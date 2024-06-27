@@ -115,6 +115,7 @@
 #define CALIBRATION_PIN_INVERTING true      // Set to true to invert the custom pin
 //#define TEMP_BOARD_PIN                    PC1 // TEMP_SENSOR_2_PIN
 #define TEMP_CHAMBER_PIN                    PC1 // TEMP_SENSOR_2_PIN
+#define TEMP_BOARD_PIN                      PC1 // TEMP_SENSOR_2_PIN
 
 //#define POWER_LOSS_PIN                      PD0 //1 sur driver e2
 #define COOLANT_FLOOD_PIN                   PD2 //7 sur driver e2

@@ -116,7 +116,7 @@
 //#define BLUETOOTH
 
 // Name displayed in the LCD "Ready" message and Info menu
-#define CUSTOM_MACHINE_NAME "Tronxydual V19exp"
+#define CUSTOM_MACHINE_NAME "Tronxydual V19.1"
 
 // Printer's unique ID, used by some programs to differentiate between machines.
 // Choose your own or use a service like https://www.uuidgenerator.net/version4
@@ -565,7 +565,7 @@
 #define TEMP_SENSOR_PROBE 0
 #define TEMP_SENSOR_CHAMBER 5
 #define TEMP_SENSOR_COOLER 0
-#define TEMP_SENSOR_BOARD 0
+#define TEMP_SENSOR_BOARD 5
 #define TEMP_SENSOR_SOC 0
 #define TEMP_SENSOR_REDUNDANT 0
 
@@ -1245,7 +1245,7 @@
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 200, 200, 8, 150 }
+#define DEFAULT_MAX_FEEDRATE          { G0_FEEDRATE/60, G0_FEEDRATE/60, 8, 150 }
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -1258,7 +1258,7 @@
  * Override with M201
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_ACCELERATION      { 500, 500, 500, 10000 }
+#define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 10000 }
 
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
 #if ENABLED(LIMITED_MAX_ACCEL_EDITING)
@@ -1273,9 +1273,9 @@
  *   M204 R    Retract Acceleration
  *   M204 T    Travel Acceleration
  */
-#define DEFAULT_ACCELERATION          500    // X, Y, Z and E acceleration for printing moves
+#define DEFAULT_ACCELERATION          1000    // X, Y, Z and E acceleration for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  3000    // E acceleration for retracts
-#define DEFAULT_TRAVEL_ACCELERATION   1500    // X, Y, Z acceleration for travel (non printing) moves
+#define DEFAULT_TRAVEL_ACCELERATION   1000    // X, Y, Z acceleration for travel (non printing) moves
 
 /**
  * Default Jerk limits (mm/s)
@@ -2270,8 +2270,8 @@
 #define Z_SAFE_HOMING
 
 #if ENABLED(Z_SAFE_HOMING)
-  #define Z_SAFE_HOMING_X_POINT 25  // (mm) X point for Z homing
-  #define Z_SAFE_HOMING_Y_POINT Y_MAX_POS  // (mm) Y point for Z homing
+  #define Z_SAFE_HOMING_X_POINT X_CENTER  // (mm) X point for Z homing
+  #define Z_SAFE_HOMING_Y_POINT Y_CENTER  // (mm) Y point for Z homing
   #define Z_SAFE_HOMING_POINT_ABSOLUTE  // Ignore home offsets (M206) for Z homing position
 #endif
 
@@ -2474,7 +2474,7 @@
   // Default pattern to use when 'P' is not provided to G12. One of the enabled options above.
   #define NOZZLE_CLEAN_DEFAULT_PATTERN 0
 
-  #define NOZZLE_CLEAN_STROKES     8   // Default number of pattern repetitions
+  #define NOZZLE_CLEAN_STROKES     12   // Default number of pattern repetitions
 
   #if ENABLED(NOZZLE_CLEAN_PATTERN_ZIGZAG)
     #define NOZZLE_CLEAN_TRIANGLES  4   // Default number of triangles

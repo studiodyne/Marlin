@@ -274,8 +274,8 @@
 //
 #if TEMP_SENSOR_BOARD
   #define THERMAL_PROTECTION_BOARD   // Halt the printer if the board sensor leaves the temp range below.
-  #define BOARD_MINTEMP           8  // (°C)
-  #define BOARD_MAXTEMP          70  // (°C)
+  #define BOARD_MINTEMP          -30  // (°C)
+  #define BOARD_MAXTEMP          60  // (°C)
   //#define TEMP_BOARD_PIN -1        // Board temp sensor pin override.
 #endif
 
@@ -1329,7 +1329,7 @@
 #if ENABLED(CALIBRATION_GCODE)
 
   #define CALIBRATION_SCRIPT_PRE  "M117 Auto-Calibration "
-  #define CALIBRATION_SCRIPT_POST "M500\nM117 Calibration data saved"
+  #define CALIBRATION_SCRIPT_POST "M500\nM117 Calibration Ok!"
   #define CALIBRATION_ALLOW_CORE_AXES  // Experimental
   #define CALIBRATION_TOOLCHANGE_FEATURE_DISABLED // Disable prime, swap, moves and park during calibration
 
@@ -1482,8 +1482,8 @@
 // Change values more rapidly when the encoder is rotated faster
 #define ENCODER_RATE_MULTIPLIER
 #if ENABLED(ENCODER_RATE_MULTIPLIER)
-  #define ENCODER_10X_STEPS_PER_SEC   30  // (steps/s) Encoder rate for 10x speed
-  #define ENCODER_100X_STEPS_PER_SEC  80  // (steps/s) Encoder rate for 100x speed
+  #define ENCODER_10X_STEPS_PER_SEC   100 // (steps/s) Encoder rate for 10x speed
+  #define ENCODER_100X_STEPS_PER_SEC  200  // (steps/s) Encoder rate for 100x speed
 #endif
 
 // Play a beep when the feedrate is changed from the Status Screen
@@ -1494,7 +1494,7 @@
 #endif
 
 #if HAS_BED_PROBE && ANY(HAS_MARLINUI_MENU, HAS_TFT_LVGL_UI)
-  //#define PROBE_OFFSET_WIZARD       // Add a Probe Z Offset calibration option to the LCD menu
+  #define PROBE_OFFSET_WIZARD       // Add a Probe Z Offset calibration option to the LCD menu
   #if ENABLED(PROBE_OFFSET_WIZARD)
     /**
      * Enable to init the Probe Z-Offset when starting the Wizard.
@@ -1504,7 +1504,7 @@
     //#define PROBE_OFFSET_WIZARD_START_Z -4.0
 
     // Set a convenient position to do the calibration (probing point and nozzle/bed-distance)
-    //#define PROBE_OFFSET_WIZARD_XY_POS { X_CENTER, Y_CENTER }
+    #define PROBE_OFFSET_WIZARD_XY_POS { X_CENTER, Y_CENTER }
   #endif
 #endif
 
@@ -1965,7 +1965,7 @@
 
   // A bigger font is available for edit items. Costs 3120 bytes of flash.
   // Western only. Not available for Cyrillic, Kana, Turkish, Greek, or Chinese.
-  #define USE_BIG_EDIT_FONT
+  //#define USE_BIG_EDIT_FONT
 
   // A smaller font may be used on the Info Screen. Costs 2434 bytes of flash.
   // Western only. Not available for Cyrillic, Kana, Turkish, Greek, or Chinese.
@@ -3357,11 +3357,11 @@
    * STEALTHCHOP_(XY|Z|E) must be enabled to use HYBRID_THRESHOLD.
    * M913 X/Y/Z/E to live tune the setting
    */
-  //#define HYBRID_THRESHOLD
+  #define HYBRID_THRESHOLD
 
-  #define X_HYBRID_THRESHOLD     100  // [mm/s]
+  #define X_HYBRID_THRESHOLD     255  // [mm/s]
   #define X2_HYBRID_THRESHOLD    100
-  #define Y_HYBRID_THRESHOLD     100
+  #define Y_HYBRID_THRESHOLD     255
   #define Y2_HYBRID_THRESHOLD    100
   #define Z_HYBRID_THRESHOLD       3
   #define Z2_HYBRID_THRESHOLD      3
@@ -4070,8 +4070,8 @@
   #define MAIN_MENU_ITEM_14_GCODE "G29 D"
   //#define MAIN_MENU_ITEM_14_CONFIRM
 
-  #define MAIN_MENU_ITEM_15_DESC "Mesh 1 vers 0"
-  #define MAIN_MENU_ITEM_15_GCODE "G29 L1\nG29 S0\nG29 L0"
+  #define MAIN_MENU_ITEM_15_DESC "Load mesh 0"
+  #define MAIN_MENU_ITEM_15_GCODE "G29 L0"
   //#define MAIN_MENU_ITEM_15_CONFIRM
 
   #define MAIN_MENU_ITEM_16_DESC "Topology"
