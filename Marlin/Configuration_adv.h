@@ -3974,7 +3974,7 @@
 //#define GCODE_MOTION_MODES  // Remember the motion mode (G0 G1 G2 G3 G5 G38.X) and apply for X Y Z E F, etc.
 
 // Enable and set a (default) feedrate for all G0 moves
-#define G0_FEEDRATE 200 * 60 // (mm/min)
+#define G0_FEEDRATE 240 * 60 // (mm/min)
 #ifdef G0_FEEDRATE
   #define VARIABLE_G0_FEEDRATE // The G0 feedrate is set by F in G0 motion mode
 #endif
@@ -4019,23 +4019,32 @@
   //#define MAIN_MENU_ITEM_1_CONFIRM          // Show a confirmation dialog before this action
 
   //#define MAIN_MENU_ITEM_2_DESC "Préch Nylon + PVA"
-  #define MAIN_MENU_ITEM_2_GCODE "M140 S100\n M190 S100 \n M104 T0 S270.00 \n M104 T1 S220.00"
+  //#define MAIN_MENU_ITEM_2_GCODE "M140 S100\n M190 S100 \n M104 T0 S270.00 \n M104 T1 S220.00"
   //#define MAIN_MENU_ITEM_2_CONFIRM
 
   //#define MAIN_MENU_ITEM_3_DESC "Préchauffage Nylon"
-  #define MAIN_MENU_ITEM_3_GCODE "M140 S100 \n M190 S100 \n M104 S270"
+  //#define MAIN_MENU_ITEM_3_GCODE "M140 S100 \n M190 S100 \n M104 S270"
   //#define MAIN_MENU_ITEM_3_CONFIRM
 
-  #define MAIN_MENU_ITEM_4_DESC "Park"
-  #define MAIN_MENU_ITEM_4_GCODE "G27"
+  //#define MAIN_MENU_ITEM_4_DESC "Park"
+  //#define MAIN_MENU_ITEM_4_GCODE "G27"
   //#define MAIN_MENU_ITEM_4_CONFIRM
 
-  #define MAIN_MENU_ITEM_5_DESC "Retract S0"
-  #define MAIN_MENU_ITEM_5_GCODE "M207 S0"
+  #define MAIN_MENU_ITEM_2_DESC "Retract S0"
+  #define MAIN_MENU_ITEM_2_GCODE "M207 S0"
+  //#define MAIN_MENU_ITEM_5_CONFIRM
+  #define MAIN_MENU_ITEM_3_DESC "Retract S3"
+  #define MAIN_MENU_ITEM_3_GCODE "M207 S3"
+  //#define MAIN_MENU_ITEM_5_CONFIRM
+  #define MAIN_MENU_ITEM_4_DESC "Retract S6"
+  #define MAIN_MENU_ITEM_4_GCODE "M207 S6"
+  //#define MAIN_MENU_ITEM_5_CONFIRM
+  #define MAIN_MENU_ITEM_5_DESC "Retract S8"
+  #define MAIN_MENU_ITEM_5_GCODE "M207 S8"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  #define MAIN_MENU_ITEM_6_DESC "Retract S3"
-  #define MAIN_MENU_ITEM_6_GCODE "M207 S3"
+  #define MAIN_MENU_ITEM_6_DESC "Retract S10"
+  #define MAIN_MENU_ITEM_6_GCODE "M207 S10"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_7_DESC "Retract z0"
@@ -4062,20 +4071,20 @@
   #define MAIN_MENU_ITEM_12_GCODE "M280 H0"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  #define MAIN_MENU_ITEM_13_DESC "Leveling ON"
-  #define MAIN_MENU_ITEM_13_GCODE "G29 A"
+  //#define MAIN_MENU_ITEM_13_DESC "Leveling ON"
+  //#define MAIN_MENU_ITEM_13_GCODE "G29 A"
   //#define MAIN_MENU_ITEM_13_CONFIRM
 
-  #define MAIN_MENU_ITEM_14_DESC "Leveling OFF"
-  #define MAIN_MENU_ITEM_14_GCODE "G29 D"
+  //#define MAIN_MENU_ITEM_14_DESC "Leveling OFF"
+  //#define MAIN_MENU_ITEM_14_GCODE "G29 D"
   //#define MAIN_MENU_ITEM_14_CONFIRM
 
   #define MAIN_MENU_ITEM_15_DESC "Load mesh 0"
   #define MAIN_MENU_ITEM_15_GCODE "G29 L0"
   //#define MAIN_MENU_ITEM_15_CONFIRM
 
-  #define MAIN_MENU_ITEM_16_DESC "Topology"
-  #define MAIN_MENU_ITEM_16_GCODE "G29 T"
+  //#define MAIN_MENU_ITEM_16_DESC "Topology"
+  //#define MAIN_MENU_ITEM_16_GCODE "G29 T"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_17_DESC "Calibration"
@@ -4095,23 +4104,23 @@
   //#define MAIN_MENU_ITEM_20_CONFIRM
 
   #define MAIN_MENU_ITEM_21_DESC "SuperVolcano E0"
-  #define MAIN_MENU_ITEM_21_GCODE "M306 E0 A0.0104 C54.63 F0.0095 P80 R0.1224"
+  #define MAIN_MENU_ITEM_21_GCODE "M306 E0 P80 C55.72 R0.2191 A-0.0091 F0.0303 H0.0056"
   //#define MAIN_MENU_ITEM_21_CONFIRM
 
   #define MAIN_MENU_ITEM_22_DESC "SuperVolcano E1"
-  #define MAIN_MENU_ITEM_22_GCODE "M306 E1 A0.0104 C54.63 F0.0095 P80 R0.1224"
+  #define MAIN_MENU_ITEM_22_GCODE "M306 E1 P80 C55.72 R0.2191 A-0.0091 F0.0303 H0.0056"
   //#define MAIN_MENU_ITEM_22_CONFIRM
 
   #define MAIN_MENU_ITEM_23_DESC "Volcano E0"
-  #define MAIN_MENU_ITEM_23_GCODE "M306 E0 A0.0056 C18.67 F0.017  P70 R0.4205"
+  #define MAIN_MENU_ITEM_23_GCODE "M306 E0 P70.00 C18.67 R0.4205 A0.0056 F0.0170 H0.0056"
   //#define MAIN_MENU_ITEM_23_CONFIRM
 
   #define MAIN_MENU_ITEM_24_DESC "Volcano E1"
-  #define MAIN_MENU_ITEM_24_GCODE "M306 E1 A0.0056 C18.67 F0.017  P70 R0.4205"
+  #define MAIN_MENU_ITEM_24_GCODE "M306 E1 P70.00 C18.67 R0.4205 A0.0056 F0.0170 H0.0056"
   //#define MAIN_MENU_ITEM_24_CONFIRM
 
-  #define MAIN_MENU_ITEM_25_DESC "Active tool low"
-  #define MAIN_MENU_ITEM_25_GCODE "M280C"
+  //#define MAIN_MENU_ITEM_25_DESC "Active tool low"
+//#define MAIN_MENU_ITEM_25_GCODE "M280C"
   //#define MAIN_MENU_ITEM_25_CONFIRM
 
 #endif
