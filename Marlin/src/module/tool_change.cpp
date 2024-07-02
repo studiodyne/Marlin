@@ -1333,6 +1333,8 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         constexpr bool safe_to_move = true;
       #endif
 
+      TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+
       // Return to position and lower again
       const bool should_move = safe_to_move && !no_move && IsRunning();
       if (should_move) {
@@ -1415,7 +1417,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
           do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
       #endif
 
-      TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+      //TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
 
     } // (new_tool != old_tool)
 

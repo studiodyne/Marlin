@@ -119,7 +119,7 @@ void GcodeSuite::M125() {
           }
         }
       }
-      resume_print(0, 0, -retract, 0);
+      resume_print(0, 0, ADVANCED_PAUSE_PURGE_LENGTH * 2, 0);
     }
   }
   else  {
