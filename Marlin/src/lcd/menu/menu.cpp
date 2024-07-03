@@ -295,6 +295,7 @@ void scroll_screen(const uint8_t limit, const bool is_menu) {
       const int16_t babystep_increment = int16_t(ui.encoderPosition) * (BABYSTEP_SIZE_Z);
       ui.encoderPosition = 0;
 
+
       const float diff = planner.mm_per_step[Z_AXIS] * babystep_increment,
                   new_probe_offset = probe.offset.z + diff,
                   new_offs = TERN(BABYSTEP_HOTEND_Z_OFFSET
@@ -305,11 +306,23 @@ void scroll_screen(const uint8_t limit, const bool is_menu) {
 
         babystep.add_steps(Z_AXIS, babystep_increment);
 
+        SERIAL_ECHOLNPGM("do_probe = ", do_probe);
+        SERIAL_ECHOLNPGM("probe.offset.z = ", probe.offset.z);
+        SERIAL_ECHOLNPGM("hotend_offset[0] { ",hotend_offset[0].z, " }");
+        SERIAL_ECHOLNPGM("hotend_offset[1] { ",hotend_offset[1].z, " }");
         if (do_probe)
           probe.offset.z = new_offs;
         else
           TERN(BABYSTEP_HOTEND_Z_OFFSET, hotend_offset[active_extruder].z = new_offs, NOOP);
 
+          //----------------------------------------------------------------------
+          SERIAL_ECHOLNPGM("do_probe = ", do_probe);
+          SERIAL_ECHOLNPGM("probe.offset.z = ", probe.offset.z);
+          SERIAL_ECHOLNPGM("hotend_offset[0] { ",hotend_offset[0].z, " }");
+          SERIAL_ECHOLNPGM("hotend_offset[1] { ",hotend_offset[1].z, " }");
+          SERIAL_ECHOLNPGM("probe.offset.z + diff / new_probe_offset = ", new_probe_offset);
+          SERIAL_ECHOLNPGM("new_offs  = ", new_offs);
+          //-------------------------------------------------------------
         ui.refresh(LCDVIEW_CALL_REDRAW_NEXT);
       }
     }
@@ -320,7 +333,8 @@ void scroll_screen(const uint8_t limit, const bool is_menu) {
       }
       else {
         #if ENABLED(BABYSTEP_HOTEND_Z_OFFSET)
-          MenuEditItemBase::draw_edit_screen(GET_TEXT_F(MSG_HOTEND_OFFSET_Z), ftostr54sign(hotend_offset[active_extruder].z));
+          MenuEditItemBase::draw_edit_screen(GET_TEXT_F(MSG_ZPROBE_ZOFFSET), BABYSTEP_TO_STR(hotend_offset[active_extruder].z));
+          TERN_(BABYSTEP_GFX_OVERLAY, ui.zoffset_overlay(hotend_offset[active_extruder].z));
         #endif
       }
     }

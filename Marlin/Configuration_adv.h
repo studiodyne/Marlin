@@ -1963,7 +1963,7 @@
 
   // A bigger font is available for edit items. Costs 3120 bytes of flash.
   // Western only. Not available for Cyrillic, Kana, Turkish, Greek, or Chinese.
-  //#define USE_BIG_EDIT_FONT
+  #define USE_BIG_EDIT_FONT
 
   // A smaller font may be used on the Info Screen. Costs 2434 bytes of flash.
   // Western only. Not available for Cyrillic, Kana, Turkish, Greek, or Chinese.
@@ -2291,7 +2291,7 @@
   #define BABYSTEP_ZPROBE_OFFSET          // Combine M851 Z and Babystepping
   #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
     #define BABYSTEP_HOTEND_Z_OFFSET      // For multiple hotends, babystep relative Z offsets
-    //#define BABYSTEP_GFX_OVERLAY   // Enable graphical overlay on Z-offset editor
+    #define BABYSTEP_GFX_OVERLAY   // Enable graphical overlay on Z-offset editor
   #endif
 #endif
 
@@ -4053,12 +4053,12 @@
   #define MAIN_MENU_ITEM_8_GCODE "M207 Z2"
   //#define MAIN_MENU_ITEM_8_CONFIRM
 
-  #define MAIN_MENU_ITEM_9_DESC "T0"
-  #define MAIN_MENU_ITEM_9_GCODE "T0"
+  #define MAIN_MENU_ITEM_9_DESC "G60\nT0\nG61"
+  #define MAIN_MENU_ITEM_9_GCODE "G60\nT0\nG61"
   //#define MAIN_MENU_ITEM_9_CONFIRM
 
-  #define MAIN_MENU_ITEM_10_DESC "T1"
-  #define MAIN_MENU_ITEM_10_GCODE "T1"
+  #define MAIN_MENU_ITEM_10_DESC "G60\nT1\nG61"
+  #define MAIN_MENU_ITEM_10_GCODE "G60\nT1\nG61"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_11_DESC "Tools HIGH"
@@ -4121,9 +4121,33 @@
   #define MAIN_MENU_ITEM_24_GCODE "M306 E1 P70.00 C18.67 R0.4205 A0.0056 F0.0170 H0.0056"
   //#define MAIN_MENU_ITEM_24_CONFIRM
 
-  //#define MAIN_MENU_ITEM_25_DESC "Active tool low"
-//#define MAIN_MENU_ITEM_25_GCODE "M280C"
+  #define MAIN_MENU_ITEM_25_DESC "ToolChange neutre"
+  #define MAIN_MENU_ITEM_25_GCODE "G28\nM217 W0 E0 D0 G0 S0 B0 Z0\G0 Z0 F14400"
   //#define MAIN_MENU_ITEM_25_CONFIRM
+
+  /*
+  *  S[linear]     Swap length
+  *  B[linear]     Extra Swap resume length
+  *  E[linear]     Extra Prime length (as used by M217 Q)
+  *  G[linear]     Cutting wipe retract length (<=100mm)
+  *  R[linear/min] Retract speed
+  *  U[linear/min] UnRetract speed
+  *  P[linear/min] Prime speed
+  *  V[linear]     0/1 Enable auto prime first extruder used
+  *  W[linear]     0/1 Enable park & Z Raise
+  *  X[linear]     Park X (Requires TOOLCHANGE_PARK)
+  *  Y[linear]     Park Y (Requires TOOLCHANGE_PARK and NUM_AXES >= 2)
+  *  I[linear]     Park I (Requires TOOLCHANGE_PARK and NUM_AXES >= 4)
+  *  J[linear]     Park J (Requires TOOLCHANGE_PARK and NUM_AXES >= 5)
+  *  K[linear]     Park K (Requires TOOLCHANGE_PARK and NUM_AXES >= 6)
+  *  C[linear]     Park U (Requires TOOLCHANGE_PARK and NUM_AXES >= 7)
+  *  H[linear]     Park V (Requires TOOLCHANGE_PARK and NUM_AXES >= 8)
+  *  O[linear]     Park W (Requires TOOLCHANGE_PARK and NUM_AXES >= 9)
+  *  Z[linear]     Z Raise
+  *  F[speed]      Fan Speed 0-255
+  *  D[seconds]    Fan time
+  *
+  */
 
 #endif
 
