@@ -1259,7 +1259,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
             );
           #endif
 
-          #if HAS_HOTEND_OFFSET
+         #if HAS_HOTEND_OFFSET
             //Apply XY correction to park the new tool at the exact park pos before tool changing
             if(new_tool != old_tool ) {
               xyz_pos_t park_diff = hotend_offset[new_tool] - hotend_offset[old_tool];
@@ -1320,9 +1320,13 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       (void)check_tool_sensor_stats(active_extruder, true);
 
       // The newly-selected extruder XYZ is actually at...
-      DEBUG_ECHOLNPGM("Offset Tool XYZ by { ", diff.x, ", ", diff.y, ", ", diff.z, " }");
-      current_position += diff;
 
+      SERIAL_ECHOLNPGM("hotend_offset[0] { ", hotend_offset[0].x, ", ", hotend_offset[0].y, ", ", hotend_offset[0].z, " }");
+      SERIAL_ECHOLNPGM("hotend_offset[1] { ",  hotend_offset[1].x, ", ",  hotend_offset[1].y, ", ",  hotend_offset[1].z, " }");
+      SERIAL_ECHOLNPGM("current_position { ",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
+      SERIAL_ECHOLNPGM("Offset Tool XYZ by { ", diff.x, ", ", diff.y, ", ", diff.z, " }");
+      current_position += diff;
+      SERIAL_ECHOLNPGM("current_position { ",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
       // Tell the planner the new "current position"
       sync_plan_position();
 
