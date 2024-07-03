@@ -33,8 +33,8 @@
 #include "../MarlinCore.h"
 #include "../gcode/gcode.h"
 
-//#define DEBUG_TOOL_CHANGE
-//#define DEBUG_TOOLCHANGE_FILAMENT_SWAP
+#define DEBUG_TOOL_CHANGE
+#define DEBUG_TOOLCHANGE_FILAMENT_SWAP
 
 #if HAS_MULTI_EXTRUDER
   toolchange_settings_t toolchange_settings;  // Initialized by settings.load()
@@ -1323,10 +1323,11 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
       SERIAL_ECHOLNPGM("hotend_offset[0] { ", hotend_offset[0].x, ", ", hotend_offset[0].y, ", ", hotend_offset[0].z, " }");
       SERIAL_ECHOLNPGM("hotend_offset[1] { ",  hotend_offset[1].x, ", ",  hotend_offset[1].y, ", ",  hotend_offset[1].z, " }");
-      SERIAL_ECHOLNPGM("current_position { ",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
+      SERIAL_ECHOLNPGM("current_position avant DIFF ",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
       SERIAL_ECHOLNPGM("Offset Tool XYZ by { ", diff.x, ", ", diff.y, ", ", diff.z, " }");
       current_position += diff;
-      SERIAL_ECHOLNPGM("current_position { ",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
+      SERIAL_ECHOLNPGM("current_position after DIFF { ",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
+      SERIAL_ECHOLNPGM("destination after DIFF { ",  destination.x, ", ",  destination.y, ", ",  destination.z, " }");
       // Tell the planner the new "current position"
       sync_plan_position();
 
@@ -1370,21 +1371,38 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
             // Just move back down
             DEBUG_ECHOLNPGM("Move back Z only");
 
-            if (TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park))
+            if (TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park)) {
+
+              SERIAL_ECHOLNPGM("current_position in RETURN ",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
               do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
+              SERIAL_ECHOLNPGM("current_position after RETURN { ",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
+
+            }
 
           #else
             // Move back to the original (or adjusted) position
             DEBUG_POS("Move back", destination);
 
             #if ENABLED(TOOLCHANGE_PARK)
-              if (toolchange_settings.enable_park) do_blocking_move_to_xy_z(destination, destination.z, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
+              if (toolchange_settings.enable_park)
+            {
+              SERIAL_ECHOLNPGM("current_position in enable park",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
+              do_blocking_move_to_xy_z(destination, destination.z, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
+
+              SERIAL_ECHOLNPGM("current_position after enable_park { ",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
+
+
+            }
             #else
               do_blocking_move_to_xy(destination, planner.settings.max_feedrate_mm_s[X_AXIS]);
 
               // If using MECHANICAL_SWITCHING extruder/nozzle, set HOTEND_OFFSET in Z axis after running EVENT_GCODE_TOOLCHANGE below.
               #if NONE(MECHANICAL_SWITCHING_EXTRUDER, MECHANICAL_SWITCHING_NOZZLE)
-                do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
+              SERIAL_ECHOLNPGM("current_position in NONE",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
+              do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
+
+              SERIAL_ECHOLNPGM("current_position after NONE ",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
+
                 SECONDARY_AXIS_CODE(
                   do_blocking_move_to_i(destination.i, planner.settings.max_feedrate_mm_s[I_AXIS]),
                   do_blocking_move_to_j(destination.j, planner.settings.max_feedrate_mm_s[J_AXIS]),
@@ -1417,8 +1435,13 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
       #if HAS_SWITCHING_NOZZLE
         // Move back down. (Including when the new tool is higher.)
-        if (!should_move)
+        if (!should_move) {
+          SERIAL_ECHOLNPGM("current_position in SWITCHING NOZZLE",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
           do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
+
+          SERIAL_ECHOLNPGM("current_position after SWITCHING NOZZLE",  current_position.x, ", ",  current_position.y, ", ",  current_position.z, " }");
+
+        }
       #endif
 
       //TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
