@@ -2866,7 +2866,7 @@
   #define TOOLCHANGE_PARK
   #if ENABLED(TOOLCHANGE_PARK)
     #define TOOLCHANGE_PARK_XY    {27, Y_MIN_POS }
-    #define TOOLCHANGE_PARK_XY_FEEDRATE 12000 // (mm/min)
+    #define TOOLCHANGE_PARK_XY_FEEDRATE G0_FEEDRATE // (mm/min)
     //#define TOOLCHANGE_PARK_X_ONLY          // X axis only move
     //#define TOOLCHANGE_PARK_Y_ONLY          // Y axis only move
     #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
@@ -4077,8 +4077,8 @@
   //#define MAIN_MENU_ITEM_14_GCODE "G29 D"
   //#define MAIN_MENU_ITEM_14_CONFIRM
 
-  #define MAIN_MENU_ITEM_15_DESC "Load mesh 0"
-  #define MAIN_MENU_ITEM_15_GCODE "G29 L0"
+  #define MAIN_MENU_ITEM_13_DESC "Load mesh 0"
+  #define MAIN_MENU_ITEM_13_GCODE "G29 L0"
   //#define MAIN_MENU_ITEM_15_CONFIRM
 
   //#define MAIN_MENU_ITEM_16_DESC "Topology"
@@ -4089,8 +4089,12 @@
   #define MAIN_MENU_ITEM_17_GCODE "G425"
   //#define MAIN_MENU_ITEM_17_CONFIRM
 
-  #define MAIN_MENU_ITEM_18_DESC "Nettoyage tous bas"
-  #define MAIN_MENU_ITEM_18_GCODE "G27\nM280 H0\nG12\nM280 C"
+  #define MAIN_MENU_ITEM_14_DESC "Net.tous bas"
+  #define MAIN_MENU_ITEM_14_GCODE "G27\nM280 H0\nG12\nM280 C"
+  //#define MAIN_MENU_ITEM_18_CONFIRM
+
+  #define MAIN_MENU_ITEM_15_DESC "Net. ligne tous bas"
+  #define MAIN_MENU_ITEM_15_GCODE "G27\nM280 H0\nG12 P0\nM280 C"
   //#define MAIN_MENU_ITEM_18_CONFIRM
 
   #define MAIN_MENU_ITEM_19_DESC "Nettoyage en cours"

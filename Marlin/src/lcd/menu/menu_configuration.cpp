@@ -596,6 +596,11 @@ void menu_configuration() {
       SUBMENU(MSG_TOUCHMI_PROBE, menu_touchmi);
     #endif
   }
+  else {
+    #if HAS_HOTEND_OFFSET
+      SUBMENU(MSG_OFFSETS_MENU, menu_tool_offsets);
+    #endif
+}
 
   #if ENABLED(HOTEND_IDLE_TIMEOUT)
     SUBMENU(MSG_HOTEND_IDLE_TIMEOUT, menu_hotend_idle);
