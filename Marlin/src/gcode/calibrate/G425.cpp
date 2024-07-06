@@ -109,9 +109,11 @@ enum side_t : uint8_t {
   LIST_N(DOUBLE(SECONDARY_AXES), IMINIMUM, IMAXIMUM, JMINIMUM, JMAXIMUM, KMINIMUM, KMAXIMUM, UMINIMUM, UMAXIMUM, VMINIMUM, VMAXIMUM, WMINIMUM, WMAXIMUM)
 };
 
-static constexpr xyz_pos_t true_center CALIBRATION_OBJECT_CENTER;
-static constexpr xyz_float_t dimensions CALIBRATION_OBJECT_DIMENSIONS;
-static constexpr xy_float_t nod = { CALIBRATION_NOZZLE_OUTER_DIAMETER, CALIBRATION_NOZZLE_OUTER_DIAMETER };
+xyz_pos_t true_center CALIBRATION_OBJECT_CENTER;//STEEVE
+xyz_float_t dimensions CALIBRATION_OBJECT_DIMENSIONS;
+xy_float_t nod = { CALIBRATION_NOZZLE_OUTER_DIAMETER, CALIBRATION_NOZZLE_OUTER_DIAMETER };
+float calibration_nozzle_height = CALIBRATION_NOZZLE_TIP_HEIGHT;
+bool not_calibrating = true;
 
 struct measurements_t {
   xyz_pos_t obj_center = true_center; // Non-static must be assigned from xyz_pos_t
@@ -326,7 +328,7 @@ inline void probe_side(measurements_t &m, const float uncertainty, const side_t 
     calibration_move();
 
     // Plunge below the side of the calibration object and measure
-    current_position.z = m.obj_side[TOP] - (CALIBRATION_NOZZLE_TIP_HEIGHT) * 0.7f;
+    current_position.z = m.obj_side[TOP] - (calibration_nozzle_height) * 0.7f;
     calibration_move();
     const float measurement = measure(axis, dir, true, &m.backlash[side], uncertainty);
     m.obj_center[axis] = measurement + dir * (dimensions[axis] / 2 + m.nozzle_outer_dimension[axis] / 2);
@@ -852,18 +854,37 @@ inline void calibrate_all() {
  *   no args     - Perform entire calibration sequence (backlash + position on all toolheads)
  */
 void GcodeSuite::G425() {
+not_calibrating = false;
 
-  #ifdef CALIBRATION_SCRIPT_PRE
-    process_subcommands_now(F(CALIBRATION_SCRIPT_PRE));
-  #endif
+//steeve.
+if (parser.seen('I') || parser.seen('J') || parser.seen('K') || parser.seen('X') || parser.seen('Y') || parser.seen('Z') || parser.seen('R') )
 
-  if (homing_needed_error()) return;
+{
+true_center.x =             parser.floatval('X', true_center.x);//STEEVE
+true_center.y =             parser.floatval('Y', true_center.y);//STEEVE
+true_center.z =             parser.floatval('Z', true_center.z);//STEEVE
+dimensions.x  =              parser.floatval('J', dimensions.x);//STEEVE
+dimensions.y  =              parser.floatval('K', dimensions.y);//STEEVE
+dimensions.z  =              parser.floatval('L', true_center.z);//STEEVE
+nod           =                       parser.floatval('N', nod);
+calibration_nozzle_height = parser.floatval('H', nod);
+SERIAL_ECHOLNPGM("CENTER : X: ", true_center.x, ", Y: ", true_center.y, ", Z: ", true_center.z);
+SERIAL_ECHOLNPGM("DIMSENSIONS : J: ", dimensions.x, ", K: ", dimensions.y, ", L: ", dimensions.z);
+SERIAL_ECHOLNPGM("C0NTOUR : ", nod, "HAUTEUR : ", calibration_nozzle_height);
+return;
+}
 
-  TEMPORARY_BED_LEVELING_STATE(false);
-  SET_SOFT_ENDSTOP_LOOSE(true);
+#ifdef CALIBRATION_SCRIPT_PRE
+  process_subcommands_now(F(CALIBRATION_SCRIPT_PRE));
+#endif
 
-  measurements_t m;
-  const float uncertainty = parser.floatval('U', CALIBRATION_MEASUREMENT_UNCERTAIN);
+if (homing_needed_error()) return;
+
+TEMPORARY_BED_LEVELING_STATE(false);
+SET_SOFT_ENDSTOP_LOOSE(true);
+
+measurements_t m;
+const float uncertainty = parser.floatval('U', CALIBRATION_MEASUREMENT_UNCERTAIN);
 
   if (parser.seen_test('B'))
     calibrate_backlash(m, uncertainty);
@@ -895,7 +916,8 @@ void GcodeSuite::G425() {
 
 
   TERN_(SWITCHING_NOZZLE, servo[active_extruder? SWITCHING_NOZZLE_SERVO_NR : SWITCHING_NOZZLE_E1_SERVO_NR].move(servo_angles[SWITCHING_NOZZLE_SERVO_NR][1]));
-
+  not_calibrating = true;
+  tool_change(0);
 }
 
 #endif // CALIBRATION_GCODE

@@ -1339,14 +1339,14 @@
 
   // The following parameters refer to the conical section of the nozzle tip.
   #define CALIBRATION_NOZZLE_TIP_HEIGHT          1  // mm
-  #define CALIBRATION_NOZZLE_OUTER_DIAMETER      3  // mm
+  #define CALIBRATION_NOZZLE_OUTER_DIAMETER      4  // mm
 
   // Uncomment to enable reporting (required for "G425 V", but consumes flash).
   #define CALIBRATION_REPORTING
 
   // The true location and dimension the cube/bolt/washer on the bed.
-  #define CALIBRATION_OBJECT_CENTER     { 395, -20, 10 } // mm
-  #define CALIBRATION_OBJECT_DIMENSIONS {  25,  25,  7 } // mm
+  #define CALIBRATION_OBJECT_CENTER     { 395, -27, 10 } // mm
+  #define CALIBRATION_OBJECT_DIMENSIONS {  51,  51,  7 } // mm
 
   // Comment out any sides which are unreachable by the probe. For best
   // auto-calibration results, all sides must be reachable.

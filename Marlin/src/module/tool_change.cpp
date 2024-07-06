@@ -1217,7 +1217,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         }
       #endif
 
-      TERN_(SWITCHING_NOZZLE_TWO_SERVOS, raise_nozzle(old_tool));
+      TERN_(SWITCHING_NOZZLE_TWO_SERVOS, if(not_calibrating) raise_nozzle(old_tool));
 
       REMEMBER(fr, feedrate_mm_s, XY_PROBE_FEEDRATE_MM_S);
 
@@ -1459,10 +1459,10 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       switch (new_tool) {
         default: break;
         #ifdef EVENT_GCODE_TOOLCHANGE_T0
-          case 0: gcode.process_subcommands_now(F(EVENT_GCODE_TOOLCHANGE_T0)); break;
+          case 0: if(not_calibrating) gcode.process_subcommands_now(F(EVENT_GCODE_TOOLCHANGE_T0)); break;
         #endif
         #ifdef EVENT_GCODE_TOOLCHANGE_T1
-          case 1: gcode.process_subcommands_now(F(EVENT_GCODE_TOOLCHANGE_T1)); break;
+          case 1: if(not_calibrating) gcode.process_subcommands_now(F(EVENT_GCODE_TOOLCHANGE_T1)); break;
         #endif
         #ifdef EVENT_GCODE_TOOLCHANGE_T2
           case 2: gcode.process_subcommands_now(F(EVENT_GCODE_TOOLCHANGE_T2)); break;
