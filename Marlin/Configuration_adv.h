@@ -2746,13 +2746,13 @@
     #define MIN_AUTORETRACT             0.1 // (mm) Don't convert E moves under this length
     #define MAX_AUTORETRACT            10.0 // (mm) Don't convert E moves over this length
   #endif
-  #define RETRACT_LENGTH                3   // (mm) Default retract length (positive value)
+  #define RETRACT_LENGTH                5   // (mm) Default retract length (positive value)
   #define RETRACT_LENGTH_SWAP          60   // (mm) Default swap retract length (positive value)
   #define RETRACT_FEEDRATE             50   // (mm/s) Default feedrate for retracting
   #define RETRACT_ZRAISE                0   // (mm) Default retract Z-raise
   #define RETRACT_RECOVER_LENGTH        0   // (mm) Default additional recover length (added to retract length on recover)
   #define RETRACT_RECOVER_LENGTH_SWAP   0   // (mm) Default additional swap recover length (added to retract length on recover from toolchange)
-  #define RETRACT_RECOVER_FEEDRATE      25   // (mm/s) Default feedrate for recovering from retraction
+  #define RETRACT_RECOVER_FEEDRATE      50   // (mm/s) Default feedrate for recovering from retraction
   #define RETRACT_RECOVER_FEEDRATE_SWAP 25   // (mm/s) Default feedrate for recovering from swap retraction
   #if ENABLED(MIXING_EXTRUDER)
     //#define RETRACT_SYNC_MIXING           // Retract and restore all mixing steppers simultaneously
@@ -2767,7 +2767,7 @@
  */
 #if HAS_MULTI_EXTRUDER
   // Z raise distance for tool-change, as needed for some extruders
-  #define TOOLCHANGE_ZRAISE                 5 // (mm)
+  #define TOOLCHANGE_ZRAISE                 3 // (mm)
   //#define TOOLCHANGE_ZRAISE_BEFORE_RETRACT  // Apply raise before swap retraction (if enabled)
 	#define TOOLCHANGE_NO_RETURN              //  M217 O 0/1: Never return to previous position on tool-change
   #if ENABLED(TOOLCHANGE_NO_RETURN)
@@ -2805,13 +2805,13 @@
     // Load / Unload
     #define TOOLCHANGE_FS_LENGTH              60  // (mm) Load / Unload length
     #define TOOLCHANGE_FS_EXTRA_RESUME_LENGTH  0  // (mm) Extra length for better restart. Adjust with LCD or M217 B.
-    #define TOOLCHANGE_FS_RETRACT_SPEED   (50*60) // (mm/min) (Unloading)
-    #define TOOLCHANGE_FS_UNRETRACT_SPEED (25*60) // (mm/min) (On SINGLENOZZLE or Bowden loading must be slowed down)
+    #define TOOLCHANGE_FS_RETRACT_SPEED   RETRACT_FEEDRATE // (mm/min) (Unloading)
+    #define TOOLCHANGE_FS_UNRETRACT_SPEED RETRACT_RECOVER_FEEDRATE // (mm/min) (On SINGLENOZZLE or Bowden loading must be slowed down)
 
     // Longer prime to clean out
     #define TOOLCHANGE_FS_EXTRA_PRIME         60  // (mm) Extra priming length
     #define TOOLCHANGE_FS_PRIME_SPEED    (4.6*60) // (mm/min) Extra priming feedrate
-    #define TOOLCHANGE_FS_WIPE_RETRACT        10  // (mm) Cutting retraction out of park, for less stringing, better wipe, etc. Adjust with LCD or M217 W.
+    #define TOOLCHANGE_FS_WIPE_RETRACT         RETRACT_LENGTH  // (mm) Cutting retraction out of park, for less stringing, better wipe, etc. Adjust with LCD or M217 W.
 
     // Cool after prime to reduce stringing
     #define TOOLCHANGE_FS_FAN                 0  // Fan index or -1 for the current extruder fan. Disable to skip.
@@ -4023,19 +4023,19 @@
   #define MAIN_MENU_ITEM_2_DESC "Retract S0"
   #define MAIN_MENU_ITEM_2_GCODE "M207 S0"
   //#define MAIN_MENU_ITEM_5_CONFIRM
-  
+
   #define MAIN_MENU_ITEM_3_DESC "Retract S3"
   #define MAIN_MENU_ITEM_3_GCODE "M207 S3"
   //#define MAIN_MENU_ITEM_5_CONFIRM
-  
-  #define MAIN_MENU_ITEM_4_DESC "Retract S6"
-  #define MAIN_MENU_ITEM_4_GCODE "M207 S6"
+
+  #define MAIN_MENU_ITEM_4_DESC "Retract S5"
+  #define MAIN_MENU_ITEM_4_GCODE "M207 S5"
   //#define MAIN_MENU_ITEM_5_CONFIRM
-  
-  #define MAIN_MENU_ITEM_5_DESC "Retract S8"
+
+  //#define MAIN_MENU_ITEM_5_DESC "Retract S8"
   #define MAIN_MENU_ITEM_5_GCODE "M207 S8"
   //#define MAIN_MENU_ITEM_5_CONFIRM
-  
+
   #define MAIN_MENU_ITEM_7_DESC "Retract z0"
   #define MAIN_MENU_ITEM_7_GCODE "M207 Z0"
   //#define MAIN_MENU_ITEM_5_CONFIRM
@@ -4052,11 +4052,11 @@
   #define MAIN_MENU_ITEM_10_GCODE "T1"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  #define MAIN_MENU_ITEM_13_DESC "Leveling ON"
+  //#define MAIN_MENU_ITEM_13_DESC "Leveling ON"
   #define MAIN_MENU_ITEM_13_GCODE "G29 A"
   //#define MAIN_MENU_ITEM_13_CONFIRM
 
-  #define MAIN_MENU_ITEM_14_DESC "Leveling OFF"
+  //#define MAIN_MENU_ITEM_14_DESC "Leveling OFF"
   #define MAIN_MENU_ITEM_14_GCODE "G29 D"
   //#define MAIN_MENU_ITEM_14_CONFIRM
 
