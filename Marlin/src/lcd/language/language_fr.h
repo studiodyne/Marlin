@@ -422,6 +422,7 @@ namespace LanguageNarrow_fr {
   LSTR MSG_ZPROBE_XOFFSET                 = _UxGT("Décalage X");
   LSTR MSG_ZPROBE_YOFFSET                 = _UxGT("Décalage Y");
   LSTR MSG_ZPROBE_ZOFFSET                 = _UxGT("Décalage Z");
+  LSTR MSG_ZPROBE_ZOFFSET2                = _UxGT("Décalage Z2");
   LSTR MSG_BABYSTEP_X                     = _UxGT("Babystep X");
   LSTR MSG_BABYSTEP_Y                     = _UxGT("Babystep Y");
   LSTR MSG_BABYSTEP_Z                     = _UxGT("Babystep Z");
@@ -501,6 +502,7 @@ namespace LanguageNarrow_fr {
   LSTR MSG_FILAMENT_CHANGE_OPTION_RESUME  = _UxGT("Reprendre impr.");
   LSTR MSG_FILAMENT_CHANGE_NOZZLE         = _UxGT("  Buse: ");
   LSTR MSG_RUNOUT_SENSOR                  = _UxGT("Capteur fil.");
+  LSTR MSG_RUNOUT_INVERSION               = _UxGT("Inv capteur.");
   LSTR MSG_KILL_HOMING_FAILED             = _UxGT("Echec origine");
   LSTR MSG_LCD_PROBING_FAILED             = _UxGT("Echec sonde");
 
