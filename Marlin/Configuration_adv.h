@@ -2770,7 +2770,7 @@
  */
 #if HAS_MULTI_EXTRUDER
   // Z raise distance for tool-change, as needed for some extruders
-  #define TOOLCHANGE_ZRAISE                 0 // (mm)
+  #define TOOLCHANGE_ZRAISE                 3 // (mm)
   //#define TOOLCHANGE_ZRAISE_BEFORE_RETRACT  // Apply raise before swap retraction (if enabled)
 	#define TOOLCHANGE_NO_RETURN
   #if ENABLED(TOOLCHANGE_NO_RETURN)
@@ -2806,20 +2806,20 @@
   #define TOOLCHANGE_FILAMENT_SWAP
   #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
     // Load / Unload
-    #define TOOLCHANGE_FS_LENGTH               10  // (mm) Load / Unload length
+    #define TOOLCHANGE_FS_LENGTH               0  // (mm) Load / Unload length
     #define TOOLCHANGE_FS_EXTRA_RESUME_LENGTH  0  // (mm) Extra length for better restart. Adjust with LCD or M217 B.
     #define TOOLCHANGE_FS_RETRACT_SPEED   (RETRACT_FEEDRATE*60) // (mm/min) (Unloading)
-    #define TOOLCHANGE_FS_UNRETRACT_SPEED (RETRACT_RECOVER_FEEDRATE*60) // (mm/min) (On SINGLENOZZLE or Bowden loading must be slowed down)
+    #define TOOLCHANGE_FS_UNRETRACT_SPEED (RETRACT_FEEDRATE*60) // (mm/min) (On SINGLENOZZLE or Bowden loading must be slowed down)
 
     // Longer prime to clean out
     #define TOOLCHANGE_FS_EXTRA_PRIME          50  // (mm) Extra priming length
     #define TOOLCHANGE_FS_PRIME_SPEED    (4.6*60) // (mm/min) Extra priming feedrate
-    #define TOOLCHANGE_FS_WIPE_RETRACT         5  // (mm) Retract before cooling for less stringing, better wipe, etc.Adjust with LCD or M217 W.
+    #define TOOLCHANGE_FS_WIPE_RETRACT         3  // (mm) Retract before cooling for less stringing, better wipe, etc.Adjust with LCD or M217 W.
 
     // Cool after prime to reduce stringing
     #define TOOLCHANGE_FS_FAN                  0  // Fan index or -1 for the current extruder fan. Disable to skip.
     #define TOOLCHANGE_FS_FAN_SPEED          255  // 0-255
-    #define TOOLCHANGE_FS_FAN_TIME             3  // (seconds)
+    #define TOOLCHANGE_FS_FAN_TIME            10  // (seconds)
 
     // Use TOOLCHANGE_FS_PRIME_SPEED feedrate the first time each extruder is primed
     #define TOOLCHANGE_FS_SLOW_FIRST_PRIME
@@ -2849,15 +2849,15 @@
       // By default tool migration uses regular toolchange settings.
       // With a prime tower, tool-change swapping/priming occur inside the bed.
       // When migrating to a new unprimed tool you can set override values below.
-      #define MIGRATION_ZRAISE            5 // (mm)
+      #define MIGRATION_ZRAISE           TOOLCHANGE_ZRAISE // (mm)
 
       // Longer prime to clean out
-      #define MIGRATION_FS_EXTRA_PRIME    50 // (mm) Extra priming length
-      #define MIGRATION_FS_WIPE_RETRACT    5 // (mm) Retract before cooling for less stringing, better wipe, etc.
+      #define MIGRATION_FS_EXTRA_PRIME   TOOLCHANGE_FS_EXTRA_PRIME + 30 // (mm) Extra priming length
+      #define MIGRATION_FS_WIPE_RETRACT  TOOLCHANGE_FS_WIPE_RETRACT // (mm) Retract before cooling for less stringing, better wipe, etc.
 
       // Cool after prime to reduce stringing
       #define MIGRATION_FS_FAN_SPEED     255 // 0-255
-      #define MIGRATION_FS_FAN_TIME        3 // (seconds)
+      #define MIGRATION_FS_FAN_TIME      TOOLCHANGE_FS_FAN_TIME // (seconds)
     #endif
   #endif
 
@@ -2892,10 +2892,10 @@
  */
 #define ADVANCED_PAUSE_FEATURE
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #define PAUSE_PARK_RETRACT_FEEDRATE         (TOOLCHANGE_FS_RETRACT_SPEED / 60) // (mm/s) Initial retract feedrate.
-  #define PAUSE_PARK_RETRACT_LENGTH           TOOLCHANGE_FS_LENGTH  // (mm) Initial retract.
+  #define PAUSE_PARK_RETRACT_FEEDRATE         RETRACT_FEEDRATE // (mm/s) Initial retract feedrate.
+  #define PAUSE_PARK_RETRACT_LENGTH           TOOLCHANGE_FS_WIPE_RETRACT   // (mm) Initial retract.
                                                   // This short retract is done immediately, before parking the nozzle.
-  #define FILAMENT_CHANGE_UNLOAD_FEEDRATE     (RETRACT_FEEDRATE)  // (mm/s) Unload filament feedrate. This can be pretty fast.
+  #define FILAMENT_CHANGE_UNLOAD_FEEDRATE     RETRACT_FEEDRATE  // (mm/s) Unload filament feedrate. This can be pretty fast.
   #define FILAMENT_CHANGE_UNLOAD_ACCEL        25  // (mm/s^2) Lower acceleration may allow a faster feedrate.
   #define FILAMENT_CHANGE_UNLOAD_LENGTH       125  // (mm) The length of filament for a complete unload.
                                                   //   For Bowden, the full length of the tube and nozzle.
@@ -2911,7 +2911,7 @@
                                                   //   For direct drive, the full length of the nozzle.
   #define ADVANCED_PAUSE_CONTINUOUS_PURGE       // Purge continuously up to the purge length until interrupted.
   #define ADVANCED_PAUSE_PURGE_FEEDRATE        (TOOLCHANGE_FS_PRIME_SPEED / 60)  // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
-  #define ADVANCED_PAUSE_PURGE_LENGTH          70  // (mm) Length to extrude after loading.
+  #define ADVANCED_PAUSE_PURGE_LENGTH          TOOLCHANGE_FS_EXTRA_PRIME  // (mm) Length to extrude after loading.
                                                   //   Set to 0 for manual extrusion.
                                                   //   Filament can be extruded repeatedly from the Filament Change menu
                                                   //   until extrusion is consistent, and to purge old filament.
