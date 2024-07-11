@@ -603,8 +603,8 @@
  * gets it spinning reliably for a short time before setting the requested speed.
  * (Does not work on Sanguinololu with FAN_SOFT_PWM.)
  */
-#define FAN_KICKSTART_TIME  1000  // (ms)
-#define FAN_KICKSTART_POWER 255  // 64-255
+#define FAN_KICKSTART_TIME  2000  // (ms)
+#define FAN_KICKSTART_POWER 255 // 64-255
 
 // Some coolers may require a non-zero "off" state.
 //#define FAN_OFF_PWM  1
@@ -1213,7 +1213,7 @@
   #endif
   //#define SHAPING_MIN_FREQ  20.0      // (Hz) By default the minimum of the shaping frequencies. Override to affect SRAM usage.
   //#define SHAPING_MAX_STEPRATE 10000  // By default the maximum total step rate of the shaped axes. Override to affect SRAM usage.
-  //#define SHAPING_MENU                // Add a menu to the LCD to set shaping parameters.
+  #define SHAPING_MENU                // Add a menu to the LCD to set shaping parameters.
 #endif
 
 // @section motion
@@ -2330,6 +2330,7 @@
  *
  * Control extrusion rate based on instantaneous extruder velocity. Can be used to correct for
  * underextrusion at high extruder speeds that are otherwise well-behaved (i.e., not skipping).
+ * For better results also enable ADAPTIVE_STEP_SMOOTHING.
  */
 //#define NONLINEAR_EXTRUSION
 
@@ -2747,13 +2748,13 @@
     #define MIN_AUTORETRACT             0.1 // (mm) Don't convert E moves under this length
     #define MAX_AUTORETRACT            10.0 // (mm) Don't convert E moves over this length
   #endif
-  #define RETRACT_LENGTH                3   // (mm) Default retract length (positive value)
+  #define RETRACT_LENGTH                5   // (mm) Default retract length (positive value)
   #define RETRACT_LENGTH_SWAP          60   // (mm) Default swap retract length (positive value)
   #define RETRACT_FEEDRATE             50   // (mm/s) Default feedrate for retracting
   #define RETRACT_ZRAISE                0   // (mm) Default retract Z-raise
   #define RETRACT_RECOVER_LENGTH        0   // (mm) Default additional recover length (added to retract length on recover)
   #define RETRACT_RECOVER_LENGTH_SWAP   0   // (mm) Default additional swap recover length (added to retract length on recover from toolchange)
-  #define RETRACT_RECOVER_FEEDRATE      25   // (mm/s) Default feedrate for recovering from retraction
+  #define RETRACT_RECOVER_FEEDRATE     50   // (mm/s) Default feedrate for recovering from retraction
   #define RETRACT_RECOVER_FEEDRATE_SWAP 25   // (mm/s) Default feedrate for recovering from swap retraction
   #if ENABLED(MIXING_EXTRUDER)
     //#define RETRACT_SYNC_MIXING           // Retract and restore all mixing steppers simultaneously
@@ -2768,7 +2769,7 @@
  */
 #if HAS_MULTI_EXTRUDER
   // Z raise distance for tool-change, as needed for some extruders
-  #define TOOLCHANGE_ZRAISE                 5 // (mm)
+  #define TOOLCHANGE_ZRAISE                 3 // (mm)
   //#define TOOLCHANGE_ZRAISE_BEFORE_RETRACT  // Apply raise before swap retraction (if enabled)
 	#define TOOLCHANGE_NO_RETURN              //  M217 O 0/1: Never return to previous position on tool-change
   #if ENABLED(TOOLCHANGE_NO_RETURN)
@@ -2806,13 +2807,13 @@
     // Load / Unload
     #define TOOLCHANGE_FS_LENGTH              60  // (mm) Load / Unload length
     #define TOOLCHANGE_FS_EXTRA_RESUME_LENGTH  0  // (mm) Extra length for better restart. Adjust with LCD or M217 B.
-    #define TOOLCHANGE_FS_RETRACT_SPEED   (50*60) // (mm/min) (Unloading)
-    #define TOOLCHANGE_FS_UNRETRACT_SPEED (25*60) // (mm/min) (On SINGLENOZZLE or Bowden loading must be slowed down)
+    #define TOOLCHANGE_FS_RETRACT_SPEED   (RETRACT_FEEDRATE*60) // (mm/min) (Unloading)
+    #define TOOLCHANGE_FS_UNRETRACT_SPEED (RETRACT_RECOVER_FEEDRATE*60) // (mm/min) (On SINGLENOZZLE or Bowden loading must be slowed down)
 
     // Longer prime to clean out
-    #define TOOLCHANGE_FS_EXTRA_PRIME         60  // (mm) Extra priming length
+    #define TOOLCHANGE_FS_EXTRA_PRIME         100  // (mm) Extra priming length
     #define TOOLCHANGE_FS_PRIME_SPEED    (4.6*60) // (mm/min) Extra priming feedrate
-    #define TOOLCHANGE_FS_WIPE_RETRACT        10  // (mm) Cutting retraction out of park, for less stringing, better wipe, etc. Adjust with LCD or M217 W.
+    #define TOOLCHANGE_FS_WIPE_RETRACT         RETRACT_LENGTH  // (mm) Cutting retraction out of park, for less stringing, better wipe, etc. Adjust with LCD or M217 W.
 
     // Cool after prime to reduce stringing
     #define TOOLCHANGE_FS_FAN                 0  // Fan index or -1 for the current extruder fan. Disable to skip.
@@ -2848,11 +2849,11 @@
       // By default tool migration uses regular toolchange settings.
       // With a prime tower, tool-change swapping/priming occur inside the bed.
       // When migrating to a new unprimed tool you can set override values below.
-      #define MIGRATION_ZRAISE            5 // (mm)
+      #define MIGRATION_ZRAISE            TOOLCHANGE_ZRAISE // (mm)
 
       // Longer prime to clean out
-      #define MIGRATION_FS_EXTRA_PRIME    100 // (mm) Extra priming length
-      #define MIGRATION_FS_WIPE_RETRACT   10 // (mm) Retract before cooling for less stringing, better wipe, etc.
+      #define MIGRATION_FS_EXTRA_PRIME    TOOLCHANGE_FS_EXTRA_PRIME // (mm) Extra priming length
+      #define MIGRATION_FS_WIPE_RETRACT   TOOLCHANGE_FS_WIPE_RETRACT // (mm) Retract before cooling for less stringing, better wipe, etc.
 
       // Cool after prime to reduce stringing
       #define MIGRATION_FS_FAN_SPEED    255 // 0-255
@@ -2867,7 +2868,7 @@
   #define TOOLCHANGE_PARK
   #if ENABLED(TOOLCHANGE_PARK)
     #define TOOLCHANGE_PARK_XY    { X_MAX_POS, Y_MIN_POS + 10 }
-    #define TOOLCHANGE_PARK_XY_FEEDRATE NOZZLE_PARK_XY_FEEDRATE  // (mm/min)
+    #define TOOLCHANGE_PARK_XY_FEEDRATE (G0_FEEDRATE)// (mm/min)
     #define TOOLCHANGE_PARK_X_ONLY          // X axis only move
     //#define TOOLCHANGE_PARK_Y_ONLY          // Y axis only move
     #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
@@ -2891,11 +2892,11 @@
  */
 #define ADVANCED_PAUSE_FEATURE
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
-  #define PAUSE_PARK_RETRACT_FEEDRATE         TOOLCHANGE_FS_RETRACT_SPEED  // (mm/s) Initial retract feedrate.
-  #define PAUSE_PARK_RETRACT_LENGTH           TOOLCHANGE_FS_LENGTH  // (mm) Initial retract.
+  #define PAUSE_PARK_RETRACT_FEEDRATE         RETRACT_FEEDRATE  // (mm/s) Initial retract feedrate.
+  #define PAUSE_PARK_RETRACT_LENGTH           RETRACT_LENGTH  // (mm) Initial retract.
                                                   // This short retract is done immediately, before parking the nozzle.
-  #define FILAMENT_CHANGE_UNLOAD_FEEDRATE     TOOLCHANGE_FS_RETRACT_SPEED  // (mm/s) Unload filament feedrate. This can be pretty fast.
-  #define FILAMENT_CHANGE_UNLOAD_ACCEL        TOOLCHANGE_FS_RETRACT_SPEED  // (mm/s^2) Lower acceleration may allow a faster feedrate.
+  #define FILAMENT_CHANGE_UNLOAD_FEEDRATE     RETRACT_FEEDRATE  // (mm/s) Unload filament feedrate. This can be pretty fast.
+  #define FILAMENT_CHANGE_UNLOAD_ACCEL        25 // (mm/s^2) Lower acceleration may allow a faster feedrate.
   #define FILAMENT_CHANGE_UNLOAD_LENGTH      110 // (mm) The length of filament for a complete unload.
                                                   //   For Bowden, the full length of the tube and nozzle.
                                                   //   For direct drive, the full length of the nozzle.
@@ -2903,14 +2904,14 @@
   #define FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE   TOOLCHANGE_FS_PRIME_SPEED  // (mm/s) Slow move when starting load.
   #define FILAMENT_CHANGE_SLOW_LOAD_LENGTH     0  // (mm) Slow length, to allow time to insert material.
                                                   // 0 to disable start loading and skip to fast load only
-  #define FILAMENT_CHANGE_FAST_LOAD_FEEDRATE   TOOLCHANGE_FS_PRIME_SPEED  // (mm/s) Load filament feedrate. This can be pretty fast.
-  #define FILAMENT_CHANGE_FAST_LOAD_ACCEL     TOOLCHANGE_FS_UNRETRACT_SPEED  // (mm/s^2) Lower acceleration may allow a faster feedrate.
-  #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     60  // (mm) Load length of filament, from extruder gear to nozzle.
+  #define FILAMENT_CHANGE_FAST_LOAD_FEEDRATE   RETRACT_RECOVER_FEEDRATE  // (mm/s) Load filament feedrate. This can be pretty fast.
+  #define FILAMENT_CHANGE_FAST_LOAD_ACCEL     25  // (mm/s^2) Lower acceleration may allow a faster feedrate.
+  #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     TOOLCHANGE_FS_LENGTH  // (mm) Load length of filament, from extruder gear to nozzle.
                                                   //   For Bowden, the full length of the tube and nozzle.
                                                   //   For direct drive, the full length of the nozzle.
   #define ADVANCED_PAUSE_CONTINUOUS_PURGE       // Purge continuously up to the purge length until interrupted.
-  #define ADVANCED_PAUSE_PURGE_FEEDRATE        TOOLCHANGE_FS_PRIME_SPEED  // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
-  #define ADVANCED_PAUSE_PURGE_LENGTH         100  // (mm) Length to extrude after loading.
+  #define ADVANCED_PAUSE_PURGE_FEEDRATE        (TOOLCHANGE_FS_PRIME_SPEED/60)  // (mm/s) Extrude feedrate (after loading). Should be slower than load feedrate.
+  #define ADVANCED_PAUSE_PURGE_LENGTH          TOOLCHANGE_FS_EXTRA_PRIME  // (mm) Length to extrude after loading.
                                                   //   Set to 0 for manual extrusion.
                                                   //   Filament can be extruded repeatedly from the Filament Change menu
                                                   //   until extrusion is consistent, and to purge old filament.
@@ -4017,16 +4018,24 @@
   #define MAIN_MENU_ITEM_1_GCODE "G28"
   //#define MAIN_MENU_ITEM_1_CONFIRM          // Show a confirmation dialog before this action
 
-  #define MAIN_MENU_ITEM_4_DESC "Park"
-  #define MAIN_MENU_ITEM_4_GCODE "G27"
+  //#define MAIN_MENU_ITEM_6_DESC "Park"
+  //#define MAIN_MENU_ITEM_6_GCODE "G27"
   //#define MAIN_MENU_ITEM_4_CONFIRM
 
-  #define MAIN_MENU_ITEM_5_DESC "Retract S0"
-  #define MAIN_MENU_ITEM_5_GCODE "M207 S0"
+  #define MAIN_MENU_ITEM_2_DESC "Retract S0"
+  #define MAIN_MENU_ITEM_2_GCODE "M207 S0"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  #define MAIN_MENU_ITEM_6_DESC "Retract S3"
-  #define MAIN_MENU_ITEM_6_GCODE "M207 S3"
+  #define MAIN_MENU_ITEM_3_DESC "Retract S3"
+  #define MAIN_MENU_ITEM_3_GCODE "M207 S3"
+  //#define MAIN_MENU_ITEM_5_CONFIRM
+
+  #define MAIN_MENU_ITEM_4_DESC "Retract S5"
+  #define MAIN_MENU_ITEM_4_GCODE "M207 S5"
+  //#define MAIN_MENU_ITEM_5_CONFIRM
+
+  //#define MAIN_MENU_ITEM_5_DESC "Retract S8"
+  //#define MAIN_MENU_ITEM_5_GCODE "M207 S8"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_7_DESC "Retract z0"
@@ -4045,16 +4054,16 @@
   #define MAIN_MENU_ITEM_10_GCODE "T1"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  #define MAIN_MENU_ITEM_13_DESC "Leveling ON"
-  #define MAIN_MENU_ITEM_13_GCODE "G29 A"
+  //#define MAIN_MENU_ITEM_13_DESC "Leveling ON"
+  //#define MAIN_MENU_ITEM_13_GCODE "G29 A"
   //#define MAIN_MENU_ITEM_13_CONFIRM
 
-  #define MAIN_MENU_ITEM_14_DESC "Leveling OFF"
-  #define MAIN_MENU_ITEM_14_GCODE "G29 D"
+  //#define MAIN_MENU_ITEM_14_DESC "Leveling OFF"
+  //#define MAIN_MENU_ITEM_14_GCODE "G29 D"
   //#define MAIN_MENU_ITEM_14_CONFIRM
 
-  #define MAIN_MENU_ITEM_15_DESC "Mesh 1 vers 0"
-  #define MAIN_MENU_ITEM_15_GCODE "G29 L1\nG29 S0\nG29 L0"
+  #define MAIN_MENU_ITEM_15_DESC "Load mesh 0"
+  #define MAIN_MENU_ITEM_15_GCODE "G29 L0"
   //#define MAIN_MENU_ITEM_15_CONFIRM
 
   #define MAIN_MENU_ITEM_16_DESC "Topology"

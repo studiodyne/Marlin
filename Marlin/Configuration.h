@@ -116,7 +116,7 @@
 //#define BLUETOOTH
 
 // Name displayed in the LCD "Ready" message and Info menu
-#define CUSTOM_MACHINE_NAME "MT1.5 V19.2exp"
+#define CUSTOM_MACHINE_NAME "MT1.5 V19.3exp"
 
 // Printer's unique ID, used by some programs to differentiate between machines.
 // Choose your own or use a service like https://www.uuidgenerator.net/version4
@@ -2087,7 +2087,7 @@
    */
   #define ENABLE_LEVELING_FADE_HEIGHT
   #if ENABLED(ENABLE_LEVELING_FADE_HEIGHT)
-    #define DEFAULT_LEVELING_FADE_HEIGHT 10.0 // (mm) Default fade height.
+    #define DEFAULT_LEVELING_FADE_HEIGHT 1 // (mm) Default fade height.
   #endif
 
   /**
@@ -2393,7 +2393,7 @@
 // Preheat Constants - Up to 10 are supported without changes
 //
 #define PREHEAT_1_LABEL       "PLA"
-#define PREHEAT_1_TEMP_HOTEND 240
+#define PREHEAT_1_TEMP_HOTEND 220
 #define PREHEAT_1_TEMP_BED     75
 #define PREHEAT_1_TEMP_CHAMBER 35
 #define PREHEAT_1_FAN_SPEED     0 // Value from 0 to 255
@@ -2424,7 +2424,7 @@
   #define NOZZLE_PARK_POINT { X_MAX_POS, (Y_MAX_POS/2), 5 }
   #define NOZZLE_PARK_MOVE          1   // Park motion: 0 = XY Move, 1 = X Only, 2 = Y Only, 3 = X before Y, 4 = Y before X
   #define NOZZLE_PARK_Z_RAISE_MIN   2   // (mm) Always raise Z by at least this distance
-  #define NOZZLE_PARK_XY_FEEDRATE 12000   // (mm/s) X and Y axes feedrate (also used for delta Z axis)
+  #define NOZZLE_PARK_XY_FEEDRATE G0_FEEDRATE   // (mm/s) X and Y axes feedrate (also used for delta Z axis)
   #define NOZZLE_PARK_Z_FEEDRATE    12   // (mm/s) Z axis feedrate (not used for delta printers)
 #endif
 
