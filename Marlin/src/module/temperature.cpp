@@ -412,6 +412,12 @@ PGMSTR(str_t_heating_failed, STR_T_HEATING_FAILED);
 
   #endif
 
+  #if ENABLED(FAN_SPEED_MODIFIER)
+    /*static*/ int16_t Temperature::fan_speed_modifier[FAN_COUNT] = {0};
+    /*static*/ uint8_t Temperature::fan_speed_modifier_thr_min[FAN_COUNT] = FAN_SPEED_THR_MIN_SPEED,
+                       Temperature::fan_speed_modifier_thr_max[FAN_COUNT] = FAN_SPEED_THR_MAX_SPEED;
+  #endif
+
   #if ANY(PROBING_FANS_OFF, ADVANCED_PAUSE_FANS_PAUSE)
     bool Temperature::fans_paused; // = false;
     uint8_t Temperature::saved_fan_speed[FAN_COUNT] = ARRAY_N_1(FAN_COUNT, FAN_OFF_PWM);

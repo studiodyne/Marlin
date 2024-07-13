@@ -592,6 +592,11 @@ class MenuItem_bool : public MenuEditItemBase {
     EDIT_EXTRA_FAN_SPEED(percent, F, MSG_EXTRA_##L, &thermalManager.extra_fan_speed[F].speed, 3, 255); \
   }while(0)
 
+  /*EDIT_TUNE_FAN_SPEED(percent, F, MSG_MODIFIER_##L, &thermalManager.fan_speed_modifier[F], -255, 255); \
+  EDIT_MIN_TUNE_FAN_SPEED(percent, F, MSG_MODIFIER_MIN_##L, &thermalManager.fan_speed_modifier_thr_min[F], 0, 255); \
+  EDIT_MAX_TUNE_FAN_SPEED(percent, F, MSG_MODIFIER_MAX_##L, &thermalManager.fan_speed_modifier_thr_max[F], 0, 255); \
+*/
+
   #if FAN_COUNT > 1
     #define FAN_EDIT_ITEMS(F) _FAN_EDIT_ITEMS(F, FAN_SPEED_N)
   #endif

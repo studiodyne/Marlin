@@ -338,6 +338,9 @@ namespace LanguageNarrow_en {
   LSTR MSG_STORED_FAN_N                   = _UxGT("Stored Fan ~");
   LSTR MSG_EXTRA_FAN_SPEED                = _UxGT("Extra Fan Speed");
   LSTR MSG_EXTRA_FAN_SPEED_N              = _UxGT("Extra Fan Speed ~");
+  LSTR MSG_MODIFIER_FAN_SPEED_N           = _UxGT("Fan speed add ~");
+  LSTR MSG_MODIFIER_MIN_FAN_SPEED_N       = _UxGT("Add min range ~");
+  LSTR MSG_MODIFIER_MAX_FAN_SPEED_N       = _UxGT("Add max range ~");
   LSTR MSG_CONTROLLER_FAN                 = _UxGT("Controller Fan");
   LSTR MSG_CONTROLLER_FAN_IDLE_SPEED      = _UxGT("Idle Speed");
   LSTR MSG_CONTROLLER_FAN_AUTO_ON         = _UxGT("Auto Mode");

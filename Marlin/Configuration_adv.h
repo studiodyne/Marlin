@@ -2726,6 +2726,20 @@
  */
 //#define EXTRA_FAN_SPEED
 
+/**
+ * Constant addition Fan Speed
+ * Adds a constant value to fan_speed, to increase/decrease  for the totality of your print.
+ * Can modify the fan speed permanently and proportionnaly , whatever the many fan speed changes.
+ *   'M106 C '+/- 100%'   : Set the additional speed
+ *   'M106 B '%'          : Min threshold of fan speed to be affected by(Any speed below this will not be modified)
+ *   'M106 D '%'          : Max threshold of fan speed addition  (If set on 70%, all higher fan speeds called will not be modified, like full power, will remains full power)
+ */
+#define FAN_SPEED_MODIFIER
+#if ENABLED(FAN_SPEED_MODIFIER)
+  #define FAN_SPEED_THR_MIN_SPEED   {20}  // '%'
+  #define FAN_SPEED_THR_MAX_SPEED   {70}  // '%'
+#endif
+
 // @section gcode
 
 /**
