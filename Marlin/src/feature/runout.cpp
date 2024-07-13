@@ -35,6 +35,10 @@ FilamentMonitor runout;
 bool FilamentMonitorBase::enabled = true,
      FilamentMonitorBase::filament_ran_out;  // = false
 
+#if NUM_RUNOUT_SENSORS == 2
+  bool FilamentMonitorBase::pin_inversion;
+#endif
+
 #if ENABLED(HOST_ACTION_COMMANDS)
   bool FilamentMonitorBase::host_handling; // = false
 #endif
@@ -104,6 +108,7 @@ void event_filament_runout(const uint8_t extruder) {
       #ifdef FILAMENT_RUNOUT_SCRIPT
         || strstr(FILAMENT_RUNOUT_SCRIPT, "M600")
         || strstr(FILAMENT_RUNOUT_SCRIPT, "M125")
+        || ENABLED(CUSTOM_RUNOUT_SCRIPT)
         || TERN0(ADVANCED_PAUSE_FEATURE, strstr(FILAMENT_RUNOUT_SCRIPT, "M25"))
       #endif
     );
