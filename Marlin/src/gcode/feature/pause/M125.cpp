@@ -64,10 +64,6 @@
  *  With an LCD menu:
  *    P<bool>   = Always show a prompt and await a response
  */
- void show_m125t(bool flipflap){
-   if (flipflap) ui.set_status("M125T...");
-   else ui.set_status("M125T");
- }
 
 void GcodeSuite::M125() {
   if (maintenance_park_enabled) return;
@@ -101,23 +97,12 @@ void GcodeSuite::M125() {
   //Maintenance park
   if (parser.seen('T')) {
     if (ENABLED(HAS_MARLINUI_MENU)){
-      show_m125t(1);
+      //show_m125t(1);
+      ui.set_status("Maintenance !");
       maintenance_park_enabled = true;
       const bool show_lcd = false;
       if (pause_print(retract, park_point, show_lcd, 0)) {
-        millis_t start_time = millis();
-        bool flipflap = 0;
-        uint8_t can_beep = 0;
-        while(maintenance_park_enabled){
-          idle();
-          if ( (millis() - start_time) > 1000 ) {
-            start_time = millis();
-            if (parser.seenval('T') && can_beep == parser.linearval('T')) { BUZZ(100, 1000); can_beep = 0; }
-            show_m125t(flipflap);
-            flipflap = flipflap? 0:1;
-            can_beep++;
-          }
-        }
+        while(maintenance_park_enabled) idle();
       }
       resume_print(0, 0, -retract, 0);
     }

@@ -4031,10 +4031,6 @@
   #define MAIN_MENU_ITEM_1_GCODE "G28"
   //#define MAIN_MENU_ITEM_1_CONFIRM          // Show a confirmation dialog before this action
 
-  #define MAIN_MENU_ITEM_6_DESC "Park"
-  #define MAIN_MENU_ITEM_6_GCODE "G27"
-  //#define MAIN_MENU_ITEM_4_CONFIRM
-
   #define MAIN_MENU_ITEM_2_DESC "************"
   #define MAIN_MENU_ITEM_2_GCODE " "
   //#define MAIN_MENU_ITEM_5_CONFIRM
@@ -4050,6 +4046,10 @@
   //#define MAIN_MENU_ITEM_5_DESC "Retract S10"
   #define MAIN_MENU_ITEM_5_GCODE "M207 S10"
   //#define MAIN_MENU_ITEM_5_CONFIRM
+
+  #define MAIN_MENU_ITEM_6_DESC "Park"
+  #define MAIN_MENU_ITEM_6_GCODE "G27"
+  //#define MAIN_MENU_ITEM_4_CONFIRM
 
   #define MAIN_MENU_ITEM_7_DESC "Retract z0"
   #define MAIN_MENU_ITEM_7_GCODE "M207 Z0"
@@ -4177,8 +4177,8 @@
   #if ENABLED(HOST_PROMPT_SUPPORT)
     #define HOST_STATUS_NOTIFICATIONS   // Send some status messages to the host as notifications
   #endif
-  //#define HOST_START_MENU_ITEM          // Add a menu item that tells the host to start
-  //#define HOST_SHUTDOWN_MENU_ITEM       // Add a menu item that tells the host to shut down
+  #define HOST_START_MENU_ITEM          // Add a menu item that tells the host to start
+  #define HOST_SHUTDOWN_MENU_ITEM       // Add a menu item that tells the host to shut down
 #endif
 
 // @section extras
