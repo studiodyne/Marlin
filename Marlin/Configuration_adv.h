@@ -2493,7 +2493,7 @@
 //
 // G2/G3 Arc Support
 //
-//#define ARC_SUPPORT                   // Requires ~3226 bytes
+#define ARC_SUPPORT                   // Requires ~3226 bytes
 #if ENABLED(ARC_SUPPORT)
   #define MIN_ARC_SEGMENT_MM      0.1 // (mm) Minimum length of each arc segment
   #define MAX_ARC_SEGMENT_MM      1.0 // (mm) Maximum length of each arc segment
@@ -2505,7 +2505,7 @@
 #endif
 
 // G5 Bézier Curve Support with XYZE destination and IJPQ offsets
-//#define BEZIER_CURVE_SUPPORT        // Requires ~2666 bytes
+#define BEZIER_CURVE_SUPPORT        // Requires ~2666 bytes
 
 #if ANY(ARC_SUPPORT, BEZIER_CURVE_SUPPORT)
   //#define CNC_WORKSPACE_PLANES      // Allow G2/G3/G5 to operate in XY, ZX, or YZ planes
@@ -4035,20 +4035,20 @@
   #define MAIN_MENU_ITEM_6_GCODE "G27"
   //#define MAIN_MENU_ITEM_4_CONFIRM
 
-  #define MAIN_MENU_ITEM_2_DESC "Retract S0"
-  #define MAIN_MENU_ITEM_2_GCODE "M207 S0"
+  #define MAIN_MENU_ITEM_2_DESC "************"
+  #define MAIN_MENU_ITEM_2_GCODE " "
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  #define MAIN_MENU_ITEM_3_DESC "Retract S3"
-  #define MAIN_MENU_ITEM_3_GCODE "M207 S3"
+  #define MAIN_MENU_ITEM_3_DESC "Retract S0"
+  #define MAIN_MENU_ITEM_3_GCODE "M207 S0"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_4_DESC "Retract S5"
   #define MAIN_MENU_ITEM_4_GCODE "M207 S5"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  //#define MAIN_MENU_ITEM_5_DESC "Retract S8"
-  #define MAIN_MENU_ITEM_5_GCODE "M207 S8"
+  //#define MAIN_MENU_ITEM_5_DESC "Retract S10"
+  #define MAIN_MENU_ITEM_5_GCODE "M207 S10"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_7_DESC "Retract z0"
