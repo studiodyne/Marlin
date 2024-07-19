@@ -1076,6 +1076,7 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
             destination.x = current_position.x;
             destination.y = current_position.y;
           #endif
+          if (toolchange_settings.enable_park) gcode.process_subcommands_now(F("G12 P0"));
           do_blocking_move_to_xy(destination, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
           do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
           planner.synchronize();
@@ -1374,6 +1375,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
             DEBUG_POS("Move back", destination);
 
             #if ENABLED(TOOLCHANGE_PARK)
+            if (toolchange_settings.enable_park) gcode.process_subcommands_now(F("G12 P0"));
               if (toolchange_settings.enable_park) do_blocking_move_to_xy_z(destination, destination.z, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
               else do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
             #else

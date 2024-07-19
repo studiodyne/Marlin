@@ -2783,7 +2783,7 @@
  */
 #if HAS_MULTI_EXTRUDER
   // Z raise distance for tool-change, as needed for some extruders
-  #define TOOLCHANGE_ZRAISE                 3 // (mm)
+  #define TOOLCHANGE_ZRAISE                 1 // (mm)
   //#define TOOLCHANGE_ZRAISE_BEFORE_RETRACT  // Apply raise before swap retraction (if enabled)
 	#define TOOLCHANGE_NO_RETURN
   #if ENABLED(TOOLCHANGE_NO_RETURN)
@@ -4031,36 +4031,36 @@
   #define MAIN_MENU_ITEM_1_GCODE "G28"
   //#define MAIN_MENU_ITEM_1_CONFIRM          // Show a confirmation dialog before this action
 
-  //#define MAIN_MENU_ITEM_2_DESC "Préch Nylon + PVA"
-  //#define MAIN_MENU_ITEM_2_GCODE "M140 S100\n M190 S100 \n M104 T0 S270.00 \n M104 T1 S220.00"
+  #define MAIN_MENU_ITEM_2_DESC "*********"
+  #define MAIN_MENU_ITEM_2_GCODE " "
   //#define MAIN_MENU_ITEM_2_CONFIRM
 
-  //#define MAIN_MENU_ITEM_3_DESC "Préchauffage Nylon"
-  //#define MAIN_MENU_ITEM_3_GCODE "M140 S100 \n M190 S100 \n M104 S270"
+  #define MAIN_MENU_ITEM_3_DESC "Prime Tool"
+  #define MAIN_MENU_ITEM_3_GCODE "M217Q"
   //#define MAIN_MENU_ITEM_3_CONFIRM
 
   //#define MAIN_MENU_ITEM_4_DESC "Park"
   //#define MAIN_MENU_ITEM_4_GCODE "G27"
   //#define MAIN_MENU_ITEM_4_CONFIRM
 
-  #define MAIN_MENU_ITEM_2_DESC "Retract S0"
-  #define MAIN_MENU_ITEM_2_GCODE "M207 S0"
+  //#define MAIN_MENU_ITEM_2_DESC "Retract S0"
+  //#define MAIN_MENU_ITEM_2_GCODE "M207 S0"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   //#define MAIN_MENU_ITEM_3_DESC "Retract S1"
   //#define MAIN_MENU_ITEM_3_GCODE "M207 S1"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  //#define MAIN_MENU_ITEM_4_DESC "Retract S2"
-  //#define MAIN_MENU_ITEM_4_GCODE "M207 S2"
+  #define MAIN_MENU_ITEM_4_DESC "Retract S2"
+  #define MAIN_MENU_ITEM_4_GCODE "M207 S2"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  //#define MAIN_MENU_ITEM_5_DESC "Retract S3"
-  //#define MAIN_MENU_ITEM_5_GCODE "M207 S3"
+  #define MAIN_MENU_ITEM_5_DESC "Retract S3"
+  #define MAIN_MENU_ITEM_5_GCODE "M207 S3"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_6_DESC "Retract S5"
-  //#define MAIN_MENU_ITEM_6_GCODE "M207 S10"
+  #define MAIN_MENU_ITEM_6_GCODE "M207 S10"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_7_DESC "Retract z0"
@@ -4096,7 +4096,7 @@
   //#define MAIN_MENU_ITEM_14_CONFIRM
 
   //#define MAIN_MENU_ITEM_13_DESC "Load mesh 0"
-  #define MAIN_MENU_ITEM_13_GCODE "G29 L0"
+  //#define MAIN_MENU_ITEM_13_GCODE "G29 L0"
   //#define MAIN_MENU_ITEM_15_CONFIRM
 
   //#define MAIN_MENU_ITEM_16_DESC "Topology"
@@ -4233,8 +4233,8 @@
   #if ENABLED(HOST_PROMPT_SUPPORT)
     #define HOST_STATUS_NOTIFICATIONS   // Send some status messages to the host as notifications
   #endif
-  //#define HOST_START_MENU_ITEM          // Add a menu item that tells the host to start
-  //#define HOST_SHUTDOWN_MENU_ITEM       // Add a menu item that tells the host to shut down
+  #define HOST_START_MENU_ITEM          // Add a menu item that tells the host to start
+  #define HOST_SHUTDOWN_MENU_ITEM       // Add a menu item that tells the host to shut down
 #endif
 
 // @section extras
