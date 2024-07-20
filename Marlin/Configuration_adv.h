@@ -4031,61 +4031,53 @@
   #define MAIN_MENU_ITEM_1_GCODE "G28"
   //#define MAIN_MENU_ITEM_1_CONFIRM          // Show a confirmation dialog before this action
 
-  #define MAIN_MENU_ITEM_2_DESC "************"
-  #define MAIN_MENU_ITEM_2_GCODE " "
+  #define MAIN_MENU_ITEM_2_DESC "No Risk"
+  #define MAIN_MENU_ITEM_2_GCODE ";"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  #define MAIN_MENU_ITEM_3_DESC "Retract S0"
+  #define MAIN_MENU_ITEM_3_DESC "Retract 0"
   #define MAIN_MENU_ITEM_3_GCODE "M207 S0"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  #define MAIN_MENU_ITEM_4_DESC "Retract S5"
-  #define MAIN_MENU_ITEM_4_GCODE "M207 S5"
+  #define MAIN_MENU_ITEM_4_DESC "Retract 3"
+  #define MAIN_MENU_ITEM_4_GCODE "M207 S3"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  //#define MAIN_MENU_ITEM_5_DESC "Retract S10"
-  #define MAIN_MENU_ITEM_5_GCODE "M207 S10"
+  #define MAIN_MENU_ITEM_5_DESC "Retract 5"
+  #define MAIN_MENU_ITEM_5_GCODE "M207 S5"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  #define MAIN_MENU_ITEM_6_DESC "Park"
-  #define MAIN_MENU_ITEM_6_GCODE "G27"
-  //#define MAIN_MENU_ITEM_4_CONFIRM
+  #define MAIN_MENU_ITEM_6_DESC "Retract 10"
+  #define MAIN_MENU_ITEM_6_GCODE "M207 S10"
+  //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_7_DESC "Retract z0"
-  #define MAIN_MENU_ITEM_7_GCODE "M207 Z0"
+  #define MAIN_MENU_ITEM_7_GCODE "Z-hop 0"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_8_DESC "Retract z2"
-  #define MAIN_MENU_ITEM_8_GCODE "M207 Z2"
+  #define MAIN_MENU_ITEM_8_GCODE "Z-hop 2"
   //#define MAIN_MENU_ITEM_8_CONFIRM
 
-  #define MAIN_MENU_ITEM_9_DESC "T0"
-  #define MAIN_MENU_ITEM_9_GCODE "T0"
+  #define MAIN_MENU_ITEM_9_DESC "T0 +G60"
+  #define MAIN_MENU_ITEM_9_GCODE "G60\nT0\nG61"
   //#define MAIN_MENU_ITEM_9_CONFIRM
 
-  #define MAIN_MENU_ITEM_10_DESC "T1"
-  #define MAIN_MENU_ITEM_10_GCODE "T1"
+  #define MAIN_MENU_ITEM_10_DESC "T1 +G60"
+  #define MAIN_MENU_ITEM_10_GCODE "G60\nT1\nG61"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
-  //#define MAIN_MENU_ITEM_13_DESC "Leveling ON"
-  #define MAIN_MENU_ITEM_13_GCODE "G29 A"
+  #define MAIN_MENU_ITEM_13_DESC "PARK"
+  #define MAIN_MENU_ITEM_13_GCODE "G27"
   //#define MAIN_MENU_ITEM_13_CONFIRM
 
-  //#define MAIN_MENU_ITEM_14_DESC "Leveling OFF"
-  #define MAIN_MENU_ITEM_14_GCODE "G29 D"
-  //#define MAIN_MENU_ITEM_14_CONFIRM
-
-  #define MAIN_MENU_ITEM_15_DESC "Load mesh 0"
-  #define MAIN_MENU_ITEM_15_GCODE "G29 L0"
-  //#define MAIN_MENU_ITEM_15_CONFIRM
-
-  #define MAIN_MENU_ITEM_16_DESC "Topology"
-  #define MAIN_MENU_ITEM_16_GCODE "G29 T"
-  //#define MAIN_MENU_ITEM_5_CONFIRM
-
   #define MAIN_MENU_ITEM_20_DESC "M125T"
-  #define MAIN_MENU_ITEM_20_GCODE "M125T"
+  #define MAIN_MENU_ITEM_20_GCODE "M125 T"
   //#define MAIN_MENU_ITEM_20_CONFIRM
+
+  #define MAIN_MENU_ITEM_25_DESC "ToolChange neutre"
+  #define MAIN_MENU_ITEM_25_GCODE "G28\nM217 W0 E0 D0 G0 S0 B0 Z0\nG0 Z0 F14400"
+  //#define MAIN_MENU_ITEM_25_CONFIRM
 
 #endif
 
