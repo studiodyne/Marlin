@@ -24,7 +24,7 @@
 #include "../inc/MarlinConfig.h"
 
 //#define DEBUG_TOOLCHANGE_MIGRATION_FEATURE
-
+extern bool not_calibrating;
 #if HAS_MULTI_EXTRUDER
 
   typedef struct {

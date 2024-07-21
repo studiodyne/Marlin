@@ -338,6 +338,12 @@ namespace LanguageNarrow_en {
   LSTR MSG_STORED_FAN_N                   = _UxGT("Stored Fan ~");
   LSTR MSG_EXTRA_FAN_SPEED                = _UxGT("Extra Fan Speed");
   LSTR MSG_EXTRA_FAN_SPEED_N              = _UxGT("Extra Fan Speed ~");
+  LSTR MSG_OFFSET_FAN_SPEED               = _UxGT("Fan speed offs ~");
+  LSTR MSG_OFFSET_MIN_FAN_SPEED           = _UxGT("Fan offs min ~");
+  LSTR MSG_OFFSET_MAX_FAN_SPEED           = _UxGT("Fan offs max ~");
+  LSTR MSG_OFFSET_FAN_SPEED_N             = _UxGT("Fan speed offs ~");
+  LSTR MSG_OFFSET_MIN_FAN_SPEED_N         = _UxGT("Fan offs min ~");
+  LSTR MSG_OFFSET_MAX_FAN_SPEED_N         = _UxGT("Fan offs max ~");
   LSTR MSG_CONTROLLER_FAN                 = _UxGT("Controller Fan");
   LSTR MSG_CONTROLLER_FAN_IDLE_SPEED      = _UxGT("Idle Speed");
   LSTR MSG_CONTROLLER_FAN_AUTO_ON         = _UxGT("Auto Mode");
@@ -720,6 +726,10 @@ namespace LanguageNarrow_en {
   LSTR MSG_RUNOUT_SENSOR                  = _UxGT("Runout Sensor");
   LSTR MSG_RUNOUT_DISTANCE_MM             = _UxGT("Runout Dist mm");
   LSTR MSG_EXTRUDER_MIN_TEMP              = _UxGT("Extruder Min Temp.");  // ProUI
+  LSTR MSG_RUNOUT_ENABLE                  = _UxGT("Enable Runout");
+  LSTR MSG_RUNOUT_ACTIVE                  = _UxGT("Runout Active");
+  LSTR MSG_RUNOUT_INVERSION               = _UxGT("Inv sensor.");
+  LSTR MSG_INVERT_EXTRUDER                = _UxGT("Invert Extruder");
   LSTR MSG_FANCHECK                       = _UxGT("Fan Tacho Check");
   LSTR MSG_KILL_HOMING_FAILED             = _UxGT("Homing Failed");
   LSTR MSG_LCD_PROBING_FAILED             = _UxGT("Probing Failed");

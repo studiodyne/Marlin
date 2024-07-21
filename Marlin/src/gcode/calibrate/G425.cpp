@@ -40,6 +40,12 @@
   #include "../../module/tool_change.h"
 #endif
 
+#include "../../core/macros.h"
+
+#if ENABLED(CALIBRATION_TOOLCHANGE_FEATURE_DISABLED)
+  #include "../../module/servo.h"
+#endif
+
 #if !AXIS_CAN_CALIBRATE(X)
   #undef CALIBRATION_MEASURE_LEFT
   #undef CALIBRATION_MEASURE_RIGHT
@@ -103,9 +109,11 @@ enum side_t : uint8_t {
   LIST_N(DOUBLE(SECONDARY_AXES), IMINIMUM, IMAXIMUM, JMINIMUM, JMAXIMUM, KMINIMUM, KMAXIMUM, UMINIMUM, UMAXIMUM, VMINIMUM, VMAXIMUM, WMINIMUM, WMAXIMUM)
 };
 
-static constexpr xyz_pos_t true_center CALIBRATION_OBJECT_CENTER;
-static constexpr xyz_float_t dimensions CALIBRATION_OBJECT_DIMENSIONS;
-static constexpr xy_float_t nod = { CALIBRATION_NOZZLE_OUTER_DIAMETER, CALIBRATION_NOZZLE_OUTER_DIAMETER };
+static xyz_pos_t true_center CALIBRATION_OBJECT_CENTER;
+static xyz_float_t dimensions CALIBRATION_OBJECT_DIMENSIONS;
+static xy_float_t nod = { CALIBRATION_NOZZLE_OUTER_DIAMETER, CALIBRATION_NOZZLE_OUTER_DIAMETER };
+float calibration_nozzle_height = CALIBRATION_NOZZLE_TIP_HEIGHT;
+bool not_calibrating = true;
 
 struct measurements_t {
   xyz_pos_t obj_center = true_center; // Non-static must be assigned from xyz_pos_t
@@ -166,7 +174,20 @@ inline void park_above_object(measurements_t &m, const float uncertainty) {
   inline void set_nozzle(measurements_t &m, const uint8_t extruder) {
     if (extruder != active_extruder) {
       park_above_object(m, CALIBRATION_MEASUREMENT_UNKNOWN);
-      tool_change(extruder);
+
+      #if ENABLED(CALIBRATION_TOOLCHANGE_FEATURE_DISABLED)
+        toolchange_settings_t tmp0 = {0};
+        REMEMBER(tmp, toolchange_settings);
+        toolchange_settings = tmp0;
+        uint8_t angle0 = servo_angles[SWITCHING_NOZZLE_SERVO_NR][0]
+               ,angle1 = servo_angles[SWITCHING_NOZZLE_SERVO_NR][1];
+        servo_angles[SWITCHING_NOZZLE_SERVO_NR][1] = angle0;
+        tool_change(extruder);
+        servo_angles[SWITCHING_NOZZLE_SERVO_NR][1] = angle1;
+        RESTORE(tmp);
+      #else
+        tool_change(extruder);
+      #endif
     }
   }
 #endif
@@ -251,8 +272,6 @@ inline void probe_side(measurements_t &m, const float uncertainty, const side_t 
   AxisEnum axis;
   float dir = 1;
 
-  park_above_object(m, uncertainty);
-
   #define _ACASE(N,A,B) case A: dir = -1; case B: axis = N##_AXIS; break
   #define _PCASE(N) _ACASE(N, N##MINIMUM, N##MAXIMUM)
 
@@ -265,6 +284,17 @@ inline void probe_side(measurements_t &m, const float uncertainty, const side_t 
     #endif
     #if AXIS_CAN_CALIBRATE(Z)
       case TOP: {
+        park_above_object(m, uncertainty);
+        SERIAL_ECHOLNPGM(" INSIDE CASE TOP ", current_position.z);
+
+        #if ENABLED(CALIBRATION_DOUBLE_PROBING)
+          if (uncertainty < CALIBRATION_MEASUREMENT_UNKNOWN) {
+            current_position.z = measure(Z_AXIS, -1, true, &m.backlash[TOP], CALIBRATION_MEASUREMENT_UNKNOWN) + CALIBRATION_MEASUREMENT_UNCERTAIN;
+			      SERIAL_ECHOLNPGM("  Probe_side Z : current Z double probing ", current_position.z);
+            calibration_move();
+          }
+        #endif
+
         const float measurement = measure(Z_AXIS, -1, true, &m.backlash[TOP], uncertainty);
         m.obj_center.z = measurement - dimensions.z / 2;
         m.obj_side[TOP] = measurement;
@@ -294,9 +324,19 @@ inline void probe_side(measurements_t &m, const float uncertainty, const side_t 
 
   if (probe_top_at_edge) {
     #if AXIS_CAN_CALIBRATE(Z)
+      park_above_object(m, uncertainty);
       // Probe top nearest the side we are probing
       current_position[axis] = m.obj_center[axis] + (-dir) * (dimensions[axis] / 2 - m.nozzle_outer_dimension[axis]);
       calibration_move();
+
+      #if ENABLED(CALIBRATION_DOUBLE_PROBING)
+        if (uncertainty < CALIBRATION_MEASUREMENT_UNKNOWN) {
+          current_position.z = measure(Z_AXIS, -1, true, &m.backlash[TOP], CALIBRATION_MEASUREMENT_UNKNOWN) + CALIBRATION_MEASUREMENT_UNCERTAIN;
+		      SERIAL_ECHOLNPGM("  Probe_side Z: current Z double probing in top edges ", current_position.z);
+          calibration_move();
+        }
+      #endif
+
       m.obj_side[TOP] = measure(Z_AXIS, -1, true, &m.backlash[TOP], uncertainty);
       m.obj_center.z = m.obj_side[TOP] - dimensions.z / 2;
     #endif
@@ -304,11 +344,17 @@ inline void probe_side(measurements_t &m, const float uncertainty, const side_t 
 
   if ((AXIS_CAN_CALIBRATE(X) && axis == X_AXIS) || (AXIS_CAN_CALIBRATE(Y) && axis == Y_AXIS)) {
     // Move to safe distance to the side of the calibration object
-    current_position[axis] = m.obj_center[axis] + (-dir) * (dimensions[axis] / 2 + m.nozzle_outer_dimension[axis] / 2 + uncertainty);
+    park_above_object(m, CALIBRATION_MEASUREMENT_UNKNOWN);
+    current_position[axis] = m.obj_center[axis] + (-dir) * (dimensions[axis] / 2 + m.nozzle_outer_dimension[axis] / 2 + CALIBRATION_MEASUREMENT_UNKNOWN);
+    calibration_move();
+    SERIAL_ECHOLNPGM("  Probe_side : current Z double probing Axe:",axis, "=",current_position[axis]);
+    current_position.z = m.obj_side[TOP] - (calibration_nozzle_height)* 0.7f;
     calibration_move();
 
+    current_position[axis] = measure(axis, dir, true, &m.backlash[side], CALIBRATION_MEASUREMENT_UNKNOWN) + (-dir) *  uncertainty;
+    calibration_move();
     // Plunge below the side of the calibration object and measure
-    current_position.z = m.obj_side[TOP] - (CALIBRATION_NOZZLE_TIP_HEIGHT) * 0.7f;
+    current_position.z -= (calibration_nozzle_height);
     calibration_move();
     const float measurement = measure(axis, dir, true, &m.backlash[side], uncertainty);
     m.obj_center[axis] = measurement + dir * (dimensions[axis] / 2 + m.nozzle_outer_dimension[axis] / 2);
@@ -739,8 +785,21 @@ inline void update_measurements(measurements_t &m, const AxisEnum axis) {
 inline void calibrate_toolhead(measurements_t &m, const float uncertainty, const uint8_t extruder) {
   TEMPORARY_BACKLASH_CORRECTION(backlash.all_on);
   TEMPORARY_BACKLASH_SMOOTHING(0.0f);
+   SERIAL_ECHOLNPGM_P(
+      PSTR("  In calibrate_toolhead avant setnozzle"), extruder,
+      SP_X_STR, LINEAR_UNIT(hotend_offset[extruder].x),
+      SP_Y_STR, LINEAR_UNIT(hotend_offset[extruder].y),
+      SP_Z_STR, p_float_t(LINEAR_UNIT(hotend_offset[extruder].z), 3)
+    );
 
-  TERN(HAS_MULTI_HOTEND, set_nozzle(m, extruder), UNUSED(extruder));
+ TERN(HAS_MULTI_HOTEND, set_nozzle(m, extruder), UNUSED(extruder));
+
+    SERIAL_ECHOLNPGM_P(
+      PSTR("  In calibrate_toolhead APRES setnozzle"), extruder,
+      SP_X_STR, LINEAR_UNIT(hotend_offset[extruder].x),
+      SP_Y_STR, LINEAR_UNIT(hotend_offset[extruder].y),
+      SP_Z_STR, p_float_t(LINEAR_UNIT(hotend_offset[extruder].z), 3)
+    );
 
   probe_sides(m, uncertainty);
 
@@ -781,10 +840,34 @@ inline void calibrate_all_toolheads(measurements_t &m, const float uncertainty) 
   TEMPORARY_BACKLASH_SMOOTHING(0.0f);
 
   HOTEND_LOOP() calibrate_toolhead(m, uncertainty, e);
+     SERIAL_ECHOLNPGM_P(
+      PSTR("  Avant Normalize"), active_extruder,
+      SP_X_STR, LINEAR_UNIT(hotend_offset[active_extruder].x),
+      SP_Y_STR, LINEAR_UNIT(hotend_offset[active_extruder].y),
+      SP_Z_STR, p_float_t(LINEAR_UNIT(hotend_offset[active_extruder].z), 3)
+    );
+
 
   TERN_(HAS_HOTEND_OFFSET, normalize_hotend_offsets());
 
+   SERIAL_ECHOLNPGM_P(
+      PSTR("  Apres Normalize"), active_extruder,
+      SP_X_STR, LINEAR_UNIT(hotend_offset[active_extruder].x),
+      SP_Y_STR, LINEAR_UNIT(hotend_offset[active_extruder].y),
+      SP_Z_STR, p_float_t(LINEAR_UNIT(hotend_offset[active_extruder].z), 3)
+    );
+
+
   TERN_(HAS_MULTI_HOTEND, set_nozzle(m, 0));
+
+     SERIAL_ECHOLNPGM_P(
+      PSTR("  Apres SETNOZZLE"), active_extruder,
+      SP_X_STR, LINEAR_UNIT(hotend_offset[active_extruder].x),
+      SP_Y_STR, LINEAR_UNIT(hotend_offset[active_extruder].y),
+      SP_Z_STR, p_float_t(LINEAR_UNIT(hotend_offset[active_extruder].z), 3)
+    );
+
+
 }
 
 /**
@@ -800,8 +883,24 @@ inline void calibrate_all_toolheads(measurements_t &m, const float uncertainty) 
  */
 inline void calibrate_all() {
   measurements_t m;
+  for (uint8_t e = 0; e < HOTENDS; ++e) {
+  SERIAL_ECHOLNPGM_P(
+    PSTR("  Avant RESET"), e,
+    SP_X_STR, LINEAR_UNIT(hotend_offset[e].x),
+    SP_Y_STR, LINEAR_UNIT(hotend_offset[e].y),
+    SP_Z_STR, p_float_t(LINEAR_UNIT(hotend_offset[e].z), 3)
+  );}
+
 
   TERN_(HAS_HOTEND_OFFSET, reset_hotend_offsets());
+
+    for (uint8_t e = 0; e < HOTENDS; ++e) {
+    SERIAL_ECHOLNPGM_P(
+      PSTR("  Apres RESET"), e,
+      SP_X_STR, LINEAR_UNIT(hotend_offset[e].x),
+      SP_Y_STR, LINEAR_UNIT(hotend_offset[e].y),
+      SP_Z_STR, p_float_t(LINEAR_UNIT(hotend_offset[e].z), 3)
+    );}
 
   TEMPORARY_BACKLASH_CORRECTION(backlash.all_on);
   TEMPORARY_BACKLASH_SMOOTHING(0.0f);
@@ -813,14 +912,14 @@ inline void calibrate_all() {
 
   // Cycle the toolheads so the servos settle into their "natural" positions
   #if HAS_MULTI_HOTEND
-    HOTEND_LOOP() set_nozzle(m, e);
+    //HOTEND_LOOP() set_nozzle(m, e);
   #endif
 
   // Do a slow and precise calibration of the toolheads
   calibrate_all_toolheads(m, CALIBRATION_MEASUREMENT_UNCERTAIN);
 
-  current_position.x = X_CENTER;
-  calibration_move();         // Park nozzle away from calibration object
+  //current_position.x = X_CENTER;
+  //calibration_move();         // Park nozzle away from calibration object
 }
 
 /**
@@ -834,6 +933,24 @@ inline void calibrate_all() {
  *   no args     - Perform entire calibration sequence (backlash + position on all toolheads)
  */
 void GcodeSuite::G425() {
+not_calibrating = false;
+uint8_t stored_active_extruder = active_extruder;
+//steeve.
+if (parser.seen('I') || parser.seen('J') || parser.seen('K') || parser.seen('X') || parser.seen('Y') || parser.seen('Z') || parser.seen('R') ) {
+    true_center.x =  parser.floatval('X', true_center.x);//STEEVE
+    true_center.y =  parser.floatval('Y', true_center.y);//STEEVE
+    true_center.z =  parser.floatval('Z', true_center.z);//STEEVE
+    dimensions.x =   parser.floatval('J', dimensions.x);//STEEVE
+    dimensions.y =   parser.floatval('K', dimensions.y);//STEEVE
+    dimensions.z =   parser.floatval('L', true_center.z);//STEEVE
+    nod = parser.floatval('N', nod);
+    calibration_nozzle_height = parser.floatval('H', nod);
+
+    SERIAL_ECHOLNPGM("CENTER : X: ", true_center.x, ", Y: ", true_center.y, ", Z: ", true_center.z);
+    SERIAL_ECHOLNPGM("DIMSENSIONS : J: ", dimensions.x, ", K: ", dimensions.y, ", L: ", dimensions.z);
+    SERIAL_ECHOLNPGM("C0NTOUR : ", nod, "HAUTEUR : ", calibration_nozzle_height);
+    return;
+}
 
   #ifdef CALIBRATION_SCRIPT_PRE
     process_subcommands_now(F(CALIBRATION_SCRIPT_PRE));
@@ -874,6 +991,12 @@ void GcodeSuite::G425() {
   #ifdef CALIBRATION_SCRIPT_POST
     process_subcommands_now(F(CALIBRATION_SCRIPT_POST));
   #endif
+
+
+  TERN_(SWITCHING_NOZZLE, servo[active_extruder? SWITCHING_NOZZLE_SERVO_NR : SWITCHING_NOZZLE_E1_SERVO_NR].move(servo_angles[SWITCHING_NOZZLE_SERVO_NR][1]));
+  tool_change(stored_active_extruder);
+  not_calibrating = true;
+
 }
 
 #endif // CALIBRATION_GCODE
