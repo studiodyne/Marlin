@@ -1072,11 +1072,11 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
       // Move back
       #if ENABLED(TOOLCHANGE_PARK)
         if (ok) {
+          if (toolchange_settings.enable_park && toolchange_settings.enable_park_cleaner) gcode.process_subcommands_now(F(TOOLCHANGE_PARK_CLEANER));
           #if ENABLED(TOOLCHANGE_NO_RETURN)
             destination.x = current_position.x;
             destination.y = current_position.y;
           #endif
-          if (toolchange_settings.enable_park) gcode.process_subcommands_now(F("G12 P0"));
           do_blocking_move_to_xy(destination, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
           do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
           planner.synchronize();
@@ -1218,7 +1218,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         }
       #endif
 
-      TERN_(SWITCHING_NOZZLE_TWO_SERVOS, if(not_calibrating) raise_nozzle(old_tool));
+      TERN_(SWITCHING_NOZZLE_TWO_SERVOS, raise_nozzle(old_tool));
 
       REMEMBER(fr, feedrate_mm_s, XY_PROBE_FEEDRATE_MM_S);
 
@@ -1363,6 +1363,9 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
         // Should the nozzle move back to the old position?
         if (can_move_away) {
+          //Cleaning before
+          if (toolchange_settings.enable_park_cleaner) gcode.process_subcommands_now(F(TOOLCHANGE_PARK_CLEANER));
+
           #if ENABLED(TOOLCHANGE_NO_RETURN)
             // Just move back down
             DEBUG_ECHOLNPGM("Move back Z only");
@@ -1375,8 +1378,9 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
             DEBUG_POS("Move back", destination);
 
             #if ENABLED(TOOLCHANGE_PARK)
-            if (toolchange_settings.enable_park) gcode.process_subcommands_now(F("G12 P0"));
-              if (toolchange_settings.enable_park) do_blocking_move_to_xy_z(destination, destination.z, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
+              if (toolchange_settings.enable_park) {
+                do_blocking_move_to_xy_z(destination, destination.z, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
+              }
               else do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
             #else
               do_blocking_move_to_xy(destination, planner.settings.max_feedrate_mm_s[X_AXIS]);
@@ -1394,7 +1398,6 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
                 );
               #endif
             #endif
-
           #endif
         }
 
@@ -1461,10 +1464,10 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       switch (new_tool) {
         default: break;
         #ifdef EVENT_GCODE_TOOLCHANGE_T0
-          case 0: if(not_calibrating) gcode.process_subcommands_now(F(EVENT_GCODE_TOOLCHANGE_T0)); break;
+          case 0: gcode.process_subcommands_now(F(EVENT_GCODE_TOOLCHANGE_T0)); break;
         #endif
         #ifdef EVENT_GCODE_TOOLCHANGE_T1
-          case 1: if(not_calibrating) gcode.process_subcommands_now(F(EVENT_GCODE_TOOLCHANGE_T1)); break;
+          case 1: gcode.process_subcommands_now(F(EVENT_GCODE_TOOLCHANGE_T1)); break;
         #endif
         #ifdef EVENT_GCODE_TOOLCHANGE_T2
           case 2: gcode.process_subcommands_now(F(EVENT_GCODE_TOOLCHANGE_T2)); break;

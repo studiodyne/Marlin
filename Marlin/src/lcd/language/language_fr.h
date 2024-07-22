@@ -373,6 +373,7 @@ namespace LanguageNarrow_fr {
   LSTR MSG_SINGLENOZZLE_WIPE_RETRACT      = _UxGT("Purge Retract");
   LSTR MSG_SINGLENOZZLE_RETRACT_SPEED     = _UxGT("Vitesse rétract") LCD_STR_DEGREE;
   LSTR MSG_FILAMENT_PARK_ENABLED          = _UxGT("Garer Extrudeur");
+  LSTR MSG_FILAMENT_PARK_CLEANER          = _UxGT("Park Cleaner");
   LSTR MSG_SINGLENOZZLE_UNRETRACT_SPEED   = _UxGT("Vitesse reprise");
   LSTR MSG_SINGLENOZZLE_FAN_SPEED         = _UxGT("Vit.  ventil.");
   LSTR MSG_SINGLENOZZLE_FAN_TIME          = _UxGT("Temps ventil.");

@@ -1332,7 +1332,6 @@
   #define CALIBRATION_SCRIPT_POST "M500\nM117 Calibration Ok!"
   #define CALIBRATION_ALLOW_CORE_AXES  // Experimental
   #define CALIBRATION_TOOLCHANGE_FEATURE_DISABLED // Disable prime, swap, moves and park during calibration
-  #define CALIBRATION_DOUBLE_PROBING  // For probing switches with backoff (Far/fast first and close/slow)
 
   #define CALIBRATION_FEEDRATE_SLOW                      30   // mm/min
   #define CALIBRATION_FEEDRATE_FAST                     125   // mm/min
@@ -2889,6 +2888,7 @@
     #define TOOLCHANGE_PARK_XY_FEEDRATE G0_FEEDRATE // (mm/min)
     //#define TOOLCHANGE_PARK_X_ONLY          // X axis only move
     //#define TOOLCHANGE_PARK_Y_ONLY          // Y axis only move
+    #define TOOLCHANGE_PARK_CLEANER "M811"
     #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
       #define TOOLCHANGE_MIGRATION_DO_PARK  // Force park (or no-park) on migration
     #endif
@@ -4002,7 +4002,7 @@
  *
  * Execute certain G-code commands immediately after power-on.
  */
-#define STARTUP_COMMANDS "M9"
+#define STARTUP_COMMANDS "M9\nM811 G0X60Y-40F14400|G12P0|G0Y0F800"
 
 /**
  * G-code Macros
@@ -4012,7 +4012,7 @@
  */
 #define GCODE_MACROS
 #if ENABLED(GCODE_MACROS)
-  #define GCODE_MACROS_SLOTS       1  // Up to 10 may be used
+  #define GCODE_MACROS_SLOTS       2  // Up to 10 may be used
   #define GCODE_MACROS_SLOT_SIZE  50  // Maximum length of a single macro
 #endif
 

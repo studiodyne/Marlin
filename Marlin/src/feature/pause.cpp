@@ -37,6 +37,7 @@
 #include "../gcode/gcode.h"
 #include "../module/motion.h"
 #include "../module/planner.h"
+#include "../module/tool_change.h"
 #include "../module/printcounter.h"
 #include "../module/temperature.h"
 
@@ -657,6 +658,8 @@ void resume_print(const_float_t slow_load_length/*=0*/, const_float_t fast_load_
 
   // Retract to prevent oozing
   unscaled_e_move(-(PAUSE_PARK_RETRACT_LENGTH), feedRate_t(PAUSE_PARK_RETRACT_FEEDRATE));
+
+  if (toolchange_settings.enable_park_cleaner) gcode.process_subcommands_now(F(TOOLCHANGE_PARK_CLEANER));
 
   if (!axes_should_home()) {
     // Move XY back to saved position

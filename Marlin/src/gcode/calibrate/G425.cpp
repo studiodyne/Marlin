@@ -113,7 +113,6 @@ static xyz_pos_t true_center CALIBRATION_OBJECT_CENTER;
 static xyz_float_t dimensions CALIBRATION_OBJECT_DIMENSIONS;
 static xy_float_t nod = { CALIBRATION_NOZZLE_OUTER_DIAMETER, CALIBRATION_NOZZLE_OUTER_DIAMETER };
 float calibration_nozzle_height = CALIBRATION_NOZZLE_TIP_HEIGHT;
-bool not_calibrating = true;
 
 struct measurements_t {
   xyz_pos_t obj_center = true_center; // Non-static must be assigned from xyz_pos_t
@@ -179,11 +178,7 @@ inline void park_above_object(measurements_t &m, const float uncertainty) {
         toolchange_settings_t tmp0 = {0};
         REMEMBER(tmp, toolchange_settings);
         toolchange_settings = tmp0;
-        uint8_t angle0 = servo_angles[SWITCHING_NOZZLE_SERVO_NR][0]
-               ,angle1 = servo_angles[SWITCHING_NOZZLE_SERVO_NR][1];
-        servo_angles[SWITCHING_NOZZLE_SERVO_NR][1] = angle0;
         tool_change(extruder);
-        servo_angles[SWITCHING_NOZZLE_SERVO_NR][1] = angle1;
         RESTORE(tmp);
       #else
         tool_change(extruder);
@@ -870,24 +865,33 @@ inline void calibrate_all() {
  *   no args     - Perform entire calibration sequence (backlash + position on all toolheads)
  */
 void GcodeSuite::G425() {
-not_calibrating = false;
-uint8_t stored_active_extruder = active_extruder;
 
-if (parser.seen('I') || parser.seen('J') || parser.seen('K') || parser.seen('X') || parser.seen('Y') || parser.seen('Z') || parser.seen('R') ) {
-    true_center.x =  parser.floatval('X', true_center.x);//STEEVE
-    true_center.y =  parser.floatval('Y', true_center.y);//STEEVE
-    true_center.z =  parser.floatval('Z', true_center.z);//STEEVE
-    dimensions.x =   parser.floatval('J', dimensions.x);//STEEVE
-    dimensions.y =   parser.floatval('K', dimensions.y);//STEEVE
-    dimensions.z =   parser.floatval('L', true_center.z);//STEEVE
-    nod = parser.floatval('N', nod);
-    calibration_nozzle_height = parser.floatval('H', nod);
+  if (parser.seen('I') || parser.seen('J') || parser.seen('K') || parser.seen('X') || parser.seen('Y') || parser.seen('Z') || parser.seen('R') ) {
+      true_center.x =  parser.floatval('X', true_center.x);//STEEVE
+      true_center.y =  parser.floatval('Y', true_center.y);//STEEVE
+      true_center.z =  parser.floatval('Z', true_center.z);//STEEVE
+      dimensions.x =   parser.floatval('J', dimensions.x);//STEEVE
+      dimensions.y =   parser.floatval('K', dimensions.y);//STEEVE
+      dimensions.z =   parser.floatval('L', true_center.z);//STEEVE
+      nod = parser.floatval('N', nod);
+      calibration_nozzle_height = parser.floatval('H', nod);
 
-    SERIAL_ECHOLNPGM("CENTER : X: ", true_center.x, ", Y: ", true_center.y, ", Z: ", true_center.z);
-    SERIAL_ECHOLNPGM("DIMSENSIONS : J: ", dimensions.x, ", K: ", dimensions.y, ", L: ", dimensions.z);
-    SERIAL_ECHOLNPGM("C0NTOUR : ", nod, "HAUTEUR : ", calibration_nozzle_height);
-    return;
-}
+      SERIAL_ECHOLNPGM("CENTER : X: ", true_center.x, ", Y: ", true_center.y, ", Z: ", true_center.z);
+      SERIAL_ECHOLNPGM("DIMSENSIONS : J: ", dimensions.x, ", K: ", dimensions.y, ", L: ", dimensions.z);
+      SERIAL_ECHOLNPGM("C0NTOUR : ", nod, "HAUTEUR : ", calibration_nozzle_height);
+      return;
+  }
+
+  #if ENABLED(CALIBRATION_TOOLCHANGE_FEATURE_DISABLED)
+    toolchange_settings_t tmp0 = {0};
+    REMEMBER(tmp, toolchange_settings);
+    toolchange_settings = tmp0;
+    uint8_t angle0 = servo_angles[SWITCHING_NOZZLE_SERVO_NR][0]
+           ,angle1 = servo_angles[SWITCHING_NOZZLE_SERVO_NR][1];
+    servo_angles[SWITCHING_NOZZLE_SERVO_NR][1] = angle0;
+  #endif
+
+  uint8_t stored_active_extruder = active_extruder;
 
   #ifdef CALIBRATION_SCRIPT_PRE
     process_subcommands_now(F(CALIBRATION_SCRIPT_PRE));
@@ -930,9 +934,11 @@ if (parser.seen('I') || parser.seen('J') || parser.seen('K') || parser.seen('X')
   #endif
 
 
-  TERN_(SWITCHING_NOZZLE, servo[active_extruder? SWITCHING_NOZZLE_SERVO_NR : SWITCHING_NOZZLE_E1_SERVO_NR].move(servo_angles[SWITCHING_NOZZLE_SERVO_NR][1]));
-  tool_change(stored_active_extruder);
-  not_calibrating = true;
+  #if ENABLED(CALIBRATION_TOOLCHANGE_FEATURE_DISABLED)
+    servo_angles[SWITCHING_NOZZLE_SERVO_NR][1] = angle1;
+    tool_change(stored_active_extruder);
+    RESTORE(tmp);
+  #endif
 
 }
 

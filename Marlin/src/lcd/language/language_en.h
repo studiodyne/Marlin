@@ -563,6 +563,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_SINGLENOZZLE_WIPE_RETRACT      = _UxGT("Wipe Retract");
   LSTR MSG_SINGLENOZZLE_RETRACT_SPEED     = _UxGT("Retract Speed");
   LSTR MSG_FILAMENT_PARK_ENABLED          = _UxGT("Park Head");
+  LSTR MSG_FILAMENT_PARK_CLEANER          = _UxGT("Park Cleaner");
   LSTR MSG_PARK_FAILED                    = _UxGT("Head cannot be parked");
   LSTR MSG_SINGLENOZZLE_UNRETRACT_SPEED   = _UxGT("Recover Speed");
   LSTR MSG_SINGLENOZZLE_FAN_SPEED         = _UxGT("Fan Speed");
