@@ -617,7 +617,8 @@ void menu_backlash();
         EDIT_ITEM(float31sign, MSG_ZPROBE_XOFFSET, &probe.offset.x, PROBE_OFFSET_XMIN, PROBE_OFFSET_XMAX);
         EDIT_ITEM(float31sign, MSG_ZPROBE_YOFFSET, &probe.offset.y, PROBE_OFFSET_YMIN, PROBE_OFFSET_YMAX);
       #endif
-      EDIT_ITEM(LCD_Z_OFFSET_TYPE, MSG_ZPROBE_ZOFFSET, &probe.offset.z, PROBE_OFFSET_ZMIN, PROBE_OFFSET_ZMAX);
+      EDIT_ITEM(float42_52, MSG_ZPROBE_ZOFFSET, &probe.offset.z, PROBE_OFFSET_ZMIN, PROBE_OFFSET_ZMAX);
+      EDIT_ITEM(float42_52, MSG_ZPROBE_ZOFFSET2, &hotend_offset[1].z, PROBE_OFFSET_ZMIN, PROBE_OFFSET_ZMAX);
 
       #if ENABLED(PROBE_OFFSET_WIZARD)
         SUBMENU(MSG_PROBE_WIZARD, goto_probe_offset_wizard);
