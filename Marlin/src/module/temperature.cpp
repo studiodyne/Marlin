@@ -4416,6 +4416,16 @@ void Temperature::isr() {
       HOTEND_LOOP() s.append(F(" @"), e, ':', getHeaterPower((heater_id_t)e));
     #endif
     s.echo();
+
+    #if FAN_COUNT > 1 && ENABLED(REPORT_FAN_CHANGE)
+      FANS_LOOP(i) {
+        thermalManager.report_fan_speed(i);
+        SERIAL_EOL();
+      }
+    #endif
+    #if FAN_COUNT == 1 && ENABLED(REPORT_FAN_CHANGE)
+      SERIAL_EOL();thermalManager.report_fan_speed(0);SERIAL_EOL();
+    #endif
   }
 
   #if ENABLED(AUTO_REPORT_TEMPERATURES)

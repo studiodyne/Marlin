@@ -1072,6 +1072,7 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
       // Move back
       #if ENABLED(TOOLCHANGE_PARK)
         if (ok) {
+          if (toolchange_settings.enable_park && toolchange_settings.enable_park_cleaner) gcode.process_subcommands_now(F(TOOLCHANGE_PARK_CLEANER));
           #if ENABLED(TOOLCHANGE_NO_RETURN)
             destination.x = current_position.x;
             destination.y = current_position.y;
@@ -1244,7 +1245,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       #endif
 
       // Toolchange park
-      #if ENABLED(TOOLCHANGE_PARK) && !HAS_SWITCHING_NOZZLE
+      #if ENABLED(TOOLCHANGE_PARK)
         if (can_move_away && toolchange_settings.enable_park) {
           IF_DISABLED(TOOLCHANGE_PARK_Y_ONLY, current_position.x = toolchange_settings.change_point.x);
           IF_DISABLED(TOOLCHANGE_PARK_X_ONLY, current_position.y = toolchange_settings.change_point.y);
@@ -1258,6 +1259,16 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
               current_position.w = toolchange_settings.change_point.w
             );
           #endif
+
+          #if HAS_HOTEND_OFFSET
+            //Apply XY correction to park the new tool at the exact park pos before tool changing
+            if(new_tool != old_tool ) {
+              xyz_pos_t park_diff = hotend_offset[new_tool] - hotend_offset[old_tool];
+              park_diff.z = 0; // No Z offset applied before tool changed
+              current_position -= park_diff;
+            }
+          #endif
+
           planner.buffer_line(current_position, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), old_tool);
           planner.synchronize();
         }
@@ -1323,6 +1334,8 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         constexpr bool safe_to_move = true;
       #endif
 
+      //TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+
       // Return to position and lower again
       const bool should_move = safe_to_move && !no_move && IsRunning();
       if (should_move) {
@@ -1350,6 +1363,12 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
         // Should the nozzle move back to the old position?
         if (can_move_away) {
+          //Cleaning before
+          if (toolchange_settings.enable_park && toolchange_settings.enable_park_cleaner) {
+             TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+             gcode.process_subcommands_now(F(TOOLCHANGE_PARK_CLEANER));
+          };
+
           #if ENABLED(TOOLCHANGE_NO_RETURN)
             // Just move back down
             DEBUG_ECHOLNPGM("Move back Z only");
@@ -1362,7 +1381,10 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
             DEBUG_POS("Move back", destination);
 
             #if ENABLED(TOOLCHANGE_PARK)
-              if (toolchange_settings.enable_park) do_blocking_move_to_xy_z(destination, destination.z, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
+              if (toolchange_settings.enable_park) {
+                do_blocking_move_to_xy_z(destination, destination.z, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
+              }
+              else do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
             #else
               do_blocking_move_to_xy(destination, planner.settings.max_feedrate_mm_s[X_AXIS]);
 
@@ -1379,7 +1401,6 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
                 );
               #endif
             #endif
-
           #endif
         }
 
