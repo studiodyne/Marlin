@@ -1203,7 +1203,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
       // Unload / Retract
       #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
-        const bool should_swap = can_move_away /*&& toolchange_settings.swap_length*/;
+        const bool should_swap = can_move_away && toolchange_settings.swap_length;
         if (should_swap) {
           if (too_cold(old_tool)) {
             // If SingleNozzle setup is too cold, unable to perform tool_change.
