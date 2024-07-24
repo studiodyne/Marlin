@@ -2888,7 +2888,9 @@
     #define TOOLCHANGE_PARK_XY_FEEDRATE G0_FEEDRATE // (mm/min)
     //#define TOOLCHANGE_PARK_X_ONLY          // X axis only move
     //#define TOOLCHANGE_PARK_Y_ONLY          // Y axis only move
-    #define TOOLCHANGE_PARK_CLEANER "M810"
+    #define TOOLCHANGE_PARK_CLEANER              "M810"
+    #define TOOLCHANGE_BEFORE_TOOLCHANGE_NO_PARK "M811"
+    #define TOOLCHANGE_AFTER_TOOLCHANGE_NO_PARK  "M812"
     #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
       #define TOOLCHANGE_MIGRATION_DO_PARK  // Force park (or no-park) on migration
     #endif
