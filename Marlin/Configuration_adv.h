@@ -2888,7 +2888,7 @@
     #define TOOLCHANGE_PARK_XY_FEEDRATE G0_FEEDRATE // (mm/min)
     //#define TOOLCHANGE_PARK_X_ONLY          // X axis only move
     //#define TOOLCHANGE_PARK_Y_ONLY          // Y axis only move
-    #define TOOLCHANGE_PARK_CLEANER "M811"
+    #define TOOLCHANGE_PARK_CLEANER "M810"
     #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
       #define TOOLCHANGE_MIGRATION_DO_PARK  // Force park (or no-park) on migration
     #endif
@@ -4002,7 +4002,7 @@
  *
  * Execute certain G-code commands immediately after power-on.
  */
-#define STARTUP_COMMANDS "M9\nM811 G0X60Y-40F14400|G12P0|G0Y-21F1000"
+#define STARTUP_COMMANDS "M9\nM810 G0X60Y-40F14400|G12P0|G0Y-21F1000"
 
 /**
  * G-code Macros
