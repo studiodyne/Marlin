@@ -4002,7 +4002,7 @@
  *
  * Execute certain G-code commands immediately after power-on.
  */
-#define STARTUP_COMMANDS "M9\nM811 G0X60Y-40F14400|G12P0|G0Y-4F1000"
+#define STARTUP_COMMANDS "M9\nM811 G0X60Y-40F14400|G12P0|G0Y-21F1000"
 
 /**
  * G-code Macros
@@ -4065,11 +4065,11 @@
   //#define MAIN_MENU_ITEM_8_CONFIRM
 
   #define MAIN_MENU_ITEM_9_DESC "T0 +G60"
-  #define MAIN_MENU_ITEM_9_GCODE "G60\nT0\nG61"
+  #define MAIN_MENU_ITEM_9_GCODE "G60\nT0\nG61F14400"
   //#define MAIN_MENU_ITEM_9_CONFIRM
 
   #define MAIN_MENU_ITEM_10_DESC "T1 +G60"
-  #define MAIN_MENU_ITEM_10_GCODE "G60\nT1\nG61"
+  #define MAIN_MENU_ITEM_10_GCODE "G60\nT1\nG61F14400"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_11_DESC "Tools HIGH"
@@ -4084,12 +4084,12 @@
   #define MAIN_MENU_ITEM_13_GCODE "G27"
   //#define MAIN_MENU_ITEM_13_CONFIRM
 
-  #define MAIN_MENU_ITEM_14_DESC "Netoyage lignes"
-  #define MAIN_MENU_ITEM_14_GCODE "G27\nM280 H0\nG12 P0\nM280 C"
+  #define MAIN_MENU_ITEM_14_DESC "Nettoyage lignes x2"
+  #define MAIN_MENU_ITEM_14_GCODE "G60\nG27\nM280 H0\nG12 P0\nM280 C\nG61F14400"
   //#define MAIN_MENU_ITEM_18_CONFIRM
 
-  #define MAIN_MENU_ITEM_15_DESC "Nettoyage triangles"
-  #define MAIN_MENU_ITEM_15_GCODE "G27\nM280 H0\nG12\nM280 C"
+  #define MAIN_MENU_ITEM_15_DESC "Nettoyage triangles x2"
+  #define MAIN_MENU_ITEM_15_GCODE "G60\nG27\nM280 H0\nG12\nM280 C\nG61F14400"
   //#define MAIN_MENU_ITEM_18_CONFIRM
 
   #define MAIN_MENU_ITEM_17_DESC "Calibration"
@@ -4097,7 +4097,7 @@
   //#define MAIN_MENU_ITEM_17_CONFIRM
 
   #define MAIN_MENU_ITEM_19_DESC "Nettoyage en cours"
-  #define MAIN_MENU_ITEM_19_GCODE "G10\nG91\nG0Z5\nG90\nG12\nG91\nG0Z-5\nG90\nG11"
+  #define MAIN_MENU_ITEM_19_GCODE "G60\nG10\nG91\nG0Z5\nG90\nG12P0\nG91\nG0Z-5\nG90\nG11\nG61F14400"
   //#define MAIN_MENU_ITEM_19_CONFIRM
 
   #define MAIN_MENU_ITEM_20_DESC "M125T"
