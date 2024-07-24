@@ -333,11 +333,7 @@ void GcodeSuite::G28() {
       #if ENABLED(PARKING_EXTRUDER)
         const bool pe_final_change_must_unpark = parking_extruder_unpark_after_homing(old_tool_index, X_HOME_DIR + 1 == old_tool_index * 2);
       #endif
-      TERN_(SWITCHING_NOZZLE, servo[SWITCHING_NOZZLE_SERVO_NR].move(servo_angles[SWITCHING_NOZZLE_SERVO_NR][1]));
-      servo[SWITCHING_NOZZLE_SERVO_NR].detach();
-      TERN_(SWITCHING_NOZZLE, servo[SWITCHING_NOZZLE_E1_SERVO_NR].move(servo_angles[SWITCHING_NOZZLE_SERVO_NR][1]));
-      servo[SWITCHING_NOZZLE_E1_SERVO_NR].detach();
-      //tool_change(0, true);
+      tool_change(0, true);
     #endif
 
     TERN_(HAS_DUPLICATION_MODE, set_duplication_enabled(false));
@@ -647,12 +643,10 @@ void GcodeSuite::G28() {
     #endif
 
     restore_feedrate_and_scaling();
-    
+
     // Restore the active tool after homing
     #if HAS_MULTI_HOTEND && (DISABLED(DELTA) || ENABLED(DELTA_HOME_TO_SAFE_ZONE))
-    TERN_(SWITCHING_NOZZLE, servo[active_extruder? SWITCHING_NOZZLE_E1_SERVO_NR : SWITCHING_NOZZLE_SERVO_NR].move(servo_angles[SWITCHING_NOZZLE_SERVO_NR][0]));
-    TERN_(SWITCHING_NOZZLE, servo[active_extruder? SWITCHING_NOZZLE_E1_SERVO_NR : SWITCHING_NOZZLE_SERVO_NR].detach());
-    //tool_change(old_tool_index, TERN(PARKING_EXTRUDER, !pe_final_change_must_unpark, DISABLED(DUAL_X_CARRIAGE)));   // Do move if one of these
+    tool_change(old_tool_index, TERN(PARKING_EXTRUDER, !pe_final_change_must_unpark, DISABLED(DUAL_X_CARRIAGE)));   // Do move if one of these
     #endif
 
     if (ENABLED(NANODLP_Z_SYNC) && (ENABLED(NANODLP_ALL_AXIS) || TERN0(HAS_Z_AXIS, doZ)))

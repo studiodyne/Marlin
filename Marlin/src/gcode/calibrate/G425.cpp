@@ -883,6 +883,9 @@ void GcodeSuite::G425() {
     servo_angles[SWITCHING_NOZZLE_SERVO_NR][1] = angle0;
     servo_angles[SWITCHING_NOZZLE_E1_SERVO_NR][1] = angle00;
 
+    process_subcommands_now(F("M117 PIN TEST !"));
+    while (READ(CALIBRATION_PIN) == CALIBRATION_PIN_INVERTING) idle();
+
   #endif
 
   uint8_t stored_active_extruder = active_extruder;
@@ -920,7 +923,6 @@ void GcodeSuite::G425() {
   #endif
   else {
     calibrate_all();
-    
     SERIAL_EOL();
     report_measured_faces(m);
     report_measured_center(m);
@@ -929,7 +931,6 @@ void GcodeSuite::G425() {
     report_measured_positional_error(m);
     report_hotend_offsets();
   }
-
 
   SET_SOFT_ENDSTOP_LOOSE(false);
 

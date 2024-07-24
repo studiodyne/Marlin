@@ -1203,7 +1203,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
       // Unload / Retract
       #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
-        const bool should_swap = can_move_away && toolchange_settings.swap_length;
+        const bool should_swap = can_move_away /*&& toolchange_settings.swap_length*/;
         if (should_swap) {
           if (too_cold(old_tool)) {
             // If SingleNozzle setup is too cold, unable to perform tool_change.
@@ -1326,6 +1326,9 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
       // Tell the planner the new "current position"
       sync_plan_position();
+      do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
+      planner.synchronize();
+      TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
 
       #if ENABLED(DELTA)
         //LOOP_NUM_AXES(i) update_software_endstops(i); // or modify the constrain function
@@ -1333,8 +1336,6 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       #else
         constexpr bool safe_to_move = true;
       #endif
-
-      //TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
 
       // Return to position and lower again
       const bool should_move = safe_to_move && !no_move && IsRunning();
@@ -1365,7 +1366,6 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         if (can_move_away) {
           //Cleaning before
           if (toolchange_settings.enable_park && toolchange_settings.enable_park_cleaner) {
-             TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
              gcode.process_subcommands_now(F(TOOLCHANGE_PARK_CLEANER));
           };
 
@@ -1373,7 +1373,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
             // Just move back down
             DEBUG_ECHOLNPGM("Move back Z only");
 
-            if (TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park))
+            //if (TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park))
               do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
 
           #else
