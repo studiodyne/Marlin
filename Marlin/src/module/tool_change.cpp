@@ -1329,8 +1329,8 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       sync_plan_position();
       do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
       planner.synchronize();
-      
-      if (!toolchange_settings.enable_park) gcode.process_subcommands_now(F(TOOLCHANGE_BEFORE_TOOLCHANGE_NO_PARK));
+
+      if (!toolchange_settings.enable_park) gcode.process_subcommands_now(F(TOOLCHANGE_AFTER_TOOLCHANGE_NO_PARK));
       TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
 
       #if ENABLED(DELTA)
