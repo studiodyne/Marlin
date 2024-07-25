@@ -1390,17 +1390,21 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
             //if (TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park))
             do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
+            //TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
 
           #else
             // Move back to the original (or adjusted) position
             DEBUG_POS("Move back", destination);
 
             #if ENABLED(TOOLCHANGE_PARK)
+              TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+
               if (toolchange_settings.enable_park) {
                 do_blocking_move_to_xy_z(destination, destination.z, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
               }
               else do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
             #else
+              TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
               do_blocking_move_to_xy(destination, planner.settings.max_feedrate_mm_s[X_AXIS]);
 
               // If using MECHANICAL_SWITCHING extruder/nozzle, set HOTEND_OFFSET in Z axis after running EVENT_GCODE_TOOLCHANGE below.
@@ -1422,12 +1426,13 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         else DEBUG_ECHOLNPGM("Move back skipped");
 
         if (!toolchange_settings.enable_park) {
-          gcode.process_subcommands_now(F(TOOLCHANGE_AFTER_TOOLCHANGE_NO_PARK));
           TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+          gcode.process_subcommands_now(F(TOOLCHANGE_AFTER_TOOLCHANGE_NO_PARK));
         }
 
         #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
           if (should_swap && !too_cold(active_extruder)) {
+            TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
             extruder_cutting_recover(0); // New extruder primed and set to 0
 
             // Restart Fan
