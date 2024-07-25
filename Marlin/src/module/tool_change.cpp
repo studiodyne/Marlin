@@ -131,13 +131,17 @@
       safe_delay(SWITCHING_NOZZLE_SERVO_DWELL);
     }
 
+    bool lowered[EXTRUDERS] = {false};
+
     void lower_nozzle(const uint8_t e) {
-      static bool lowered[EXTRUDERS] = {false};
       if (lowered[e]) return;
       _move_nozzle_servo(e, 0);
       lowered[e] = true;
      }
-    void raise_nozzle(const uint8_t e) { _move_nozzle_servo(e, 1); }
+    void raise_nozzle(const uint8_t e) {
+      _move_nozzle_servo(e, 1);
+      lowered[e] = false;
+     }
 
   #else
 
@@ -1074,6 +1078,7 @@ static float stored_swap[EXTRUDERS] = {toolchange_settings.swap_length};
       #endif
 
       // Prime without changing E
+      TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(active_extruder));
       extruder_prime();
 
       // Move back
