@@ -1397,9 +1397,8 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
             DEBUG_POS("Move back", destination);
 
             #if ENABLED(TOOLCHANGE_PARK)
-              TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
-
               if (toolchange_settings.enable_park) {
+                TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
                 do_blocking_move_to_xy_z(destination, destination.z, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
               }
               else do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
@@ -1432,7 +1431,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
         #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
           if (should_swap && !too_cold(active_extruder)) {
-            TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+            if ( (toolchange_settings.extra_resume + toolchange_settings.wipe_retract) !=0 ) TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
             extruder_cutting_recover(0); // New extruder primed and set to 0
 
             // Restart Fan
