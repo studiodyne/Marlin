@@ -131,7 +131,12 @@
       safe_delay(SWITCHING_NOZZLE_SERVO_DWELL);
     }
 
-    void lower_nozzle(const uint8_t e) { _move_nozzle_servo(e, 0); }
+    void lower_nozzle(const uint8_t e) {
+      static bool lowered[EXTRUDERS] = {false};
+      if (lowered[e]) return;
+      _move_nozzle_servo(e, 0);
+      lowered[e] = true;
+     }
     void raise_nozzle(const uint8_t e) { _move_nozzle_servo(e, 1); }
 
   #else
@@ -155,6 +160,8 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
 
 #define DEBUG_OUT ENABLED(DEBUG_TOOL_CHANGE)
 #include "../core/debug_out.h"
+
+static float stored_swap[EXTRUDERS] = {toolchange_settings.swap_length};
 
 #if ENABLED(MAGNETIC_PARKING_EXTRUDER)
 
@@ -986,8 +993,8 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
     if (toolchange_settings.extra_prime >= 0) {
       // Positive extra_prime value
       // - Return filament at speed (fr_mm_s) then extra_prime at prime speed
-      DEBUG_ECHOLNPGM("Loading Filament for T", active_extruder, " | Distance: ", toolchange_settings.swap_length, " | Speed: ", fr_mm_s, "mm/s");
-      unscaled_e_move(toolchange_settings.swap_length, fr_mm_s); // Prime (Unretract) filament by extruding equal to Swap Length (Unretract)
+      DEBUG_ECHOLNPGM("Loading Filament for T", active_extruder, " | Distance: ",stored_swap[active_extruder], " | Speed: ", fr_mm_s, "mm/s");
+      unscaled_e_move(stored_swap[active_extruder], fr_mm_s); // Prime (Unretract) filament by extruding equal to Swap Length (Unretract)
 
       if (toolchange_settings.extra_prime > 0) {
         DEBUG_ECHOLNPGM("Performing Extra Priming for T", active_extruder, " | Distance: ", toolchange_settings.extra_prime, " | Speed: ", MMM_TO_MMS(toolchange_settings.prime_speed), "mm/s");
@@ -997,8 +1004,8 @@ void fast_line_to_current(const AxisEnum fr_axis) { _line_to_current(fr_axis, 0.
     else {
       // Negative extra_prime value
       // - Unretract distance (swap length) is reduced by the value of extra_prime
-      const float eswap = toolchange_settings.swap_length + toolchange_settings.extra_prime;
-      DEBUG_ECHOLNPGM("Negative ExtraPrime value - Swap Return Length has been reduced from ", toolchange_settings.swap_length, " to ", eswap);
+      const float eswap = stored_swap[active_extruder] + toolchange_settings.extra_prime;
+      DEBUG_ECHOLNPGM("Negative ExtraPrime value - Swap Return Length has been reduced from ", stored_swap[active_extruder], " to ", eswap);
       DEBUG_ECHOLNPGM("Loading Filament for T", active_extruder, " | Distance: ", eswap, " | Speed: ", fr_mm_s, "mm/s");
       unscaled_e_move(eswap, fr_mm_s);
     }
@@ -1183,7 +1190,6 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
     if (new_tool != old_tool || TERN0(PARKING_EXTRUDER, extruder_parked)) { // PARKING_EXTRUDER may need to attach old_tool when homing
       destination = current_position;
-
       if (!toolchange_settings.enable_park) gcode.process_subcommands_now(F(TOOLCHANGE_BEFORE_TOOLCHANGE_NO_PARK));
 
       #if ALL(TOOLCHANGE_FILAMENT_SWAP, HAS_FAN) && TOOLCHANGE_FS_FAN >= 0
@@ -1192,7 +1198,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       #endif
 
       // Z raise before retraction
-      #if ENABLED(TOOLCHANGE_ZRAISE_BEFORE_RETRACT) && !HAS_SWITCHING_NOZZLE
+      #if ENABLED(TOOLCHANGE_ZRAISE_BEFORE_RETRACT)
         if (can_move_away && TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park)) {
           // Do a small lift to avoid the workpiece in the move back (below)
           current_position.z += toolchange_settings.z_raise;
@@ -1204,7 +1210,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
       // Unload / Retract
       #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
-        const bool should_swap = can_move_away && toolchange_settings.swap_length;
+        const bool should_swap = can_move_away && (toolchange_settings.swap_length || stored_swap[old_tool]);
         if (should_swap) {
           if (too_cold(old_tool)) {
             // If SingleNozzle setup is too cold, unable to perform tool_change.
@@ -1215,6 +1221,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
             // To-Do: Should SingleNozzle always retract?
             DEBUG_ECHOLNPGM("Retracting Filament for T", old_tool, ". | Distance: ", toolchange_settings.swap_length, " | Speed: ", MMM_TO_MMS(toolchange_settings.retract_speed), "mm/s");
             unscaled_e_move(-toolchange_settings.swap_length, MMM_TO_MMS(toolchange_settings.retract_speed));
+            stored_swap[old_tool] = toolchange_settings.swap_length;
           }
         }
       #endif
@@ -1236,7 +1243,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         #endif
       #endif
 
-      #if NONE(TOOLCHANGE_ZRAISE_BEFORE_RETRACT, HAS_SWITCHING_NOZZLE)
+      #if NONE(TOOLCHANGE_ZRAISE_BEFORE_RETRACT)
         if (can_move_away && TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park)) {
           // Do a small lift to avoid the workpiece in the move back (below)
           current_position.z += toolchange_settings.z_raise;
@@ -1330,8 +1337,10 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
       planner.synchronize();
 
-      if (!toolchange_settings.enable_park) gcode.process_subcommands_now(F(TOOLCHANGE_AFTER_TOOLCHANGE_NO_PARK));
-      TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+      /*if (!toolchange_settings.enable_park) {
+        gcode.process_subcommands_now(F(TOOLCHANGE_AFTER_TOOLCHANGE_NO_PARK));
+        TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+      }*/
 
       #if ENABLED(DELTA)
         //LOOP_NUM_AXES(i) update_software_endstops(i); // or modify the constrain function
@@ -1349,8 +1358,10 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         #endif
 
         #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
-          if (should_swap && !too_cold(active_extruder))
+          if (should_swap && !too_cold(active_extruder)) {
+            if (toolchange_settings.extra_prime > 0) TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
             extruder_prime(); // Prime selected Extruder
+          }
         #endif
 
         // Prevent a move outside physical bounds
@@ -1369,7 +1380,8 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         if (can_move_away) {
           //Cleaning before
           if (toolchange_settings.enable_park && toolchange_settings.enable_park_cleaner) {
-             gcode.process_subcommands_now(F(TOOLCHANGE_PARK_CLEANER));
+            TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+            gcode.process_subcommands_now(F(TOOLCHANGE_PARK_CLEANER));
           };
 
           #if ENABLED(TOOLCHANGE_NO_RETURN)
@@ -1377,7 +1389,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
             DEBUG_ECHOLNPGM("Move back Z only");
 
             //if (TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park))
-              do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
+            do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
 
           #else
             // Move back to the original (or adjusted) position
@@ -1408,6 +1420,11 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         }
 
         else DEBUG_ECHOLNPGM("Move back skipped");
+
+        if (!toolchange_settings.enable_park) {
+          gcode.process_subcommands_now(F(TOOLCHANGE_AFTER_TOOLCHANGE_NO_PARK));
+          TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+        }
 
         #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
           if (should_swap && !too_cold(active_extruder)) {
