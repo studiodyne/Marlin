@@ -2435,7 +2435,7 @@
 
 #if ENABLED(NOZZLE_PARK_FEATURE)
   // Specify a park position as { X, Y, Z_raise }
-  #define NOZZLE_PARK_POINT { 27, Y_MIN_POS + 10, 0 }
+  #define NOZZLE_PARK_POINT { X_MIN_POS + 60, Y_MIN_POS + 10, 0 }
   #define NOZZLE_PARK_MOVE          0   // Park motion: 0 = XY Move, 1 = X Only, 2 = Y Only, 3 = X before Y, 4 = Y before X
   #define NOZZLE_PARK_Z_RAISE_MIN   0   // (mm) Always raise Z by at least this distance
   #define NOZZLE_PARK_XY_FEEDRATE G0_FEEDRATE   // (mm/s) X and Y axes feedrate (also used for delta Z axis)

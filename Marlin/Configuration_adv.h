@@ -2829,9 +2829,9 @@
     #define TOOLCHANGE_FS_UNRETRACT_SPEED (RETRACT_FEEDRATE*60) // (mm/min) (On SINGLENOZZLE or Bowden loading must be slowed down)
 
     // Longer prime to clean out
-    #define TOOLCHANGE_FS_EXTRA_PRIME          50  // (mm) Extra priming length
+    #define TOOLCHANGE_FS_EXTRA_PRIME          60 // (mm) Extra priming length
     #define TOOLCHANGE_FS_PRIME_SPEED    (4.6*60) // (mm/min) Extra priming feedrate
-    #define TOOLCHANGE_FS_WIPE_RETRACT         10 // (mm) Retract before cooling for less stringing, better wipe, etc.Adjust with LCD or M217 W.
+    #define TOOLCHANGE_FS_WIPE_RETRACT          5 // (mm) Retract before cooling for less stringing, better wipe, etc.Adjust with LCD or M217 W.
 
     // Cool after prime to reduce stringing
     #define TOOLCHANGE_FS_FAN                  0  // Fan index or -1 for the current extruder fan. Disable to skip.
@@ -2887,9 +2887,8 @@
     #define TOOLCHANGE_PARK_XY_FEEDRATE G0_FEEDRATE // (mm/min)
     //#define TOOLCHANGE_PARK_X_ONLY          // X axis only move
     //#define TOOLCHANGE_PARK_Y_ONLY          // Y axis only move
-    #define TOOLCHANGE_PARK_CLEANER              "M810"
-    #define TOOLCHANGE_BEFORE_TOOLCHANGE_NO_PARK "M811"
-    #define TOOLCHANGE_AFTER_TOOLCHANGE_NO_PARK  "M812"
+    #define TOOLCHANGE_BEFORE_TOOLCHANGE "M810"
+    #define TOOLCHANGE_PARK_CLEANER "M811"
 
     #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
       #define TOOLCHANGE_MIGRATION_DO_PARK  // Force park (or no-park) on migration
@@ -4004,7 +4003,7 @@
  *
  * Execute certain G-code commands immediately after power-on.
  */
-#define STARTUP_COMMANDS "M9\nM810 G0X60Y-40F14400|G12P0|G0Y-21F1000"
+#define STARTUP_COMMANDS "M9"
 
 /**
  * G-code Macros
@@ -4036,11 +4035,11 @@
 
   #define MAIN_MENU_ITEM_1_DESC "Homing"
   #define MAIN_MENU_ITEM_1_GCODE "G28"
-  //#define MAIN_MENU_ITEM_1_CONFIRM          // Show a confirmation dialog before this action
+  #define MAIN_MENU_ITEM_1_CONFIRM          // Show a confirmation dialog before this action
 
-  #define MAIN_MENU_ITEM_2_DESC "No Risk"
-  #define MAIN_MENU_ITEM_2_GCODE ";"
-  //#define MAIN_MENU_ITEM_5_CONFIRM
+  #define MAIN_MENU_ITEM_2_DESC "PLA/PVA"
+  #define MAIN_MENU_ITEM_2_GCODE "M140 S85\nM104 T0 S210\nM104 T1 S190"
+  #define MAIN_MENU_ITEM_2_CONFIRM
 
   #define MAIN_MENU_ITEM_3_DESC "Retract 0"
   #define MAIN_MENU_ITEM_3_GCODE "M207 S0"
