@@ -261,7 +261,7 @@ Nozzle nozzle;
     }
   #endif // HAS_Z_AXIS
 
-  void Nozzle::park(const uint8_t z_action, const xyz_pos_t &park/*=NOZZLE_PARK_POINT*/) {
+  void Nozzle::park(const uint8_t z_action,const bool rand_G27, const xyz_pos_t &park/*=NOZZLE_PARK_POINT*/) {
     #if HAS_Z_AXIS
       constexpr feedRate_t fr_z = NOZZLE_PARK_Z_FEEDRATE;
 
@@ -292,9 +292,12 @@ Nozzle nozzle;
       #ifndef NOZZLE_PARK_MOVE
         #define NOZZLE_PARK_MOVE 0
       #endif
+      xyz_pos_t rand_start[HOTENDS] = NOZZLE_CLEAN_START_POINT, rand_end[HOTENDS] = NOZZLE_CLEAN_END_POINT;
+      xyz_pos_t rand_park = park;
+      if (rand_G27) rand_park.x = random(rand_start[active_extruder].x+10, rand_end[active_extruder].x-10);
       constexpr feedRate_t fr_xy = NOZZLE_PARK_XY_FEEDRATE;
       switch (NOZZLE_PARK_MOVE) {
-        case 0: do_blocking_move_to_xy(park, fr_xy); break;
+        case 0: do_blocking_move_to_xy(rand_park, fr_xy); break;
         case 1: do_blocking_move_to_x(park.x, fr_xy); break;
         case 2: do_blocking_move_to_y(park.y, fr_xy); break;
         case 3: do_blocking_move_to_x(park.x, fr_xy);
