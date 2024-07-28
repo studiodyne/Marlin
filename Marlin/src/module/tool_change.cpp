@@ -1293,9 +1293,10 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
           // On lui donne les coordonnées du newtool
           if (old_tool == 0) rand_end[old_tool].x = rand_end[new_tool].x - hotend_offset[new_tool].x;
           else rand_start[old_tool].x = rand_start[new_tool].x + hotend_offset[old_tool].x;
-          current_position.x = random(rand_start[active_extruder].x+5 , rand_end[active_extruder].x-5);
+          current_position.x = random(rand_start[active_extruder].x , rand_end[active_extruder].x-5);
           NOLESS(current_position.x, active_extruder?X_MIN_POS+hotend_offset[active_extruder]:X_MIN_POS);
           //   M217 M0Z0E0B0G0S0D0G0
+          planner.buffer_line(current_position, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), active_extruder);
           planner.synchronize();
         }
       #endif
