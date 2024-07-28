@@ -1301,18 +1301,18 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
               #endif
             }
 
-          // Ceci est bon si on est sûr de la position au park , et qu'elle soit commune/possible
-          /*#if HAS_HOTEND_OFFSET
-            //Apply XY correction to park the new tool at the exact park pos before tool changing
-            if(new_tool != old_tool ) {
-              xyz_pos_t park_diff = hotend_offset[new_tool] - hotend_offset[old_tool];
-              park_diff.z = 0; // No Z offset applied before tool changed
-              current_position -= park_diff;
-            }
-          #endif*/
+            // Ceci est bon si on est sûr de la position au park , et qu'elle soit commune/possible
+            /*#if HAS_HOTEND_OFFSET
+              //Apply XY correction to park the new tool at the exact park pos before tool changing
+              if(new_tool != old_tool ) {
+                xyz_pos_t park_diff = hotend_offset[new_tool] - hotend_offset[old_tool];
+                park_diff.z = 0; // No Z offset applied before tool changed
+                current_position -= park_diff;
+              }
+            #endif*/
           }
-          planner.buffer_line(current_position, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), old_tool);
-          planner.synchronize();
+        planner.buffer_line(current_position, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), old_tool);
+        planner.synchronize();
       #endif
 
       #if HAS_HOTEND_OFFSET
