@@ -1059,9 +1059,9 @@ static float stored_swap[EXTRUDERS] = {toolchange_settings.swap_length};
         planner.synchronize();
       }
 
-      // Toolchange park
+      // Park
       #if ENABLED(TOOLCHANGE_PARK)
-        if (can_move_away && toolchange_settings.enable_park) {
+        if (ok) {
           IF_DISABLED(TOOLCHANGE_PARK_Y_ONLY, current_position.x = toolchange_settings.change_point.x);
           IF_DISABLED(TOOLCHANGE_PARK_X_ONLY, current_position.y = toolchange_settings.change_point.y);
           #if NONE(TOOLCHANGE_PARK_X_ONLY, TOOLCHANGE_PARK_Y_ONLY)
@@ -1074,12 +1074,10 @@ static float stored_swap[EXTRUDERS] = {toolchange_settings.swap_length};
               current_position.w = toolchange_settings.change_point.w
             );
           #endif
+          planner.buffer_line(current_position, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), active_extruder);
+          planner.synchronize();
         }
-        planner.buffer_line(current_position, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), active_extruder);
-        planner.synchronize();
-
       #endif
-
       // Prime without changing E
       //Ouverture buze !
       TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(active_extruder));
