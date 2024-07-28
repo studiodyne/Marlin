@@ -1194,8 +1194,11 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
     #endif
 
     if (new_tool != old_tool || TERN0(PARKING_EXTRUDER, extruder_parked)) { // PARKING_EXTRUDER may need to attach old_tool when homing
+
+      if (!toolchange_settings.enable_park) gcode.process_subcommands_now(F(TOOLCHANGE_BEFORE_TOOLCHANGE));
+
+      planner.synchronize();
       destination = current_position;
-      if (!toolchange_settings.enable_park) gcode.process_subcommands_now(F(TOOLCHANGE_BEFORE_TOOLCHANGE_NO_PARK));
 
       #if ALL(TOOLCHANGE_FILAMENT_SWAP, HAS_FAN) && TOOLCHANGE_FS_FAN >= 0
         // Store and stop fan. Restored on any exit.
@@ -1258,7 +1261,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       #endif
 
       // Toolchange park
-      #if ENABLED(TOOLCHANGE_PARK)
+      /*#if ENABLED(TOOLCHANGE_PARK)
         if (can_move_away && toolchange_settings.enable_park) {
           IF_DISABLED(TOOLCHANGE_PARK_Y_ONLY, current_position.x = toolchange_settings.change_point.x);
           IF_DISABLED(TOOLCHANGE_PARK_X_ONLY, current_position.y = toolchange_settings.change_point.y);
@@ -1271,20 +1274,45 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
               current_position.v = toolchange_settings.change_point.v,
               current_position.w = toolchange_settings.change_point.w
             );
-          #endif
+          #endif*/
+      #if ENABLED(TOOLCHANGE_PARK)
+        if (1) {
+          xyz_pos_t rand_start[HOTENDS] = NOZZLE_CLEAN_START_POINT,
+                    rand_end[HOTENDS] = NOZZLE_CLEAN_END_POINT;
+          if (active_extruder == 0) rand_end[0].x = rand_end[0].x - hotend_offset[1].x;
+          else rand_start[1].x = rand_start[0].x + hotend_offset[1].x;
+          current_position.x = random(rand_start[active_extruder].x , rand_end[active_extruder].x);
+          apply_motion_limits(current_position);
+        }
+        else {
+          // Toolchange park
+            if (can_move_away && toolchange_settings.enable_park) {
+              IF_DISABLED(TOOLCHANGE_PARK_Y_ONLY, current_position.x = toolchange_settings.change_point.x);
+              IF_DISABLED(TOOLCHANGE_PARK_X_ONLY, current_position.y = toolchange_settings.change_point.y);
+              #if NONE(TOOLCHANGE_PARK_X_ONLY, TOOLCHANGE_PARK_Y_ONLY)
+                SECONDARY_AXIS_CODE(
+                  current_position.i = toolchange_settings.change_point.i,
+                  current_position.j = toolchange_settings.change_point.j,
+                  current_position.k = toolchange_settings.change_point.k,
+                  current_position.u = toolchange_settings.change_point.u,
+                  current_position.v = toolchange_settings.change_point.v,
+                  current_position.w = toolchange_settings.change_point.w
+                );
+              #endif
+            }
 
-          #if HAS_HOTEND_OFFSET
+          // Ceci est bon si on est sûr de la position au park , et qu'elle soit commune/possible
+          /*#if HAS_HOTEND_OFFSET
             //Apply XY correction to park the new tool at the exact park pos before tool changing
             if(new_tool != old_tool ) {
               xyz_pos_t park_diff = hotend_offset[new_tool] - hotend_offset[old_tool];
               park_diff.z = 0; // No Z offset applied before tool changed
               current_position -= park_diff;
             }
-          #endif
-
+          #endif*/
+          }
           planner.buffer_line(current_position, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), old_tool);
           planner.synchronize();
-        }
       #endif
 
       #if HAS_HOTEND_OFFSET
@@ -1339,14 +1367,6 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
       // Tell the planner the new "current position"
       sync_plan_position();
-      if (!no_move) do_blocking_move_to_xy(current_position - diff, planner.settings.max_feedrate_mm_s[X_AXIS]);
-      do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
-      planner.synchronize();
-
-      /*if (!toolchange_settings.enable_park) {
-        gcode.process_subcommands_now(F(TOOLCHANGE_AFTER_TOOLCHANGE_NO_PARK));
-        TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
-      }*/
 
       #if ENABLED(DELTA)
         //LOOP_NUM_AXES(i) update_software_endstops(i); // or modify the constrain function
@@ -1364,7 +1384,8 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         #endif
 
         #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
-          if (should_swap && !too_cold(active_extruder)) {
+          if (/*should_swap &&*/ !too_cold(active_extruder)) { // Je veux juste primer sans valeur de SWAP
+            // Ouvrir la buse , et oui !
             if (toolchange_settings.extra_prime > 0) TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
             extruder_prime(); // Prime selected Extruder
           }
@@ -1384,32 +1405,29 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
         // Should the nozzle move back to the old position?
         if (can_move_away) {
-          //Cleaning before
-          if (toolchange_settings.enable_park && toolchange_settings.enable_park_cleaner) {
-            TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
-            gcode.process_subcommands_now(F(TOOLCHANGE_PARK_CLEANER));
-          };
 
           #if ENABLED(TOOLCHANGE_NO_RETURN)
             // Just move back down
             DEBUG_ECHOLNPGM("Move back Z only");
-
-            //if (TERN1(TOOLCHANGE_PARK, toolchange_settings.enable_park))
-            do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
-            //TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+            //Cleaning before
+            if (toolchange_settings.enable_park) {
+              if (toolchange_settings.enable_park_cleaner) {
+                //Ouverture buse pour cleaning
+                TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+                gcode.process_subcommands_now(F(TOOLCHANGE_PARK_CLEANER));
+                planner.synchronize();
+              }
+              do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
+            };
 
           #else
             // Move back to the original (or adjusted) position
             DEBUG_POS("Move back", destination);
 
             #if ENABLED(TOOLCHANGE_PARK)
-              if (toolchange_settings.enable_park) {
-                TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
-                do_blocking_move_to_xy_z(destination, destination.z, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
+              if (toolchange_settings.enable_park) do_blocking_move_to_xy_z(destination, destination.z, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE));
               }
-              else do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
             #else
-              TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
               do_blocking_move_to_xy(destination, planner.settings.max_feedrate_mm_s[X_AXIS]);
 
               // If using MECHANICAL_SWITCHING extruder/nozzle, set HOTEND_OFFSET in Z axis after running EVENT_GCODE_TOOLCHANGE below.
@@ -1430,14 +1448,17 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
 
         else DEBUG_ECHOLNPGM("Move back skipped");
 
-        if (!toolchange_settings.enable_park) {
-          TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
-          gcode.process_subcommands_now(F(TOOLCHANGE_AFTER_TOOLCHANGE_NO_PARK));
-        }
-
+        /******************************************************************************
+        Ici si park alors z lowered ,  pas de SERVO low
+        */
         #if ENABLED(TOOLCHANGE_FILAMENT_SWAP)
-          if (should_swap && !too_cold(active_extruder)) {
-            if ( (toolchange_settings.extra_resume + toolchange_settings.wipe_retract) !=0 ) TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+          if (/*should_swap && */!too_cold(active_extruder)) {
+            // Descente SERVO si extrusion , faut ouvrir la buse
+            // Ici on peut etre au park ou pas ! Donc z + servo + recover
+            if ( (toolchange_settings.extra_resume + toolchange_settings.wipe_retract) !=0 ) {
+              do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
+              TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
+            }
             extruder_cutting_recover(0); // New extruder primed and set to 0
 
             // Restart Fan
@@ -1450,12 +1471,13 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         TERN_(DUAL_X_CARRIAGE, idex_set_parked(false));
       }
 
+      //Cette fois on ajuste le Z c'est sûr mais servo toujours en haut
       #if HAS_SWITCHING_NOZZLE
         // Move back down. (Including when the new tool is higher.)
-        if (!should_move)
+        //if (!should_move) // Z offset bloqué trop dangereux si pres du bedlevel donc on regle z , tant pis
           do_blocking_move_to_z(destination.z, planner.settings.max_feedrate_mm_s[Z_AXIS]);
       #endif
-
+      //On descend la buse apres le Z
       TERN_(SWITCHING_NOZZLE_TWO_SERVOS, lower_nozzle(new_tool));
 
     } // (new_tool != old_tool)
