@@ -1061,7 +1061,7 @@ static float stored_swap[EXTRUDERS] = {toolchange_settings.swap_length};
 
       // Toolchange park
       #if ENABLED(TOOLCHANGE_PARK)
-        /*if (can_move_away && toolchange_settings.enable_park) {
+        if (can_move_away && toolchange_settings.enable_park) {
           IF_DISABLED(TOOLCHANGE_PARK_Y_ONLY, current_position.x = toolchange_settings.change_point.x);
           IF_DISABLED(TOOLCHANGE_PARK_X_ONLY, current_position.y = toolchange_settings.change_point.y);
           #if NONE(TOOLCHANGE_PARK_X_ONLY, TOOLCHANGE_PARK_Y_ONLY)
@@ -1073,27 +1073,8 @@ static float stored_swap[EXTRUDERS] = {toolchange_settings.swap_length};
               current_position.v = toolchange_settings.change_point.v,
               current_position.w = toolchange_settings.change_point.w
             );
-          #endif*/
-
-          IF_DISABLED(TOOLCHANGE_PARK_X_ONLY, current_position.y = toolchange_settings.change_point.y);
-
-          xyz_pos_t rand_start[HOTENDS] = NOZZLE_CLEAN_START_POINT,
-                    rand_end[HOTENDS] = NOZZLE_CLEAN_END_POINT;
-          if (active_extruder == 0) rand_end[0].x = rand_end[0].x - hotend_offset[1].x;
-          else rand_start[1].x = rand_start[0].x + hotend_offset[1].x;
-          current_position.x = random(rand_start[active_extruder].x+5 , rand_end[active_extruder].x-5);
-          apply_motion_limits(current_position);
-        /*}*/
-
-        // Ceci est bon si on est sûr de la position au park , et qu'elle soit commune/possible
-        /*#if HAS_HOTEND_OFFSET
-        //Apply XY correction to park the new tool at the exact park pos before tool changing
-        if(new_tool != old_tool ) {
-          xyz_pos_t park_diff = hotend_offset[new_tool] - hotend_offset[old_tool];
-          park_diff.z = 0; // No Z offset applied before tool changed
-          current_position -= park_diff;
+          #endif
         }
-        #endif*/
         planner.buffer_line(current_position, MMM_TO_MMS(TOOLCHANGE_PARK_XY_FEEDRATE), active_extruder);
         planner.synchronize();
 
