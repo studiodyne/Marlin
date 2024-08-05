@@ -399,7 +399,6 @@
    * thermal malfunction. Check the temperature graph in your host for any unusual bumps.
    */
   //#define THERMAL_PROTECTION_VARIANCE_MONITOR
-  #define NO_VARIANCE_MONITOR_WARNING
   #if ENABLED(THERMAL_PROTECTION_VARIANCE_MONITOR)
     // Variance detection window to override the THERMAL_PROTECTION...PERIOD settings above.
     // Keep in mind that some heaters heat up faster than others.
@@ -1388,7 +1387,8 @@
  */
 #define MULTISTEPPING_LIMIT   16  //: [1, 2, 4, 8, 16, 32, 64, 128]
 
-/** * Adaptive Step Smoothing increases the resolution of multi-axis moves, particularly at step frequencies
+/**
+ * Adaptive Step Smoothing increases the resolution of multi-axis moves, particularly at step frequencies
  * below 1kHz (for AVR) or 10kHz (for ARM), where aliasing between axes in multi-axis moves causes audible
  * vibration and surface artifacts. The algorithm adapts to provide the best possible step smoothing at the
  * lowest stepping frequencies.
@@ -1697,7 +1697,7 @@
    *
    * :['SPI_HALF_SPEED', 'SPI_QUARTER_SPEED', 'SPI_EIGHTH_SPEED']
    */
-  #define SD_SPI_SPEED SPI_EIGHTH_SPEED
+  //#define SD_SPI_SPEED SPI_EIGHTH_SPEED
 
   // The standard SD detect circuit reads LOW when media is inserted and HIGH when empty.
   // Enable this option and set to HIGH if your SD cards are incorrectly detected.
@@ -1962,7 +1962,7 @@
 
   // A bigger font is available for edit items. Costs 3120 bytes of flash.
   // Western only. Not available for Cyrillic, Kana, Turkish, Greek, or Chinese.
-  #define USE_BIG_EDIT_FONT
+  //#define USE_BIG_EDIT_FONT
 
   // A smaller font may be used on the Info Screen. Costs 2434 bytes of flash.
   // Western only. Not available for Cyrillic, Kana, Turkish, Greek, or Chinese.
@@ -2500,7 +2500,7 @@
   #define MIN_CIRCLE_SEGMENTS    72   // Minimum number of segments in a complete circle
   //#define ARC_SEGMENTS_PER_SEC 50   // Use the feedrate to choose the segment length
   #define N_ARC_CORRECTION       25   // Number of interpolated segments between corrections
-  //#define ARC_P_CIRCLES             // Enable the 'P' parameter to specify complete circles
+  #define ARC_P_CIRCLES             // Enable the 'P' parameter to specify complete circles
   //#define SF_ARC_FIX                // Enable only if using SkeinForge with "Arc Point" fillet procedure
 #endif
 
@@ -2842,8 +2842,6 @@
      * If disabled, no priming on T0 until switching back to T0 from another extruder:
      *  [ Power-On -> T0 { T0 Activated } -> T1 { Activate & Prime T1 } -> T0 { Retract T1, Activate & Prime T0 } ]
      * Enable with M217 V1 before printing to avoid unwanted priming on host connect.
-     * To avoid unwanted priming, value not stored, must be applied on printing file.
-     * Note: M217 Q, prime tool without resuming position. Can only be used for starting, not during printing
      */
     #define TOOLCHANGE_FS_PRIME_FIRST_USED
     /*
@@ -2887,7 +2885,7 @@
     #define TOOLCHANGE_PARK_CLEANER              "M810"
     #define TOOLCHANGE_BEFORE_TOOLCHANGE_NO_PARK "M811"
     #define TOOLCHANGE_AFTER_TOOLCHANGE_NO_PARK  "M812"
-    
+
     #if ENABLED(TOOLCHANGE_MIGRATION_FEATURE)
       #define TOOLCHANGE_MIGRATION_DO_PARK  // Force park (or no-park) on migration
     #endif
@@ -3883,7 +3881,7 @@
    */
   //#define VOLUMETRIC_DEFAULT_ON
 
-  #define VOLUMETRIC_EXTRUDER_LIMIT
+  //#define VOLUMETRIC_EXTRUDER_LIMIT
   #if ENABLED(VOLUMETRIC_EXTRUDER_LIMIT)
     /**
      * Default volumetric extrusion limit in cubic mm per second (mm^3/sec).
@@ -4009,10 +4007,10 @@
  * Add G-codes M810-M819 to define and run G-code macros.
  * Macros are not saved to EEPROM.
  */
-#define GCODE_MACROS
+//#define GCODE_MACROS
 #if ENABLED(GCODE_MACROS)
-  #define GCODE_MACROS_SLOTS       1  // Up to 10 may be used
-  #define GCODE_MACROS_SLOT_SIZE  50  // Maximum length of a single macro
+  #define GCODE_MACROS_SLOTS       3  // Up to 10 may be used
+  #define GCODE_MACROS_SLOT_SIZE  100  // Maximum length of a single macro
 #endif
 
 /**
@@ -4080,7 +4078,7 @@
   //#define MAIN_MENU_ITEM_20_CONFIRM
 
   #define MAIN_MENU_ITEM_25_DESC "ToolChange neutre"
-  #define MAIN_MENU_ITEM_25_GCODE "G28\nM217 W0 E0 D0 G0 S0 B0 Z0\nG0 Z0 F14400"
+  #define MAIN_MENU_ITEM_25_GCODE "M217 W0 E0 D0 G0 S0 B0 Z0"
   //#define MAIN_MENU_ITEM_25_CONFIRM
 
 #endif
