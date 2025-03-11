@@ -66,6 +66,15 @@
   #include "../../feature/repeat.h"
 #endif
 
+#if ENABLED(PARK_HEAD_ON_PAUSE)
+  #include "../../feature/pause.h"
+#endif
+
+#if HAS_FILAMENT_SENSOR
+  #include "../../feature/runout.h"
+#endif
+
+
 void menu_tune();
 void menu_cancelobject();
 void menu_motion();
@@ -258,9 +267,17 @@ void menu_main() {
     #define MEDIA_MENU_AT_TOP
   #endif
 
+  #if HAS_FILAMENT_SENSOR
+    EDIT_ITEM(bool, MSG_RUNOUT_SENSOR, &runout.enabled, runout.reset);
+    #if NUM_RUNOUT_SENSORS == 2
+      EDIT_ITEM(bool, MSG_RUNOUT_INVERSION, &runout.pin_inversion);
+    #endif
+  #endif
+
   if (busy) {
     #if MACHINE_CAN_PAUSE
-      ACTION_ITEM(MSG_PAUSE_PRINT, ui.pause_print);
+      //ACTION_ITEM(MSG_PAUSE_PRINT, ui.pause_print);
+      GCODES_ITEM(MSG_PAUSE_PRINT, F("M125T"));
     #endif
     #if MACHINE_CAN_STOP
       SUBMENU(MSG_STOP_PRINT, []{
@@ -284,6 +301,7 @@ void menu_main() {
     #endif
   }
   else {
+    SUBMENU(MSG_TUNE, menu_tune);
     #if ALL(HAS_MEDIA, MEDIA_MENU_AT_TOP)
       // BEGIN MEDIA MENU
       if (card_detected) {
@@ -325,8 +343,17 @@ void menu_main() {
       // END MEDIA MENU
     #endif
 
-    if (TERN0(MACHINE_CAN_PAUSE, printingIsPaused()))
-      ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
+    #if ENABLED(PARK_HEAD_ON_PAUSE)
+      if (TERN0(MACHINE_CAN_PAUSE, printingIsPaused())) {
+        if (maintenance_park_enabled)
+          ACTION_ITEM(MSG_RESUME_PRINT, maintenance_park_disable);
+        else
+          ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
+      }
+    #else
+      if (TERN0(MACHINE_CAN_PAUSE, printingIsPaused()))
+        ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
+    #endif
 
     #if ENABLED(HOST_START_MENU_ITEM) && defined(ACTION_ON_START)
       ACTION_ITEM(MSG_HOST_START_PRINT, hostui.start);
