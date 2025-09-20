@@ -38,6 +38,7 @@
       int16_t unretract_speed;      // M217 U (mm/min)
       uint8_t fan_speed;            // M217 F
       uint8_t fan_time;             // M217 D
+      bool enable_full_fan;          // M217 M
     #endif
     #if ENABLED(TOOLCHANGE_PARK)
       bool enable_park;             // M217 W

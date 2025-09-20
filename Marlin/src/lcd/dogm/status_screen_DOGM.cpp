@@ -900,6 +900,18 @@ void MarlinUI::draw_status_screen() {
     #endif
     lcd_put_u8str(F("%"));
 
+    switch (int(thermalManager.temp_hotend[0].mpc.heater_power)) {
+      case SUPERVOLCANO_HEATER_POWER: lcd_put_u8str(F(" SVolc")); break;
+      case VOLCANO_HEATER_POWER: lcd_put_u8str(F(" Volc")); break;
+      default: lcd_put_u8str(F(" Revo"));
+    }
+
+    switch (int(thermalManager.temp_hotend[1].mpc.heater_power)) {
+      case SUPERVOLCANO_HEATER_POWER: lcd_put_u8str(F(" + SVolc")); break;
+      case VOLCANO_HEATER_POWER: lcd_put_u8str(F(" + Volc")); break;
+      default: lcd_put_u8str(F(" + Revo"));
+    }
+
     //
     // Filament sensor display if SD is disabled
     //
