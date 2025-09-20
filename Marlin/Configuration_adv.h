@@ -2857,8 +2857,7 @@
     #define TOOLCHANGE_FS_FAN                 0  // Fan index or -1 for the current extruder fan. Disable to skip.
     #define TOOLCHANGE_FS_FAN_SPEED          255  // 0-255
     #define TOOLCHANGE_FS_FAN_TIME            10  // (seconds)
-    #define TOOLCHANGE_FS_FULL_FAN              // Full speed on tool change startup
-
+    #define TOOLCHANGE_FS_FULL_FAN                // M217 M0/1: full fan speed on startup to improve cooling filament and travel without leaking
 
     // Use TOOLCHANGE_FS_PRIME_SPEED feedrate the first time each extruder is primed
     #define TOOLCHANGE_FS_SLOW_FIRST_PRIME

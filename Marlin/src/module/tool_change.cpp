@@ -1227,7 +1227,7 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
       #if ALL(TOOLCHANGE_FILAMENT_SWAP, HAS_FAN) && TOOLCHANGE_FS_FAN >= 0
         // Store and stop fan. Restored on any exit.
         planner.synchronize();
-        REMEMBER(tfan, thermalManager.fan_speed[TOOLCHANGE_FS_FAN], 255);
+        REMEMBER(tfan, thermalManager.fan_speed[TOOLCHANGE_FS_FAN], toolchange_settings.enable_full_fan? 255 : 0);
       #endif
 
       // Macro before toolchange
@@ -1388,13 +1388,10 @@ void tool_change(const uint8_t new_tool, bool no_move/*=false*/) {
         constexpr bool safe_to_move = true;
       #endif
 
-      if (TERN0(TOOLCHANGE_PARK, toolchange_settings.enable_park))
       #if ALL(TOOLCHANGE_FILAMENT_SWAP, HAS_FAN) && TOOLCHANGE_FS_FAN >= 0
-        // Store and stop fan. Restored on any exit.
-        if (toolchange_settings.enable_full_fan) RESTORE(tfan);
-      #endif
-
-      #if ALL(TOOLCHANGE_FILAMENT_SWAP, HAS_FAN) && TOOLCHANGE_FS_FAN >= 0
+        // Restore initial fan speed , because of full fan speed possibility
+        RESTORE(tfan);
+        // Now travel is done, full fan speed can stop, and toolchange works normaly
         // Store and stop fan. Restored on any exit.
         REMEMBER(fan, thermalManager.fan_speed[TOOLCHANGE_FS_FAN], 0);
       #endif
