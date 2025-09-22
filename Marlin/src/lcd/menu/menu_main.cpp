@@ -78,6 +78,7 @@
 void menu_tune();
 void menu_cancelobject();
 void menu_motion();
+void menu_motion_short();
 void menu_temperature();
 void menu_configuration();
 
@@ -382,7 +383,7 @@ void menu_main() {
       EDIT_ITEM(bool, MSG_RUNOUT_INVERSION, &runout.pin_inversion);
     #endif
   #endif
-  
+
   if (busy) {
     #if MACHINE_CAN_PAUSE
       //ACTION_ITEM(MSG_PAUSE_PRINT, ui.pause_print);
@@ -418,8 +419,10 @@ void menu_main() {
 
     #if ENABLED(PARK_HEAD_ON_PAUSE)
       if (TERN0(MACHINE_CAN_PAUSE, printingIsPaused())) {
-        if (maintenance_park_enabled)
+        if (maintenance_park_enabled){
+          SUBMENU(MSG_MOTION, menu_motion);
           ACTION_ITEM(MSG_RESUME_PRINT, maintenance_park_disable);
+        }
         else
           ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
       }
