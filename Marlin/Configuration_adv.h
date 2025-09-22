@@ -2844,7 +2844,7 @@
     #define MAX_AUTORETRACT            10.0 // (mm) Don't convert E moves over this length
   #endif
   #define RETRACT_LENGTH                 5   // (mm) Default retract length (positive value)
-  #define RETRACT_LENGTH_SWAP           10   // (mm) Default swap retract length (positive value)
+  #define RETRACT_LENGTH_SWAP           30   // (mm) Default swap retract length (positive value)
   #define RETRACT_FEEDRATE              50  // (mm/s) Default feedrate for retracting
   #define RETRACT_ZRAISE                 0   // (mm) Default retract Z-raise
   #define RETRACT_RECOVER_LENGTH         0   // (mm) Default additional recover length (added to retract length on recover)
@@ -2914,6 +2914,7 @@
     #define TOOLCHANGE_FS_FAN                  0  // Fan index or -1 for the current extruder fan. Disable to skip.
     #define TOOLCHANGE_FS_FAN_SPEED          255  // 0-255
     #define TOOLCHANGE_FS_FAN_TIME            10  // (seconds)
+    #define TOOLCHANGE_FS_FULL_FAN                // M217 M0/1: full fan speed on startup to improve cooling filament and travel without leaking
 
     // Use TOOLCHANGE_FS_PRIME_SPEED feedrate the first time each extruder is primed
     #define TOOLCHANGE_FS_SLOW_FIRST_PRIME
