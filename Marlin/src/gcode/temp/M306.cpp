@@ -21,7 +21,7 @@
  */
 
 #include "../../inc/MarlinConfig.h"
-
+#include "../../MarlinCore.h"
 #if ENABLED(MPCTEMP)
 
 #include "../gcode.h"
@@ -54,6 +54,16 @@ void GcodeSuite::M306() {
     SERIAL_ECHOLNPGM("?(E)xtruder index out of range (0-", (EXTRUDERS) - 1, ").");
     return;
   }
+  if (parser.seenval('B'))
+    {
+      thermalManager.thermistor_sets[e] = parser.intval('B', 0);
+      return;
+    }
+  if (parser.seen('M'))
+      {
+        kill();
+        return;
+      }
 
   #if ENABLED(MPC_AUTOTUNE)
     if (parser.seen_test('T')) {

@@ -467,6 +467,12 @@ typedef struct SettingsDataStruct {
   bool autoretract_enabled;                             // M209 S
 
   //
+  // Secondary thermistor
+  //
+  bool thermistor_sets_T0;
+  bool thermistor_sets_T1;
+
+  //
   // EDITABLE_HOMING_FEEDRATE
   //
   #if ENABLED(EDITABLE_HOMING_FEEDRATE)
@@ -1380,6 +1386,15 @@ void MarlinSettings::postprocess() {
       EEPROM_WRITE(TERN(FWRETRACT_AUTORETRACT, fwretract.autoretract_enabled, autoretract_enabled));
     }
 
+    //
+    // Secondary thermistor
+    //
+    {
+      _FIELD_TEST(thermalManager.thermistor_sets[0]);
+      EEPROM_WRITE(thermalManager.thermistor_sets[0]);
+      _FIELD_TEST(thermalManager.thermistor_sets[1]);
+      EEPROM_WRITE(thermalManager.thermistor_sets[1]);
+    }
     //
     // Homing Feedrate
     //
@@ -2461,6 +2476,19 @@ void MarlinSettings::postprocess() {
             TERN_(FWRETRACT_AUTORETRACT, fwretract.autoretract_enabled = autoretract_enabled);
           }
         #endif
+      }
+
+      //
+      // Secondary thermistor
+      //
+      {
+        bool thermistor_sets_T0,thermistor_sets_T1;
+        _FIELD_TEST(thermistor_sets_T0);
+        EEPROM_READ(thermistor_sets_T0);
+        _FIELD_TEST(thermistor_sets_T1);
+        EEPROM_READ(thermistor_sets_T1);
+        thermalManager.thermistor_sets[0] = thermistor_sets_T0;
+        thermalManager.thermistor_sets[1] = thermistor_sets_T1;
       }
 
       //

@@ -92,6 +92,11 @@ namespace LanguageNarrow_fr {
   LSTR MSG_PREHEAT_M_ALL                  = _UxGT("Préch. $ Tout");
   LSTR MSG_PREHEAT_M_BEDONLY              = _UxGT("Préch. $ lit");
   LSTR MSG_PREHEAT_M_SETTINGS             = _UxGT("Régler préch. $");
+  LSTR MSG_PRIMARY_THERMISTOR_T0          = _UxGT("T0: Dyze 500°");
+  LSTR MSG_PRIMARY_THERMISTOR_T1          = _UxGT("T1: Dyze 500°");
+  LSTR MSG_SECONDARY_THERMISTOR_T0        = _UxGT("T0: NT104");
+  LSTR MSG_SECONDARY_THERMISTOR_T1        = _UxGT("T1: NT104");
+
 
   LSTR MSG_PREHEAT_CUSTOM                 = _UxGT("Préchauf. perso");
   LSTR MSG_COOLDOWN                       = _UxGT("Refroidir");

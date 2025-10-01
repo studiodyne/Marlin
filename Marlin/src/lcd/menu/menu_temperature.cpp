@@ -145,7 +145,6 @@ void menu_temperature() {
   START_MENU();
   BACK_ITEM(MSG_MAIN_MENU);
 
-  //
   // Nozzle:
   // Nozzle [1-5]:
   //
@@ -264,6 +263,11 @@ void menu_temperature() {
     if (TERN0(HAS_HEATED_BED, thermalManager.degTargetBed())) has_heat = true;
     if (has_heat) ACTION_ITEM(MSG_COOLDOWN, lcd_cooldown);
   #endif
+  
+  if (thermalManager.thermistor_sets[0] ) EDIT_ITEM(bool, MSG_SECONDARY_THERMISTOR_T0, &thermalManager.thermistor_sets[0]);
+  else  EDIT_ITEM(bool, MSG_PRIMARY_THERMISTOR_T0, &thermalManager.thermistor_sets[0]);
+  if (thermalManager.thermistor_sets[1] ) EDIT_ITEM(bool, MSG_SECONDARY_THERMISTOR_T1, &thermalManager.thermistor_sets[1]);
+  else   EDIT_ITEM(bool, MSG_PRIMARY_THERMISTOR_T1, &thermalManager.thermistor_sets[1]);
 
   END_MENU();
 }

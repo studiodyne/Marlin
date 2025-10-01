@@ -337,6 +337,7 @@ PGMSTR(str_t_heating_failed, STR_T_HEATING_FAILED);
 #endif
 
 #if HAS_HOTEND
+  bool Temperature::thermistor_sets[HOTENDS];
   hotend_info_t Temperature::temp_hotend[HOTENDS];
   constexpr celsius_t Temperature::hotend_maxtemp[HOTENDS];
 
@@ -1964,8 +1965,9 @@ void Temperature::mintemp_error(const heater_id_t heater_id OPTARG(ERR_INCLUDE_T
       #if ENABLED(THERMAL_PROTECTION_HOTENDS)
       {
         const auto deg = degHotend(e);
-        if (deg > temp_range[e].maxtemp) {
+        if (deg > temp_range[thermistor_sets[e]].maxtemp) {
           TERN_(SOVOL_SV06_RTS, rts.gotoPageBeep(ID_KillBadTemp_L, ID_KillBadTemp_D));
+          // SERIAL_ECHOPGM("premiere BOUCLE");
           MAXTEMP_ERROR(e, deg);
         }
       }
@@ -1979,7 +1981,7 @@ void Temperature::mintemp_error(const heater_id_t heater_id OPTARG(ERR_INCLUDE_T
       #endif
 
       temp_hotend[e].soft_pwm_amount = (temp_hotend[e].celsius > temp_range[e].mintemp || is_hotend_preheating(e))
-        && temp_hotend[e].celsius < temp_range[e].maxtemp ? (int)get_pid_output_hotend(e) >> 1 : 0;
+        && temp_hotend[e].celsius < temp_range[thermistor_sets[e]].maxtemp ? (int)get_pid_output_hotend(e) >> 1 : 0;
 
       #if WATCH_HOTENDS
         // Make sure temperature is increasing
@@ -2741,8 +2743,8 @@ void Temperature::task() {
 
     #if HAS_HOTEND_THERMISTOR
       // Thermistor with conversion table?
-      const temp_entry_t(*tt)[] = (temp_entry_t(*)[])(heater_ttbl_map[e]);
-      SCAN_THERMISTOR_TABLE((*tt), heater_ttbllen_map[e]);
+      const temp_entry_t(*tt)[] = (temp_entry_t(*)[])(heater_ttbl_map[thermistor_sets[e]]);
+      SCAN_THERMISTOR_TABLE((*tt), heater_ttbllen_map[thermistor_sets[e]]);
     #endif
 
     return 0;
@@ -2936,9 +2938,12 @@ void Temperature::updateTemperaturesFromRawValues() {
 
     HOTEND_LOOP() {
       const raw_adc_t r = temp_hotend[e].getraw();
-      const bool neg = temp_dir[e] < 0, pos = temp_dir[e] > 0;
-      if ((neg && r < temp_range[e].raw_max) || (pos && r > temp_range[e].raw_max))
-        MAXTEMP_ERROR(e, temp_hotend[e].celsius);
+      const bool neg = temp_dir[thermistor_sets[e]] < 0, pos = temp_dir[thermistor_sets[e]] > 0;
+      //SERIAL_ECHOLNPGM(" AVANT E",e," r:" , r, " neg:", neg, " pos:", pos, " raw max:", temp_range[thermistor_sets[e]].raw_max);
+      if ((neg && r < temp_range[thermistor_sets[e]].raw_max) || (pos && r > temp_range[thermistor_sets[e]].raw_max))
+      //SERIAL_ECHOLNPGM(" ALARME E",e," r:" , r, " neg:", neg, " pos:", pos, " raw max:", temp_range[thermistor_sets[e]].raw_max);
+
+      MAXTEMP_ERROR(e, temp_hotend[e].celsius);
 
       /**
       // DEBUG PREHEATING TIME

@@ -435,6 +435,7 @@ void menu_backlash();
 
     #if ENABLED(MPC_AUTOTUNE_MENU)
       ACTION_ITEM(MSG_MPC_AUTOTUNE, []{ queue.inject(F("M306 T")); ui.return_to_status(); });
+      ACTION_ITEM(MSG_MPC_AUTOTUNE2, []{ queue.inject(F("T1\nM306 T")); ui.return_to_status(); });
     #endif
 
     #if ENABLED(PIDTEMPBED)

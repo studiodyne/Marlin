@@ -243,7 +243,7 @@ void GcodeSuite::M360() {
       config_line_e(e, F("Acceleration"), planner.settings.max_acceleration_mm_per_s2[E_AXIS_N(e)]);
       config_line_e(e, F("MaxSpeed"), planner.settings.max_feedrate_mm_s[E_AXIS_N(e)]);
       config_line_e(e, F("Diameter"), TERN(NO_VOLUMETRICS, DEFAULT_NOMINAL_FILAMENT_DIA, planner.filament_size[e]));
-      config_line_e(e, F("MaxTemp"), thermalManager.hotend_maxtemp[e]);
+      config_line_e(e, F("MaxTemp"), thermalManager.hotend_maxtemp[thermalManager.thermistor_sets[e]]);
     }
   #endif
 }

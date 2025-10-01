@@ -900,16 +900,15 @@ void MarlinUI::draw_status_screen() {
     #endif
     lcd_put_u8str(F("%"));
 
-    switch (int(thermalManager.temp_hotend[0].mpc.heater_power)) {
-      case SUPERVOLCANO_HEATER_POWER: lcd_put_u8str(F(" SVolc")); break;
-      case VOLCANO_HEATER_POWER: lcd_put_u8str(F(" Volc")); break;
-      default: lcd_put_u8str(F(" Revo"));
+    switch (int(thermalManager.temp_hotend[0].mpc.heater_power) * (!thermalManager.thermistor_sets[0])) {
+      case SUPERVOLCANO_HEATER_POWER: {lcd_put_u8str(F(" SVo"));lcd_put_u8str(utostr3(uint16_t(thermalManager.temp_hotend[0].mpc.heater_power) ));lcd_put_u8str(F(" + ")); break;}
+      case VOLCANO_HEATER_POWER: {lcd_put_u8str(F(" Vo"));lcd_put_u8str(utostr3(uint16_t(thermalManager.temp_hotend[0].mpc.heater_power) )); lcd_put_u8str(F(" + ")); break;}
+      default: {lcd_put_u8str(F(" Rv"));lcd_put_u8str(utostr3(uint16_t(thermalManager.temp_hotend[0].mpc.heater_power) )); lcd_put_u8str(F(" + "));}
     }
-
-    switch (int(thermalManager.temp_hotend[1].mpc.heater_power)) {
-      case SUPERVOLCANO_HEATER_POWER: lcd_put_u8str(F(" + SVolc")); break;
-      case VOLCANO_HEATER_POWER: lcd_put_u8str(F(" + Volc")); break;
-      default: lcd_put_u8str(F(" + Revo"));
+    switch (int(thermalManager.temp_hotend[1].mpc.heater_power) * (!thermalManager.thermistor_sets[1])) {
+      case SUPERVOLCANO_HEATER_POWER: {lcd_put_u8str(F("SVo"));lcd_put_u8str(utostr3(uint16_t(thermalManager.temp_hotend[1].mpc.heater_power) )); break;}
+      case VOLCANO_HEATER_POWER: {lcd_put_u8str(F("Vo"));lcd_put_u8str(utostr3(uint16_t(thermalManager.temp_hotend[1].mpc.heater_power) )); break;}
+      default: {lcd_put_u8str(F("Rv"));lcd_put_u8str(utostr3(uint16_t(thermalManager.temp_hotend[1].mpc.heater_power) ));}
     }
 
     //
