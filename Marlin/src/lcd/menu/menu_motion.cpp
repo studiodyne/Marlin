@@ -207,6 +207,36 @@ void _menu_move_distance(const AxisEnum axis, const screenFunc_t func, const int
   }
 
 #endif
+void menu_move_short() {
+  START_MENU();
+  BACK_ITEM(MSG_MOTION);
+
+  #if E_MANUAL
+
+    // The current extruder
+    SUBMENU(MSG_MOVE_E, _menu_move_distance_e_maybe);
+
+  /*  #define SUBMENU_MOVE_E(N) SUBMENU_N(N, MSG_MOVE_EN, []{ _menu_move_distance(E_AXIS, []{ lcd_move_e(N); }, N); });
+
+    #if HAS_SWITCHING_EXTRUDER || HAS_SWITCHING_NOZZLE
+
+      // ...and the non-switching
+      #if E_MANUAL == 7 || E_MANUAL == 5 || E_MANUAL == 3
+        SUBMENU_MOVE_E(E_MANUAL - 1);
+      #endif
+
+    #elif MULTI_E_MANUAL
+
+      // Independent extruders with one E stepper per hotend
+      REPEAT(E_MANUAL, SUBMENU_MOVE_E);
+
+    #endif*/
+
+  #endif // E_MANUAL
+
+  END_MENU();
+}
+;
 
 void menu_move() {
   START_MENU();
@@ -608,6 +638,20 @@ void menu_move() {
   #pragma GCC diagnostic pop
 
 #endif // FT_MOTION_MENU
+void menu_motion_short(){
+  START_MENU();
+
+  //
+  // ^ Main
+  //
+  BACK_ITEM(MSG_MAIN_MENU);
+
+  if (TERN1(DELTA, all_axes_homed()))
+    SUBMENU(MSG_MOVE_AXIS, menu_move_short);
+
+  END_MENU();
+
+};
 
 void menu_motion() {
 

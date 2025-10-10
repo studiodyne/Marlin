@@ -1121,7 +1121,7 @@ void Temperature::factory_reset() {
       if (housekeeping() == CANCELLED) return CANCELLED;
 
       if (ELAPSED(curr_time_ms, next_test_ms)) {
-        if (current_temp >= ambient_temp) {
+        if (current_temp <=30) {
           ambient_temp = (ambient_temp + current_temp) / 2.0f;
           break;
         }
