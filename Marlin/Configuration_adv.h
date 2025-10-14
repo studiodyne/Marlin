@@ -3017,7 +3017,7 @@
 #define ADVANCED_PAUSE_FEATURE
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   #define PAUSE_PARK_RETRACT_FEEDRATE         RETRACT_FEEDRATE // (mm/s) Initial retract feedrate.
-  #define PAUSE_PARK_RETRACT_LENGTH           TOOLCHANGE_FS_WIPE_RETRACT   // (mm) Initial retract.
+  #define PAUSE_PARK_RETRACT_LENGTH           RETRACT_LENGTH   // (mm) Initial retract.
                                                   // This short retract is done immediately, before parking the nozzle.
   #define FILAMENT_CHANGE_UNLOAD_FEEDRATE     RETRACT_FEEDRATE  // (mm/s) Unload filament feedrate. This can be pretty fast.
   #define FILAMENT_CHANGE_UNLOAD_ACCEL        25  // (mm/s^2) Lower acceleration may allow a faster feedrate.
@@ -3899,8 +3899,8 @@
 #if ENABLED(COOLANT_CONTROL)
   #define COOLANT_MIST                // Enable if mist coolant is present
   #define COOLANT_FLOOD               // Enable if flood coolant is present
-  #define COOLANT_MIST_INVERT  true  // Set "true" if the on/off function is reversed
-  #define COOLANT_FLOOD_INVERT true  // Set "true" if the on/off function is reversed
+  #define COOLANT_MIST_INVERT  false  // Set "true" if the on/off function is reversed
+  #define COOLANT_FLOOD_INVERT false  // Set "true" if the on/off function is reversed
 #endif
 
 // @section filament width
@@ -4128,7 +4128,7 @@
  *
  * Execute certain G-code commands immediately after power-on.
  */
-#define STARTUP_COMMANDS "M9\nG29L1\nG29S0"
+#define STARTUP_COMMANDS "M9\nG29L1\nG29S0\nM593XYF0"
 
 /**
  * G-code Macros
@@ -4195,10 +4195,6 @@
   //#define MAIN_MENU_ITEM_9_CONFIRM
 
   /*
-  #define MAIN_MENU_ITEM_9_DESC  "T0 +G60"
-  #define MAIN_MENU_ITEM_9_GCODE "G60\nT0\nG61F14400"
-  //#define MAIN_MENU_ITEM_9_CONFIRM
-
   #define MAIN_MENU_ITEM_10_DESC  "T1 +G60"
   #define MAIN_MENU_ITEM_10_GCODE "G60\nT1\nG61F14400"
   //#define MAIN_MENU_ITEM_5_CONFIRM
@@ -4311,6 +4307,12 @@
   #define CONFIG_MENU_ITEM_19_DESC  "M125T"
   #define CONFIG_MENU_ITEM_19_GCODE "M125T"
   //#define CONFIG_MENU_ITEM_19_CONFIRM
+
+  #define CONFIG_MENU_ITEM_20_DESC  "Mesure du lit"
+  #define CONFIG_MENU_ITEM_20_GCODE "G425S\nG29NP1"
+  //#define CONFIG_MENU_ITEM_20_CONFIRM
+
+
 #endif
 
 // @section custom buttons
