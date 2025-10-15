@@ -4154,8 +4154,8 @@
 #if ENABLED(CUSTOM_MENU_MAIN)
   #define CUSTOM_MENU_MAIN_TITLE "Cmdes perso"
   //#define CUSTOM_MENU_MAIN_SCRIPT_DONE "M117 User Script Done"
-  //#define CUSTOM_MENU_MAIN_SCRIPT_AUDIBLE_FEEDBACK
-  //#define CUSTOM_MENU_MAIN_SCRIPT_RETURN   // Return to status screen after a script
+  #define CUSTOM_MENU_MAIN_SCRIPT_AUDIBLE_FEEDBACK
+  #define CUSTOM_MENU_MAIN_SCRIPT_RETURN   // Return to status screen after a script
   //#define CUSTOM_MENU_MAIN_ONLY_IDLE         // Only show custom menu when the machine is idle
 
   #define MAIN_MENU_ITEM_1_DESC  "Retract 0"
@@ -4194,14 +4194,19 @@
   #define MAIN_MENU_ITEM_9_GCODE "G10\nG91\nG0Z2\nG90\nM400\nG60\nG27\nM280 H0\nG12\nM280C\nG61F14400\nG91\nG0Z-2\nG90\nG11"
   //#define MAIN_MENU_ITEM_9_CONFIRM
 
-  /*
-  #define MAIN_MENU_ITEM_10_DESC  "T1 +G60"
-  #define MAIN_MENU_ITEM_10_GCODE "G60\nT1\nG61F14400"
-  //#define MAIN_MENU_ITEM_5_CONFIRM
+  #define MAIN_MENU_ITEM_10_DESC  "Mesh PLA-0"
+  #define MAIN_MENU_ITEM_10_GCODE "G29L0"
+  //#define MAIN_MENU_ITEM_10_CONFIRM
 
-  #define MAIN_MENU_ITEM_11_DESC  "Tools HIGH"
-  #define MAIN_MENU_ITEM_11_GCODE "M280 H1"
-  //#define MAIN_MENU_ITEM_5_CONFIRM
+  #define MAIN_MENU_ITEM_11_DESC  "Mesh PLA-1"
+  #define MAIN_MENU_ITEM_11_GCODE "G29L1"
+  //#define MAIN_MENU_ITEM_11_CONFIRM
+
+  #define MAIN_MENU_ITEM_12_DESC  "Mesh ABS-2"
+  #define MAIN_MENU_ITEM_12_GCODE "G29L2"
+  //#define MAIN_MENU_ITEM_12_CONFIRM
+  /*
+
 
   #define MAIN_MENU_ITEM_12_DESC  "Tools LOW"
   #define MAIN_MENU_ITEM_12_GCODE "M280 H0"
@@ -4308,9 +4313,13 @@
   #define CONFIG_MENU_ITEM_19_GCODE "M125T"
   //#define CONFIG_MENU_ITEM_19_CONFIRM
 
-  #define CONFIG_MENU_ITEM_20_DESC  "Mesure du lit"
-  #define CONFIG_MENU_ITEM_20_GCODE "G425S\nG29NP1"
+  #define CONFIG_MENU_ITEM_20_DESC  "Mesure lit PLA"
+  #define CONFIG_MENU_ITEM_20_GCODE "G425S\nG29NP1\nG29S1\nG29S0\nG29L1"
   //#define CONFIG_MENU_ITEM_20_CONFIRM
+
+  #define CONFIG_MENU_ITEM_21_DESC  "Mesure lit ABS"
+  #define CONFIG_MENU_ITEM_21_GCODE "G425S\nG29NP1\nG29S2\nG29L2"
+  //#define CONFIG_MENU_ITEM_21_CONFIRM
 
 
 #endif
