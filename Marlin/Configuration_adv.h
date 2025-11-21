@@ -4175,11 +4175,11 @@
   //#define MAIN_MENU_ITEM_4_CONFIRM
 
   #define MAIN_MENU_ITEM_5_DESC  "Retract z0"
-  #define MAIN_MENU_ITEM_5_GCODE "Z-hop 0"
+  #define MAIN_MENU_ITEM_5_GCODE "M207 Z0"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_6_DESC  "Retract z2"
-  #define MAIN_MENU_ITEM_6_GCODE "Z-hop 2"
+  #define MAIN_MENU_ITEM_6_GCODE "M207 Z2"
   //#define MAIN_MENU_ITEM_6_CONFIR
 
   #define MAIN_MENU_ITEM_7_DESC  "Clean lines one "
