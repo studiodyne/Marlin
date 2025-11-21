@@ -4154,11 +4154,11 @@
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_7_DESC "Retract z0"
-  #define MAIN_MENU_ITEM_7_GCODE "Z-hop 0"
+  #define MAIN_MENU_ITEM_7_GCODE "M207 Z0"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_8_DESC "Retract z2"
-  #define MAIN_MENU_ITEM_8_GCODE "Z-hop 2"
+  #define MAIN_MENU_ITEM_8_GCODE "M207 2"
   //#define MAIN_MENU_ITEM_8_CONFIRM
 
   #define MAIN_MENU_ITEM_9_DESC "T0 +G60"
