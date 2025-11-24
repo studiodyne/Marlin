@@ -337,6 +337,7 @@ PGMSTR(str_t_heating_failed, STR_T_HEATING_FAILED);
 
 #if HAS_HOTEND
   hotend_info_t Temperature::temp_hotend[HOTENDS];
+  uint8_t Temperature::mesh_number = 0;
   constexpr celsius_t Temperature::hotend_maxtemp[HOTENDS];
 
   #if ENABLED(MPCTEMP)

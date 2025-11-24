@@ -3401,6 +3401,7 @@ void MarlinSettings::reset() {
       toolchange_settings.wipe_retract    = TOOLCHANGE_FS_WIPE_RETRACT;
       toolchange_settings.fan_speed       = TOOLCHANGE_FS_FAN_SPEED;
       toolchange_settings.fan_time        = TOOLCHANGE_FS_FAN_TIME;
+      toolchange_settings.enable_full_fan = ENABLED(TOOLCHANGE_FS_FULL_FAN);
     #endif
 
     #if ENABLED(TOOLCHANGE_FS_PRIME_FIRST_USED)

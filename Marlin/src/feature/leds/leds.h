@@ -146,8 +146,8 @@ struct LED2Color_t {
   #define LEDColorOrange()    LED1Color_t(255,  25,   0)
   #define LEDColorYellow()    LED1Color_t(255,  75,   0)
 #else
-  #define LEDColorOrange()    LED1Color_t(255,  80,   0)
-  #define LEDColorYellow()    LED1Color_t(255, 255,   0)
+  #define LEDColorOrange()    LED1Color_t(255,  50,   0)
+  #define LEDColorYellow()    LED1Color_t(255, 123,   0)
 #endif
 #define LEDColorGreen()       LED1Color_t(  0, 255,   0)
 #define LEDColorBlue()        LED1Color_t(  0,   0, 255)
