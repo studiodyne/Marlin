@@ -608,7 +608,7 @@
  * gets it spinning reliably for a short time before setting the requested speed.
  * (Does not work on Sanguinololu with FAN_SOFT_PWM.)
  */
-#define FAN_KICKSTART_TIME  1000  // (ms)
+#define FAN_KICKSTART_TIME  100  // (ms)
 #define FAN_KICKSTART_POWER 255  // 64-255
 //#define FAN_KICKSTART_LINEAR     // Set kickstart time linearly based on the speed, e.g., for 20% (51) it will be FAN_KICKSTART_TIME * 0.2.
                                    // Useful for quick speed up to low speed. Kickstart power must be set to 255.
@@ -4162,16 +4162,16 @@
   #define MAIN_MENU_ITEM_1_GCODE "M207 S0"
   //#define MAIN_MENU_ITEM_1_CONFIRM
 
-  #define MAIN_MENU_ITEM_2_DESC  "Retract 3"
-  #define MAIN_MENU_ITEM_2_GCODE "M207 S3"
+  #define MAIN_MENU_ITEM_2_DESC  "Retract 1.5"
+  #define MAIN_MENU_ITEM_2_GCODE "M207 S1.5"
   //#define MAIN_MENU_ITEM_2_CONFIRM
 
-  #define MAIN_MENU_ITEM_3_DESC  "Retract 5"
-  #define MAIN_MENU_ITEM_3_GCODE "M207 S5"
+  #define MAIN_MENU_ITEM_3_DESC  "Retract 3"
+  #define MAIN_MENU_ITEM_3_GCODE "M207 S3"
   //#define MAIN_MENU_ITEM_3_CONFIRM
 
-  #define MAIN_MENU_ITEM_4_DESC  "Retract 10"
-  #define MAIN_MENU_ITEM_4_GCODE "M207 S10"
+  #define MAIN_MENU_ITEM_4_DESC  "Retract 5"
+  #define MAIN_MENU_ITEM_4_GCODE "M207 S5"
   //#define MAIN_MENU_ITEM_4_CONFIRM
 
   #define MAIN_MENU_ITEM_5_DESC  "Retract z0"
