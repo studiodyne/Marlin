@@ -1679,7 +1679,7 @@
 #endif
 
 // Add 'M73' to set print job progress, overrides Marlin's built-in estimate
-#define SET_PROGRESS_MANUALLY
+//#define SET_PROGRESS_MANUALLY
 #if ENABLED(SET_PROGRESS_MANUALLY)
   #define SET_PROGRESS_PERCENT            // Add 'P' parameter to set percentage done
   #define SET_REMAINING_TIME              // Add 'R' parameter to set remaining time
@@ -4046,7 +4046,7 @@
 #define GCODE_MACROS
 #if ENABLED(GCODE_MACROS)
   #define GCODE_MACROS_SLOTS       1  // Up to 10 may be used
-  #define GCODE_MACROS_SLOT_SIZE  25  // Maximum length of a single macro
+  #define GCODE_MACROS_SLOT_SIZE  50  // Maximum length of a single macro
 #endif
 
 /**
@@ -4090,11 +4090,11 @@
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_7_DESC "Retract z0"
-  #define MAIN_MENU_ITEM_7_GCODE "Z-hop 0"
+  #define MAIN_MENU_ITEM_7_GCODE "M207 Z0"
   //#define MAIN_MENU_ITEM_5_CONFIRM
 
   #define MAIN_MENU_ITEM_8_DESC "Retract z2"
-  #define MAIN_MENU_ITEM_8_GCODE "Z-hop 2"
+  #define MAIN_MENU_ITEM_8_GCODE "M207 2"
   //#define MAIN_MENU_ITEM_8_CONFIRM
 
   #define MAIN_MENU_ITEM_9_DESC "T0 +G60"
