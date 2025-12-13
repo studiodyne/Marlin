@@ -66,9 +66,19 @@
   #include "../../feature/repeat.h"
 #endif
 
+#if ENABLED(PARK_HEAD_ON_PAUSE)
+  #include "../../feature/pause.h"
+#endif
+
+#if HAS_FILAMENT_SENSOR
+  #include "../../feature/runout.h"
+#endif
+
+
 void menu_tune();
 void menu_cancelobject();
 void menu_motion();
+void menu_motion_short();
 void menu_temperature();
 void menu_configuration();
 
@@ -378,9 +388,17 @@ void menu_main() {
     #endif // HAS_MEDIA
   };
 
+  #if HAS_FILAMENT_SENSOR
+    EDIT_ITEM(bool, MSG_RUNOUT_SENSOR, &runout.enabled, runout.reset);
+    #if NUM_RUNOUT_SENSORS == 2
+      EDIT_ITEM(bool, MSG_RUNOUT_INVERSION, &runout.pin_inversion);
+    #endif
+  #endif
+
   if (busy) {
     #if MACHINE_CAN_PAUSE
-      ACTION_ITEM(MSG_PAUSE_PRINT, ui.pause_print);
+      //ACTION_ITEM(MSG_PAUSE_PRINT, ui.pause_print);
+      GCODES_ITEM(MSG_PAUSE_PRINT, F("M125T"));
     #endif
     #if MACHINE_CAN_STOP
       SUBMENU(MSG_STOP_PRINT, []{
@@ -410,8 +428,19 @@ void menu_main() {
       INJECT_MENU_ITEMS(media_menu_items());
     #endif
 
-    if (TERN0(MACHINE_CAN_PAUSE, marlin.printingIsPaused()))
-      ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
+    #if ENABLED(PARK_HEAD_ON_PAUSE)
+      if (TERN0(MACHINE_CAN_PAUSE, marlin.printingIsPaused())) {
+        if (maintenance_park_enabled){
+          SUBMENU(MSG_MOTION, menu_motion);
+          ACTION_ITEM(MSG_RESUME_PRINT, maintenance_park_disable);
+        }
+        else
+          ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
+      }
+    #else
+      if (TERN0(MACHINE_CAN_PAUSE, marlin.printingIsPaused()))
+        ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
+    #endif
 
     #if ENABLED(HOST_START_MENU_ITEM) && defined(ACTION_ON_START)
       ACTION_ITEM(MSG_HOST_START_PRINT, hostui.start);
