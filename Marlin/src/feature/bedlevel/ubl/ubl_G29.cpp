@@ -33,6 +33,7 @@
 #include "../../../module/planner.h"
 #include "../../../module/motion.h"
 #include "../../../module/probe.h"
+#include "../../../module/temperature.h"
 #include "../../../gcode/gcode.h"
 #include "../../../libs/least_squares_fit.h"
 
@@ -638,7 +639,7 @@ void unified_bed_leveling::G29() {
 
   if (parser.seen('L')) {     // Load Current Mesh Data
     param.KLS_storage_slot = parser.has_value() ? (int8_t)parser.value_int() : storage_slot;
-
+    thermalManager.mesh_number = param.KLS_storage_slot;
     int16_t a = settings.calc_num_meshes();
 
     if (!a) {

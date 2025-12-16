@@ -904,6 +904,25 @@ void MarlinUI::draw_status_screen() {
     #endif
     lcd_put_u8str(F("%"));
 
+    switch (int(thermalManager.temp_hotend[0].mpc.heater_power)) {
+      case SUPERVOLCANO_HEATER_POWER: {lcd_put_u8str(F(" SVo"));/*lcd_put_u8str(utostr3(uint16_t(thermalManager.temp_hotend[0].mpc.heater_power) ));*/ lcd_put_u8str(F(" + ")); break;}
+      case VOLCANO_HEATER_POWER: {lcd_put_u8str(F(" Vo"));/*lcd_put_u8str(utostr3(uint16_t(thermalManager.temp_hotend[0].mpc.heater_power) ));*/ lcd_put_u8str(F(" + ")); break;}
+      default: {lcd_put_u8str(F(" Rv"));/*lcd_put_u8str(utostr3(uint16_t(thermalManager.temp_hotend[0].mpc.heater_power) ));*/ lcd_put_u8str(F(" + "));}
+    }
+    switch (int(thermalManager.temp_hotend[1].mpc.heater_power)) {
+      case SUPERVOLCANO_HEATER_POWER: {lcd_put_u8str(F("SVo"));/*lcd_put_u8str(utostr3(uint16_t(thermalManager.temp_hotend[1].mpc.heater_power) ));*/ break;}
+      case VOLCANO_HEATER_POWER: {lcd_put_u8str(F("Vo"));/*lcd_put_u8str(utostr3(uint16_t(thermalManager.temp_hotend[1].mpc.heater_power) ));*/ break;}
+      default: {lcd_put_u8str(F("Rv"));/*lcd_put_u8str(utostr3(uint16_t(thermalManager.temp_hotend[1].mpc.heater_power) ));*/ }
+    }
+    switch (thermalManager.mesh_number) {
+      case 0:  {lcd_put_u8str(F("  PLA-")); break;}
+      case 1:  {lcd_put_u8str(F("  PLA-")); break;}
+      case 2:  {lcd_put_u8str(F("  ABS-")); break;}
+      default:  lcd_put_u8str(F("  ###-"));
+    }
+
+    lcd_put_u8str(utostr3(thermalManager.mesh_number ));
+    
     //
     // Filament sensor display if SD is disabled
     //

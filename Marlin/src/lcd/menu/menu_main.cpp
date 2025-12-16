@@ -66,9 +66,19 @@
   #include "../../feature/repeat.h"
 #endif
 
+#if ENABLED(PARK_HEAD_ON_PAUSE)
+  #include "../../feature/pause.h"
+#endif
+
+#if HAS_FILAMENT_SENSOR
+  #include "../../feature/runout.h"
+#endif
+
+
 void menu_tune();
 void menu_cancelobject();
 void menu_motion();
+void menu_motion_short();
 void menu_temperature();
 void menu_configuration();
 
@@ -245,6 +255,125 @@ void menu_configuration();
 
 #endif // CUSTOM_MENU_MAIN
 
+#if ENABLED(CUSTOM_MENU_CONFIG)
+
+  void _lcd_custom_menus_configuration_gcode2(FSTR_P const fstr) {
+    queue.inject(fstr);
+    TERN_(CUSTOM_MENU_CONFIG_SCRIPT_AUDIBLE_FEEDBACK, ui.completion_feedback());
+    TERN_(CUSTOM_MENU_CONFIG_SCRIPT_RETURN, ui.return_to_status());
+  }
+
+  void custom_menus_configuration2() {
+    START_MENU();
+    BACK_ITEM(MSG_MAIN_MENU);
+
+    #define HAS_CUSTOM_ITEM_CONF(N) (defined(CONFIG_MENU_ITEM_##N##_DESC) && defined(CONFIG_MENU_ITEM_##N##_GCODE))
+
+    #ifdef CUSTOM_MENU_CONFIG_SCRIPT_DONE
+      #define _DONE_SCRIPT "\n" CUSTOM_MENU_CONFIG_SCRIPT_DONE
+    #else
+      #define _DONE_SCRIPT ""
+    #endif
+    #define GCODE_LAMBDA_CONF(N) []{ _lcd_custom_menus_configuration_gcode2(F(CONFIG_MENU_ITEM_##N##_GCODE _DONE_SCRIPT)); }
+    #define _CUSTOM_ITEM_CONF(N) ACTION_ITEM_F(F(CONFIG_MENU_ITEM_##N##_DESC), GCODE_LAMBDA_CONF(N));
+    #define _CUSTOM_ITEM_CONF_CONFIRM(N)            \
+      SUBMENU_F(F(CONFIG_MENU_ITEM_##N##_DESC), []{ \
+          MenuItem_confirm::confirm_screen(         \
+            GCODE_LAMBDA_CONF(N), nullptr,          \
+            F(CONFIG_MENU_ITEM_##N##_DESC "?")      \
+          );                                        \
+        })
+
+    #define CUSTOM_ITEM_CONF(N) do{ \
+      constexpr char c = CONFIG_MENU_ITEM_##N##_GCODE[strlen(CONFIG_MENU_ITEM_##N##_GCODE) - 1]; \
+      static_assert(c != '\n' && c != '\r', "CONFIG_MENU_ITEM_" STRINGIFY(N) "_GCODE cannot have a newline at the end. Please remove it."); \
+      if (ENABLED(CONFIG_MENU_ITEM_##N##_CONFIRM)) \
+        _CUSTOM_ITEM_CONF_CONFIRM(N); \
+      else \
+        _CUSTOM_ITEM_CONF(N); \
+    }while(0)
+
+    #if HAS_CUSTOM_ITEM_CONF(1)
+      CUSTOM_ITEM_CONF(1);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(2)
+      CUSTOM_ITEM_CONF(2);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(3)
+      CUSTOM_ITEM_CONF(3);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(4)
+      CUSTOM_ITEM_CONF(4);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(5)
+      CUSTOM_ITEM_CONF(5);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(6)
+      CUSTOM_ITEM_CONF(6);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(7)
+      CUSTOM_ITEM_CONF(7);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(8)
+      CUSTOM_ITEM_CONF(8);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(9)
+      CUSTOM_ITEM_CONF(9);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(10)
+      CUSTOM_ITEM_CONF(10);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(11)
+      CUSTOM_ITEM_CONF(11);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(12)
+      CUSTOM_ITEM_CONF(12);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(13)
+      CUSTOM_ITEM_CONF(13);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(14)
+      CUSTOM_ITEM_CONF(14);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(15)
+      CUSTOM_ITEM_CONF(15);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(16)
+      CUSTOM_ITEM_CONF(16);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(17)
+      CUSTOM_ITEM_CONF(17);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(18)
+      CUSTOM_ITEM_CONF(18);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(19)
+      CUSTOM_ITEM_CONF(19);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(20)
+      CUSTOM_ITEM_CONF(20);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(21)
+      CUSTOM_ITEM_CONF(21);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(22)
+      CUSTOM_ITEM_CONF(22);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(23)
+      CUSTOM_ITEM_CONF(23);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(24)
+      CUSTOM_ITEM_CONF(24);
+    #endif
+    #if HAS_CUSTOM_ITEM_CONF(25)
+      CUSTOM_ITEM_CONF(25);
+    #endif
+    END_MENU();
+  }
+
+#endif // CUSTOM_MENU_CONFIG
+
+
 void menu_main() {
   const bool busy = marlin.printingIsActive();
   #if HAS_MEDIA
@@ -378,9 +507,17 @@ void menu_main() {
     #endif // HAS_MEDIA
   };
 
+  #if HAS_FILAMENT_SENSOR
+    EDIT_ITEM(bool, MSG_RUNOUT_SENSOR, &runout.enabled, runout.reset);
+    #if NUM_RUNOUT_SENSORS == 2
+      EDIT_ITEM(bool, MSG_RUNOUT_INVERSION, &runout.pin_inversion);
+    #endif
+  #endif
+
   if (busy) {
     #if MACHINE_CAN_PAUSE
-      ACTION_ITEM(MSG_PAUSE_PRINT, ui.pause_print);
+      //ACTION_ITEM(MSG_PAUSE_PRINT, ui.pause_print);
+      GCODES_ITEM(MSG_PAUSE_PRINT, F("M125T"));
     #endif
     #if MACHINE_CAN_STOP
       SUBMENU(MSG_STOP_PRINT, []{
@@ -410,8 +547,19 @@ void menu_main() {
       INJECT_MENU_ITEMS(media_menu_items());
     #endif
 
-    if (TERN0(MACHINE_CAN_PAUSE, marlin.printingIsPaused()))
-      ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
+    #if ENABLED(PARK_HEAD_ON_PAUSE)
+      if (TERN0(MACHINE_CAN_PAUSE, marlin.printingIsPaused())) {
+        if (maintenance_park_enabled){
+          SUBMENU(MSG_MOTION, menu_motion);
+          ACTION_ITEM(MSG_RESUME_PRINT, maintenance_park_disable);
+        }
+        else
+          ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
+      }
+    #else
+      if (TERN0(MACHINE_CAN_PAUSE, marlin.printingIsPaused()))
+        ACTION_ITEM(MSG_RESUME_PRINT, ui.resume_print);
+    #endif
 
     #if ENABLED(HOST_START_MENU_ITEM) && defined(ACTION_ON_START)
       ACTION_ITEM(MSG_HOST_START_PRINT, hostui.start);
@@ -466,6 +614,16 @@ void menu_main() {
         SUBMENU_F(F(CUSTOM_MENU_MAIN_TITLE), custom_menus_main);
       #else
         SUBMENU(MSG_CUSTOM_COMMANDS, custom_menus_main);
+      #endif
+    }
+  #endif
+
+  #if ENABLED(CUSTOM_MENU_CONFIG)
+    if (TERN1(CUSTOM_MENU_CONFIG_ONLY_IDLE, !busy)) {
+      #ifdef CUSTOM_MENU_CONFIG_TITLE
+        SUBMENU_F(F(CUSTOM_MENU_CONFIG_TITLE), custom_menus_configuration2);
+      #else
+        SUBMENU(MSG_CUSTOM_COMMANDS, custom_menus_configuration2);
       #endif
     }
   #endif
